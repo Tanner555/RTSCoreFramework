@@ -12,9 +12,9 @@ namespace RTSCoreFramework
             get; protected set;
         }
 
-        public RTSGameModeCore gamemode
+        public RTSGameMode gamemode
         {
-            get { return RTSGameModeCore.thisInstance; }
+            get { return RTSGameMode.thisInstance; }
         }
 
         public RTSCamRaycaster rayCaster { get { return RTSCamRaycaster.thisInstance; } }
@@ -61,7 +61,7 @@ namespace RTSCoreFramework
         public event RtsHitTypeAndRayCastHitHandler OnLeftClickSendHit;
         public event RtsHitTypeAndRayCastHitHandler OnRightClickSendHit;
 
-        public delegate void AllyMemberHandler(AllyMemberCore ally);
+        public delegate void AllyMemberHandler(AllyMember ally);
         //public event AllyMemberHandler OnHoverOverAlly;
         //public event AllyMemberHandler OnHoverOverEnemy;
         //public event AllyMemberHandler OnHoverLeaveAlly;
@@ -71,7 +71,7 @@ namespace RTSCoreFramework
         public event AllyMemberHandler OnRightClickAlly;
         public event AllyMemberHandler OnRightClickEnemy;
 
-        public delegate void AllySwitchHandler(PartyManagerCore _party, AllyMemberCore _toSet, AllyMemberCore _current);
+        public delegate void AllySwitchHandler(PartyManager _party, AllyMember _toSet, AllyMember _current);
         public event AllySwitchHandler OnAllySwitch;
 
         #endregion
@@ -113,7 +113,7 @@ namespace RTSCoreFramework
             }
         }
 
-        public void CallOnAllySwitch(PartyManagerCore _party, AllyMemberCore _toSet, AllyMemberCore _current)
+        public void CallOnAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
             if (OnAllySwitch != null)
                 OnAllySwitch(_party, _toSet, _current);
@@ -148,7 +148,7 @@ namespace RTSCoreFramework
             switch (hitType)
             {
                 case rtsHitType.Ally:
-                    AllyMemberCore _ally = hitObjectRoot.GetComponent<AllyMemberCore>();
+                    AllyMember _ally = hitObjectRoot.GetComponent<AllyMember>();
                     if (_ally == null) return;
                     gamemode.hasPrevHighAlly = true;
                     //if (OnHoverOverAlly != null) OnHoverOverAlly(_ally);
@@ -156,7 +156,7 @@ namespace RTSCoreFramework
                     gamemode.prevHighAlly = _ally;
                     break;
                 case rtsHitType.Enemy:
-                    AllyMemberCore _enemy = hitObjectRoot.GetComponent<AllyMemberCore>();
+                    AllyMember _enemy = hitObjectRoot.GetComponent<AllyMember>();
                     if (_enemy == null) return;
                     gamemode.hasPrevHighAlly = true;
                     //if (OnHoverOverAlly != null) OnHoverOverAlly(_enemy);
@@ -203,12 +203,12 @@ namespace RTSCoreFramework
             switch (hitType)
             {
                 case rtsHitType.Ally:
-                    AllyMemberCore _ally = hitObjectRoot.GetComponent<AllyMemberCore>();
+                    AllyMember _ally = hitObjectRoot.GetComponent<AllyMember>();
                     if (_ally == null) return;
                     if (OnLeftClickAlly != null) OnLeftClickAlly(_ally);
                     break;
                 case rtsHitType.Enemy:
-                    AllyMemberCore _enemy = hitObjectRoot.GetComponent<AllyMemberCore>();
+                    AllyMember _enemy = hitObjectRoot.GetComponent<AllyMember>();
                     if (_enemy == null) return;
                     if (OnLeftClickEnemy != null) OnLeftClickEnemy(_enemy);
                     break;
@@ -252,12 +252,12 @@ namespace RTSCoreFramework
             switch (hitType)
             {
                 case rtsHitType.Ally:
-                    AllyMemberCore _ally = hitObjectRoot.GetComponent<AllyMemberCore>();
+                    AllyMember _ally = hitObjectRoot.GetComponent<AllyMember>();
                     if (_ally == null) return;
                     if (OnRightClickAlly != null) OnRightClickAlly(_ally);
                     break;
                 case rtsHitType.Enemy:
-                    AllyMemberCore _enemy = hitObjectRoot.GetComponent<AllyMemberCore>();
+                    AllyMember _enemy = hitObjectRoot.GetComponent<AllyMember>();
                     if (_enemy == null) return;
                     if (OnRightClickEnemy != null) OnRightClickEnemy(_enemy);
                     break;

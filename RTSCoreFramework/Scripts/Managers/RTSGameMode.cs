@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RTSCoreFramework
 {
-    public class RTSGameModeCore : MonoBehaviour
+    public class RTSGameMode : MonoBehaviour
     {
         #region Enums
         [HideInInspector]
@@ -52,7 +52,7 @@ namespace RTSCoreFramework
         [Header("Factions")]
         public List<ECommanders> AllyFaction = new List<ECommanders>();
         public List<ECommanders> EnemyFaction = new List<ECommanders>();
-        public List<PartyManagerCore> GeneralMembers = new List<PartyManagerCore>();
+        public List<PartyManager> GeneralMembers = new List<PartyManager>();
 
         [HideInInspector]
         public int TargetKillCount = 0;
@@ -91,7 +91,7 @@ namespace RTSCoreFramework
         #endregion
 
         #region Properties
-        public PartyManagerCore GeneralInCommand { get; protected set; }
+        public PartyManager GeneralInCommand { get; protected set; }
         //GameMode must access GameMaster sooner than On Start
         //To Subscribe Events and Prevent Errors when AllySwitching
         public RTSGameMaster gamemaster
@@ -109,7 +109,7 @@ namespace RTSCoreFramework
         public RTSUiManager uiManager { get { return RTSUiManager.thisInstance; } }
         //Static GameMode Instance For Easy Access
         [HideInInspector]
-        public static RTSGameModeCore thisInstance
+        public static RTSGameMode thisInstance
         {
             get; protected set;
         }
@@ -118,13 +118,13 @@ namespace RTSCoreFramework
             get { return GeneralInCommand.PartyMembers.Count <= 0; }
         }
 
-        public AllyMemberCore UiTargetAlly
+        public AllyMember UiTargetAlly
         {
             get; protected set;
         }
 
         //Used for Getting Past Allies highlighted
-        public AllyMemberCore prevHighAlly { get; set; }
+        public AllyMember prevHighAlly { get; set; }
         public bool hasPrevHighAlly
         {
             get; set;
@@ -141,9 +141,9 @@ namespace RTSCoreFramework
             if (thisInstance != null)
                 Debug.LogWarning("More than one instance of RTSGameMode in scene.");
             else
-                thisInstance = (RTSGameModeCore)this;
+                thisInstance = (RTSGameMode)this;
 
-            PartyManagerCore firstGeneralFound = FindGenerals(false, null);
+            PartyManager firstGeneralFound = FindGenerals(false, null);
             if (firstGeneralFound == null)
             {
                 Debug.LogWarning("No General could be found!");
@@ -204,11 +204,11 @@ namespace RTSCoreFramework
             return false;
         }
 
-        public int GetAllyFactionPlayerCount(AllyMemberCore teamMember)
+        public int GetAllyFactionPlayerCount(AllyMember teamMember)
         {
             int _playerCount = 0;
             EFactions Faction = GetAllyFaction(teamMember);
-            AllyMemberCore[] Allies = GameObject.FindObjectsOfType<AllyMemberCore>();
+            AllyMember[] Allies = GameObject.FindObjectsOfType<AllyMember>();
             foreach (var Ally in Allies)
             {
                 if (Ally.AllyFaction == Faction)
@@ -222,7 +222,7 @@ namespace RTSCoreFramework
         public int GetFactionPlayerCount(EFactions Faction)
         {
             int playerCount = 0;
-            AllyMemberCore[] Allies = GameObject.FindObjectsOfType<AllyMemberCore>();
+            AllyMember[] Allies = GameObject.FindObjectsOfType<AllyMember>();
             foreach (var Ally in Allies)
             {
                 if (Ally.AllyFaction == Faction)
@@ -236,7 +236,7 @@ namespace RTSCoreFramework
         public int GetGeneralPlayerCount(ECommanders General)
         {
             int playerCount = 0;
-            AllyMemberCore[] Allies = GameObject.FindObjectsOfType<AllyMemberCore>();
+            AllyMember[] Allies = GameObject.FindObjectsOfType<AllyMember>();
             foreach (var Ally in Allies)
             {
                 if (Ally.GeneralCommander == General)
@@ -247,7 +247,7 @@ namespace RTSCoreFramework
             return playerCount;
         }
 
-        public PartyManagerCore GetPartyManagerFromECommander(ECommanders General)
+        public PartyManager GetPartyManagerFromECommander(ECommanders General)
         {
             foreach (var Gen in GeneralMembers)
             {
@@ -259,11 +259,11 @@ namespace RTSCoreFramework
             return null;
         }
 
-        public int GetAllyGeneralPlayerCount(AllyMemberCore teamMember)
+        public int GetAllyGeneralPlayerCount(AllyMember teamMember)
         {
             int playerCount = 0;
             ECommanders General = teamMember.GeneralCommander;
-            AllyMemberCore[] allies = GameObject.FindObjectsOfType<AllyMemberCore>();
+            AllyMember[] allies = GameObject.FindObjectsOfType<AllyMember>();
             foreach (var ally in allies)
             {
                 if (ally.GeneralCommander == General)
@@ -274,7 +274,7 @@ namespace RTSCoreFramework
             return playerCount;
         }
 
-        public PartyManagerCore GetPartyManager(AllyMemberCore _teamMember)
+        public PartyManager GetPartyManager(AllyMember _teamMember)
         {
             foreach (var Gen in GeneralMembers)
             {
@@ -286,9 +286,9 @@ namespace RTSCoreFramework
             return null;
         }
 
-        public List<PartyManagerCore> GetPartyManagers(EFactions _faction)
+        public List<PartyManager> GetPartyManagers(EFactions _faction)
         {
-            List<PartyManagerCore> partymanagers = new List<PartyManagerCore>();
+            List<PartyManager> partymanagers = new List<PartyManager>();
             foreach (var Gen in GeneralMembers)
             {
                 if (Gen.GeneralFaction == _faction)
@@ -299,7 +299,7 @@ namespace RTSCoreFramework
             return partymanagers;
         }
 
-        public EFactions GetAllyFaction(AllyMemberCore _teamMember)
+        public EFactions GetAllyFaction(AllyMember _teamMember)
         {
             if (AllyFaction.Contains(_teamMember.GeneralCommander))
             {
@@ -312,19 +312,19 @@ namespace RTSCoreFramework
             return EFactions.Faction_Default;
         }
 
-        public int GetPendingReward(AllyMemberCore receiver, ERTSRewardTypes rewardType)
+        public int GetPendingReward(AllyMember receiver, ERTSRewardTypes rewardType)
         {
             return DefaultKillPoints;
         }
 
-        public int GetPendingPunishment(AllyMemberCore receiver, ERTSPunishmentTypes punishType)
+        public int GetPendingPunishment(AllyMember receiver, ERTSPunishmentTypes punishType)
         {
             return DefaultFriendlyFirePoints;
         }
         #endregion
 
         #region Setters
-        public void SetGeneralInCommand(PartyManagerCore setToCommand)
+        public void SetGeneralInCommand(PartyManager setToCommand)
         {
             if (GeneralMembers.Contains(setToCommand))
             {
@@ -335,10 +335,10 @@ namespace RTSCoreFramework
         #endregion
 
         #region Finders
-        public PartyManagerCore FindGenerals(bool pendingLeave, PartyManagerCore generalLeaving)
+        public PartyManager FindGenerals(bool pendingLeave, PartyManager generalLeaving)
         {
             GeneralMembers.Clear();
-            foreach (var PMember in GameObject.FindObjectsOfType<PartyManagerCore>())
+            foreach (var PMember in GameObject.FindObjectsOfType<PartyManager>())
             {
                 if (pendingLeave)
                 {
@@ -364,7 +364,7 @@ namespace RTSCoreFramework
             }
         }
 
-        public PartyManagerCore FindEnemyCommander(PartyManagerCore _partyMan)
+        public PartyManager FindEnemyCommander(PartyManager _partyMan)
         {
             foreach (var Gen in GeneralMembers)
             {
@@ -446,7 +446,7 @@ namespace RTSCoreFramework
         #endregion
 
         #region AllyProcessing
-        public virtual void ProcessAllySwitch(PartyManagerCore _party, AllyMemberCore _toSet, AllyMemberCore _current)
+        public virtual void ProcessAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
             if (_toSet != null && _party.isCurrentPlayerCommander)
             {
@@ -457,18 +457,18 @@ namespace RTSCoreFramework
         #endregion
 
         #region UIAndCameraProcessing
-        void SetThirdPersonCam(PartyManagerCore _party, AllyMemberCore _toSet, AllyMemberCore _current)
+        void SetThirdPersonCam(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
             if (!_party.isCurrentPlayerCommander) return;
             SetCameraCharacter(_toSet);
         }
 
-        protected virtual void SetCameraCharacter(AllyMemberCore _target)
+        protected virtual void SetCameraCharacter(AllyMember _target)
         {
 
         }
 
-        protected void SetUiTargetAlly(AllyMemberCore _allyToSet)
+        protected void SetUiTargetAlly(AllyMember _allyToSet)
         {
             if (_allyToSet != null)
             {
@@ -480,7 +480,7 @@ namespace RTSCoreFramework
 
         #region AllyProcessing
         //Ui and Ally Processing
-        public void HandlePartyMemberWOutAllies(PartyManagerCore _partyMan, AllyMemberCore _lAlly, bool _onDeath)
+        public void HandlePartyMemberWOutAllies(PartyManager _partyMan, AllyMember _lAlly, bool _onDeath)
         {
             Debug.Log("No party members called on gamemode!");
             if (_onDeath && _partyMan.isCurrentPlayerCommander)
@@ -497,22 +497,22 @@ namespace RTSCoreFramework
             }
         }
 
-        public virtual void ProcessAllyDeath(AllyMemberCore _ally)
+        public virtual void ProcessAllyDeath(AllyMember _ally)
         {
             //Check rewards for instigator
-            AllyMemberCore _instigator = _ally.DamageInstigator;
+            AllyMember _instigator = _ally.DamageInstigator;
             if (_instigator != null)
             {
                 //Killed enemy, give reward
                 if (_ally.IsEnemyFor(_instigator))
                 {
-                    _instigator.PartyPoints += GetPendingReward(_instigator, RTSGameModeCore.ERTSRewardTypes.Reward_Kill);
+                    _instigator.PartyPoints += GetPendingReward(_instigator, RTSGameMode.ERTSRewardTypes.Reward_Kill);
                     _instigator.PartyKills += 1;
                 }
                 else
                 {
                     //Friendly Kill, give punishment
-                    _instigator.PartyPoints += GetPendingPunishment(_instigator, RTSGameModeCore.ERTSPunishmentTypes.Punishment_KilledAnAlly);
+                    _instigator.PartyPoints += GetPendingPunishment(_instigator, RTSGameMode.ERTSPunishmentTypes.Punishment_KilledAnAlly);
                 }
                 _instigator.npcMaster.CallEventKilledEnemy();
             }
@@ -521,12 +521,12 @@ namespace RTSCoreFramework
             UpdateGameModeStats();
         }
 
-        public bool AllyIsInCommand(AllyMemberCore _allyMember)
+        public bool AllyIsInCommand(AllyMember _allyMember)
         {
             return GetPartyManager(_allyMember).AllyIsCurrentPlayer(_allyMember);
         }
 
-        public bool AllyIsGenCommanderMember(AllyMemberCore _allyMember)
+        public bool AllyIsGenCommanderMember(AllyMember _allyMember)
         {
             return GeneralInCommand.AllyIsAPartyMember(_allyMember);
         }

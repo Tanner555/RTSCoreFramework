@@ -5,12 +5,12 @@ using UnityEngine.AI;
 
 namespace RTSCoreFramework
 {
-    public class AllyAIControllerCore : MonoBehaviour
+    public class AllyAIController : MonoBehaviour
     {
         #region Components
         protected NavMeshAgent myNavAgent;
-        protected AllyEventHandlerCore myEventHandler;
-        protected AllyMemberCore allyMember;
+        protected AllyEventHandler myEventHandler;
+        protected AllyMember allyMember;
         #endregion
 
         #region Properties
@@ -19,12 +19,12 @@ namespace RTSCoreFramework
             get { return RTSGameMaster.thisInstance; }
         }
 
-        protected RTSGameModeCore gamemode
+        protected RTSGameMode gamemode
         {
-            get { return RTSGameModeCore.thisInstance; }
+            get { return RTSGameMode.thisInstance; }
         }
 
-        public AllyMemberCore currentTargettedEnemy { get; protected set; }
+        public AllyMember currentTargettedEnemy { get; protected set; }
 
         protected virtual bool AllCompsAreValid
         {
@@ -55,11 +55,11 @@ namespace RTSCoreFramework
         #endregion
 
         #region Getters
-        public bool isEnemyFor(Transform _transform, out AllyMemberCore _ally)
+        public bool isEnemyFor(Transform _transform, out AllyMember _ally)
         {
             _ally = null;
-            if (_transform.root.GetComponent<AllyMemberCore>())
-                _ally = _transform.root.GetComponent<AllyMemberCore>();
+            if (_transform.root.GetComponent<AllyMember>())
+                _ally = _transform.root.GetComponent<AllyMember>();
 
             return _ally != null && allyMember.IsEnemyFor(_ally);
         }
@@ -72,7 +72,7 @@ namespace RTSCoreFramework
         #endregion
 
         #region Handlers
-        protected void HandleCommandAttackEnemy(AllyMemberCore enemy)
+        protected void HandleCommandAttackEnemy(AllyMember enemy)
         {
             currentTargettedEnemy = enemy;
         }
@@ -92,8 +92,8 @@ namespace RTSCoreFramework
         protected virtual void SetInitialReferences()
         {
             myNavAgent = GetComponent<NavMeshAgent>();
-            myEventHandler = GetComponent<AllyEventHandlerCore>();
-            allyMember = GetComponent<AllyMemberCore>();
+            myEventHandler = GetComponent<AllyEventHandler>();
+            allyMember = GetComponent<AllyMember>();
 
             if (!AllCompsAreValid)
             {

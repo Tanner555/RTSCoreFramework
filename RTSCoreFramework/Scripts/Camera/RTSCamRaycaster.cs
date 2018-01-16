@@ -32,9 +32,9 @@ namespace RTSCoreFramework
             get { return RTSGameMaster.thisInstance; }
         }
 
-        RTSGameModeCore gamemode
+        RTSGameMode gamemode
         {
-            get { return RTSGameModeCore.thisInstance; }
+            get { return RTSGameMode.thisInstance; }
         }
 
         public static RTSCamRaycaster thisInstance { get; protected set; }
@@ -65,7 +65,7 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
         private GameObject gObject, gObjectRoot = null;
         private GameObject gObjectLastFrame = null;
         private string hitTag = "";
-        private AllyMemberCore hitAlly = null;
+        private AllyMember hitAlly = null;
 
         //For event initialization checking
         bool hasStarted = false;
@@ -160,7 +160,7 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
 
         rtsHitType CheckAllyObject(GameObject gObjectRoot)
         {
-            hitAlly = gObjectRoot.GetComponent<AllyMemberCore>();
+            hitAlly = gObjectRoot.GetComponent<AllyMember>();
             if (hitAlly == null) return rtsHitType.Unknown;
             return gamemode.AllyIsGenCommanderMember(hitAlly) ?
                 rtsHitType.Ally : rtsHitType.Enemy;

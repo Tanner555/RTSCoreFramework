@@ -14,9 +14,9 @@ namespace RTSCoreFramework
             get { return RTSUiManager.thisInstance; }
         }
 
-        RTSGameModeCore gamemode
+        RTSGameMode gamemode
         {
-            get { return RTSGameModeCore.thisInstance; }
+            get { return RTSGameMode.thisInstance; }
         }
 
         RTSGameMaster gamemaster
@@ -53,7 +53,7 @@ namespace RTSCoreFramework
         //Sprinting Setup
         private bool isSprinting = false;
         //private AllyMoveSpeed setupMoveSpeed;
-        private AllyMemberCore setupSprintAlly = null;
+        private AllyMember setupSprintAlly = null;
         //UI is enabled
         private bool UiIsEnabled = false;
         #endregion

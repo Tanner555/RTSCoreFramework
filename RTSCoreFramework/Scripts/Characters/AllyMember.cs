@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace RTSCoreFramework
 {
-    public class AllyMemberCore : MonoBehaviour
+    public class AllyMember : MonoBehaviour
     {
         #region Fields
         //Inspector Set Variables
         [Header("Faction and General Settings")]
-        public RTSGameModeCore.EFactions AllyFaction;
-        public RTSGameModeCore.ECommanders GeneralCommander;
+        public RTSGameMode.EFactions AllyFaction;
+        public RTSGameMode.ECommanders GeneralCommander;
         [Header("Debug Menu")]
         public bool Debug_InfiniteHealth = false;
         public bool Debug_DoNotShoot = false;
@@ -28,12 +28,12 @@ namespace RTSCoreFramework
         #endregion
 
         #region Properties
-        public RTSGameModeCore gamemode { get { return RTSGameModeCore.thisInstance; } }
-        public AllyMemberCore DamageInstigator { get; protected set; }
+        public RTSGameMode gamemode { get { return RTSGameMode.thisInstance; } }
+        public AllyMember DamageInstigator { get; protected set; }
         //Faction Properties
-        public PartyManagerCore partyManager { get; protected set; }
-        public int FactionPlayerCount { get { return gamemode.GetAllyFactionPlayerCount((AllyMemberCore)this); } }
-        public int GeneralPlayerCount { get { return gamemode.GetAllyGeneralPlayerCount((AllyMemberCore)this); } }
+        public PartyManager partyManager { get; protected set; }
+        public int FactionPlayerCount { get { return gamemode.GetAllyFactionPlayerCount((AllyMember)this); } }
+        public int GeneralPlayerCount { get { return gamemode.GetAllyGeneralPlayerCount((AllyMember)this); } }
 
         public int PartyKills
         {
@@ -53,8 +53,8 @@ namespace RTSCoreFramework
         #endregion
 
         #region PlayerComponents
-        public AllyEventHandlerCore npcMaster { get; protected set; }
-        public AllyAIControllerCore aiController { get; protected set; }
+        public AllyEventHandler npcMaster { get; protected set; }
+        public AllyAIController aiController { get; protected set; }
         #endregion
 
         #region BooleanProperties
@@ -104,7 +104,7 @@ namespace RTSCoreFramework
         #endregion
 
         #region Handlers
-        void SetDamageInstigator(AllyMemberCore _instigator)
+        void SetDamageInstigator(AllyMember _instigator)
         {
             if (_instigator != null && _instigator != DamageInstigator)
             {
@@ -117,7 +117,7 @@ namespace RTSCoreFramework
             //if gamemode, find allies and exclude this ally
             if (gamemode != null && partyManager != null)
             {
-                AllyMemberCore _firstAlly = partyManager.FindPartyMembers(true, this);
+                AllyMember _firstAlly = partyManager.FindPartyMembers(true, this);
                 if (_firstAlly != null)
                 {
                     partyManager.SetAllyInCommand(_firstAlly);
@@ -144,7 +144,7 @@ namespace RTSCoreFramework
         #endregion
 
         #region Getters
-        public bool IsEnemyFor(AllyMemberCore player)
+        public bool IsEnemyFor(AllyMember player)
         {
             return player.AllyFaction != AllyFaction;
         }
@@ -154,8 +154,8 @@ namespace RTSCoreFramework
         #region Initialization
         protected void SetInitialReferences()
         {
-            npcMaster = GetComponent<AllyEventHandlerCore>();
-            aiController = GetComponent<AllyAIControllerCore>();
+            npcMaster = GetComponent<AllyEventHandler>();
+            aiController = GetComponent<AllyAIController>();
             TryFindingPartyManager();
 
             if (partyManager == null)
@@ -165,9 +165,9 @@ namespace RTSCoreFramework
             if (aiController == null)
                 Debug.LogError("No aiController on allymember!");
 
-            if (AllyFaction == RTSGameModeCore.EFactions.Faction_Default)
+            if (AllyFaction == RTSGameMode.EFactions.Faction_Default)
             {
-                AllyFaction = RTSGameModeCore.EFactions.Faction_Allies;
+                AllyFaction = RTSGameMode.EFactions.Faction_Allies;
             }
 
         }
@@ -184,7 +184,7 @@ namespace RTSCoreFramework
 
         public bool TryFindingPartyManager()
         {
-            foreach (var pManager in GameObject.FindObjectsOfType<PartyManagerCore>())
+            foreach (var pManager in GameObject.FindObjectsOfType<PartyManager>())
             {
                 if (pManager.GeneralCommander == GeneralCommander)
                     partyManager = pManager;

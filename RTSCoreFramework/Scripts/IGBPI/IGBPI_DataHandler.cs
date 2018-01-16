@@ -82,7 +82,7 @@ namespace RTSCoreFramework
 
         #region Properties
         public static IGBPI_DataHandler thisInstance { get; protected set; }
-        RTSGameModeCore gamemode { get { return RTSGameModeCore.thisInstance; } }
+        RTSGameMode gamemode { get { return RTSGameMode.thisInstance; } }
         #endregion
 
         #region ConditionDictionary
@@ -156,10 +156,10 @@ namespace RTSCoreFramework
         #region Structs
         public struct IGBPI_Condition
         {
-            public Func<AllyMemberCore, bool> action;
+            public Func<AllyMember, bool> action;
             public ConditionFilters filter;
 
-            public IGBPI_Condition(Func<AllyMemberCore, bool> action, ConditionFilters filter)
+            public IGBPI_Condition(Func<AllyMember, bool> action, ConditionFilters filter)
             {
                 this.action = action;
                 this.filter = filter;
@@ -168,10 +168,10 @@ namespace RTSCoreFramework
 
         public struct IGBPI_Action
         {
-            public Action<AllyMemberCore> action;
+            public Action<AllyMember> action;
             public ActionFilters filter;
 
-            public IGBPI_Action(Action<AllyMemberCore> action, ActionFilters filter)
+            public IGBPI_Action(Action<AllyMember> action, ActionFilters filter)
             {
                 this.action = action;
                 this.filter = filter;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RTSCoreFramework
 {
-    public class AllyEventHandlerCore : MonoBehaviour
+    public class AllyEventHandler : MonoBehaviour
     {
         #region DelegatesAndEvents
         public delegate void GeneralEventHandler();
@@ -52,7 +52,7 @@ namespace RTSCoreFramework
         public event RtsHitTypeAndRayCastHitHandler OnHoverLeave;
         public event RtsHitTypeAndRayCastHitHandler EventCommandMove;
 
-        public delegate void AllyHandler(AllyMemberCore ally);
+        public delegate void AllyHandler(AllyMember ally);
         public event AllyHandler EventCommandAttackEnemy;
 
         //public delegate void NavSpeedHandler(AllyMoveSpeed _navSpeed);
@@ -270,7 +270,7 @@ namespace RTSCoreFramework
             }
         }
 
-        public void CallEventCommandAttackEnemy(AllyMemberCore ally)
+        public void CallEventCommandAttackEnemy(AllyMember ally)
         {
             if (EventCommandAttackEnemy != null)
             {
