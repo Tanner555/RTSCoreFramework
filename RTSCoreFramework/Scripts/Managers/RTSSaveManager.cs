@@ -8,7 +8,7 @@ namespace RTSCoreFramework
     public class RTSSaveManager : MonoBehaviour
     {
         [SerializeField]
-        private IGBPI_Data IGBPIDataObject;
+        private IGBPIDataCore IGBPIDataObject;
         public static RTSSaveManager thisInstance { get; protected set; }
         IGBPI_DataHandler dataHandler { get { return IGBPI_DataHandler.thisInstance; } }
 

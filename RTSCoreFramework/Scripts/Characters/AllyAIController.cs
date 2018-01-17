@@ -37,20 +37,38 @@ namespace RTSCoreFramework
         #endregion
 
         #region UnityMessages
+        protected virtual void OnEnable()
+        {
+
+        }
+
         // Use this for initialization
         protected virtual void Start()
         {
             SetInitialReferences();
-            myEventHandler.EventCommandAttackEnemy += HandleCommandAttackEnemy;
-            myEventHandler.EventStopTargettingEnemy += HandleStopTargetting;
-            gamemaster.EventEnableCameraMovement += OnEnableCameraMovement;
+            SubToEvents();
+            StartServices();
+        }
+
+        protected virtual void Update()
+        {
+
+        }
+
+        protected virtual void LateUpdate()
+        {
+
         }
 
         protected virtual void OnDisable()
         {
-            myEventHandler.EventCommandAttackEnemy -= HandleCommandAttackEnemy;
-            myEventHandler.EventStopTargettingEnemy -= HandleStopTargetting;
-            gamemaster.EventEnableCameraMovement -= OnEnableCameraMovement;
+            UnSubFromEvents();
+            CancelServices();
+        }
+
+        protected virtual void OnDrawGizmos()
+        {
+
         }
         #endregion
 
@@ -72,12 +90,12 @@ namespace RTSCoreFramework
         #endregion
 
         #region Handlers
-        protected void HandleCommandAttackEnemy(AllyMember enemy)
+        protected virtual void HandleCommandAttackEnemy(AllyMember enemy)
         {
             currentTargettedEnemy = enemy;
         }
 
-        protected void HandleStopTargetting()
+        protected virtual void HandleStopTargetting()
         {
             currentTargettedEnemy = null;
         }
@@ -88,6 +106,31 @@ namespace RTSCoreFramework
             myEventHandler.CallOnTryAim(_enable);
         }
         #endregion
+
+        #region Initialization
+        protected virtual void SubToEvents()
+        {
+            myEventHandler.EventCommandAttackEnemy += HandleCommandAttackEnemy;
+            myEventHandler.EventStopTargettingEnemy += HandleStopTargetting;
+            gamemaster.EventEnableCameraMovement += OnEnableCameraMovement;
+        }
+
+        protected virtual void UnSubFromEvents()
+        {
+            myEventHandler.EventCommandAttackEnemy -= HandleCommandAttackEnemy;
+            myEventHandler.EventStopTargettingEnemy -= HandleStopTargetting;
+            gamemaster.EventEnableCameraMovement -= OnEnableCameraMovement;
+        }
+
+        protected virtual void StartServices()
+        {
+
+        }
+
+        protected virtual void CancelServices()
+        {
+            CancelInvoke();
+        }
 
         protected virtual void SetInitialReferences()
         {
@@ -100,5 +143,7 @@ namespace RTSCoreFramework
                 Debug.LogError("Not all comps are valid!");
             }
         }
+        #endregion
+
     }
 }

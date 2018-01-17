@@ -20,7 +20,6 @@ namespace RTSCoreFramework
         public event GeneralEventHandler EventInventoryChanged;
         public event GeneralEventHandler EventHandsEmpty;
         public event GeneralEventHandler EventAmmoChanged;
-        public event GeneralEventHandler EventToggleCover;
         public event GeneralEventHandler EventSwitchingFromCom;
         public event GeneralEventHandler EventPartySwitching;
         public event GeneralEventHandler EventSetAsCommander;
@@ -284,12 +283,5 @@ namespace RTSCoreFramework
         }
         #endregion
 
-        #region CommentedCode
-        //public void CallEventSetNavSpeed(AllyMoveSpeed _navSpeed)
-        //{
-        //    myMoveSpeed = _navSpeed;
-        //    if (EventSetNavSpeed != null) EventSetNavSpeed(_navSpeed);
-        //}
-        #endregion
     }
 }
