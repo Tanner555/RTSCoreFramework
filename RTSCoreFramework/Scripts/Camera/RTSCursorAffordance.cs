@@ -23,9 +23,10 @@ namespace RTSCoreFramework
         {
             gamemaster.OnMouseCursorChange -= OnLayerChanged;
             gamemaster.GameOverEvent -= HandleGameOver;
-            uimaster.EventIGBPIToggle -= HandleUIEnabled;
-            uimaster.EventInventoryUIToggle -= HandleUIEnabled;
-            uimaster.EventMenuToggle -= HandleUIEnabled;
+            uimaster.EventAnyUIToggle -= HandleUIEnabled;
+            //uimaster.EventIGBPIToggle -= HandleUIEnabled;
+            //uimaster.EventInventoryUIToggle -= HandleUIEnabled;
+            //uimaster.EventMenuToggle -= HandleUIEnabled;
         }
 
         // Use this for initialization
@@ -33,9 +34,10 @@ namespace RTSCoreFramework
         {
             gamemaster.OnMouseCursorChange += OnLayerChanged;
             gamemaster.GameOverEvent += HandleGameOver;
-            uimaster.EventIGBPIToggle += HandleUIEnabled;
-            uimaster.EventInventoryUIToggle += HandleUIEnabled;
-            uimaster.EventMenuToggle += HandleUIEnabled;
+            uimaster.EventAnyUIToggle += HandleUIEnabled;
+            //uimaster.EventIGBPIToggle += HandleUIEnabled;
+            //uimaster.EventInventoryUIToggle += HandleUIEnabled;
+            //uimaster.EventMenuToggle += HandleUIEnabled;
         }
 
         void OnLayerChanged(rtsHitType hitType, RaycastHit hit)

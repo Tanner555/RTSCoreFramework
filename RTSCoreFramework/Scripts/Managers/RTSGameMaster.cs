@@ -136,7 +136,7 @@ namespace RTSCoreFramework
                 gamemode.hasPrevHighAlly = false;
                 if (gamemode.prevHighAlly == null) return;
                 //if (OnHoverLeaveAlly != null) OnHoverLeaveAlly(gamemode.prevHighAlly);
-                gamemode.prevHighAlly.npcMaster.CallEventOnHoverLeave(hitType, hit);
+                gamemode.prevHighAlly.allyEventHandler.CallEventOnHoverLeave(hitType, hit);
             }
 
             GameObject hitObjectRoot = null;
@@ -152,7 +152,7 @@ namespace RTSCoreFramework
                     if (_ally == null) return;
                     gamemode.hasPrevHighAlly = true;
                     //if (OnHoverOverAlly != null) OnHoverOverAlly(_ally);
-                    _ally.npcMaster.CallEventOnHoverOver(hitType, hit);
+                    _ally.allyEventHandler.CallEventOnHoverOver(hitType, hit);
                     gamemode.prevHighAlly = _ally;
                     break;
                 case rtsHitType.Enemy:
@@ -160,7 +160,7 @@ namespace RTSCoreFramework
                     if (_enemy == null) return;
                     gamemode.hasPrevHighAlly = true;
                     //if (OnHoverOverAlly != null) OnHoverOverAlly(_enemy);
-                    _enemy.npcMaster.CallEventOnHoverOver(hitType, hit);
+                    _enemy.allyEventHandler.CallEventOnHoverOver(hitType, hit);
                     gamemode.prevHighAlly = _enemy;
                     break;
                 case rtsHitType.Cover:

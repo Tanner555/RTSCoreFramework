@@ -43,6 +43,7 @@ choiceNavigateLeft && choiceNavigateRight &&
 conditionButton && actionButton;
             }
         }
+        
         #endregion
 
         #region Fields
@@ -60,18 +61,8 @@ conditionButton && actionButton;
 
         #region UIGameObjects
         [Header("Main Ui GameObjects")]
-        public GameObject PauseMenuUi;
-        public GameObject InventoryUi;
         public GameObject IGBPIUi;
-        [Header("Health Canvas")]
-        public Text healthText;
-        [Header("Ammo Canvas")]
-        public GameObject AmmoPanel;
-        public Text currentAmmoText;
-        public Text carriedAmmoText;
-        [Header("HurtCanvas")]
-        public GameObject hurtCanvas;
-        private float secsTillHideHurtCanvas = 2;
+
         [Header("IGBPI Objects")]
         public GameObject UI_Panel_Prefab;
         public GameObject ButtonChoicePrefab;
@@ -117,57 +108,6 @@ conditionButton && actionButton;
         {
             UnsubEvents();
         }
-        #endregion
-
-        #region UiMethodCalls
-        public void SetHealthText(float _health)
-        {
-            healthText.text = System.Math.Round(_health, 2).ToString();
-        }
-
-        public void SetGunAmmoText(int _current, int _carried)
-        {
-            if (AmmoPanel.activeSelf)
-            {
-                currentAmmoText.text = _current.ToString();
-                carriedAmmoText.text = _carried.ToString();
-            }
-        }
-
-        public void EnableAmmoText()
-        {
-            AmmoPanel.SetActive(true);
-        }
-
-        public void DisableAmmoText()
-        {
-            AmmoPanel.SetActive(false);
-        }
-
-        ////HurtCanvas Methods
-        //public void TurnOnHurtEffect(int damage)
-        //{
-        //    if (hurtCanvas != null)
-        //    {
-        //        if (damage >= 1)
-        //        {
-        //            StopAllCoroutines();
-        //            hurtCanvas.SetActive(true);
-        //            StartCoroutine(ResetHurtCanvas());
-        //        }
-        //    }
-        //}
-
-        //IEnumerator ResetHurtCanvas()
-        //{
-        //    yield return new WaitForSeconds(secsTillHideHurtCanvas);
-        //    HideHurtCanvas();
-        //}
-
-        //void HideHurtCanvas()
-        //{
-        //    hurtCanvas.SetActive(false);
-        //}
         #endregion
 
         #region ButtonCalls
@@ -251,14 +191,14 @@ conditionButton && actionButton;
         //Toggles Ui GameObjects
         void TogglePauseMenuUi(bool enable)
         {
-            if (PauseMenuUi != null)
-                PauseMenuUi.SetActive(enable);
+            //if (PauseMenuUi != null)
+            //    PauseMenuUi.SetActive(enable);
         }
 
         void ToggleInventoryUi(bool enable)
         {
-            if (InventoryUi != null)
-                InventoryUi.SetActive(enable);
+            //if (InventoryUi != null)
+            //    InventoryUi.SetActive(enable);
         }
 
         void ToggleIGBPIUi(bool enable)
@@ -627,7 +567,7 @@ conditionButton && actionButton;
         void SubToEvents()
         {
             uiMaster.EventMenuToggle += TogglePauseMenuUi;
-            uiMaster.EventInventoryUIToggle += ToggleInventoryUi;
+            //uiMaster.EventInventoryUIToggle += ToggleInventoryUi;
             uiMaster.EventIGBPIToggle += ToggleIGBPIUi;
             uiMaster.EventAddDropdownInstance += AddDropdownInstance;
             uiMaster.EventRemoveDropdownInstance += DeregisterDropdownMenu;
@@ -639,7 +579,7 @@ conditionButton && actionButton;
         void UnsubEvents()
         {
             uiMaster.EventMenuToggle -= TogglePauseMenuUi;
-            uiMaster.EventInventoryUIToggle -= ToggleInventoryUi;
+            //uiMaster.EventInventoryUIToggle -= ToggleInventoryUi;
             uiMaster.EventIGBPIToggle -= ToggleIGBPIUi;
             uiMaster.EventAddDropdownInstance -= AddDropdownInstance;
             uiMaster.EventRemoveDropdownInstance -= DeregisterDropdownMenu;

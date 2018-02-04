@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace RTSCoreFramework
@@ -51,9 +50,12 @@ namespace RTSCoreFramework
             if (!isIGBPISavingPermitted()) return;
             IGBPIDataObject.IGBPIPanelData.Clear();
             IGBPIDataObject.IGBPIPanelData = ValidateIGBPIValues(_values);
-
-            EditorUtility.SetDirty(IGBPIDataObject);
-            AssetDatabase.SaveAssets();
+            //TODO: RTSPrototype Find Another Way to Save IGBPI Values
+            //Serializable Objects cannot be used in builds
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(IGBPIDataObject);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
 
         public IEnumerator YieldSave_IGBPI_Values(List<IGBPIPanelValue> _values)

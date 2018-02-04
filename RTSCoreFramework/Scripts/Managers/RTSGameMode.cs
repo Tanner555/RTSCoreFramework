@@ -132,6 +132,10 @@ namespace RTSCoreFramework
 
         #endregion
 
+        #region Tags
+        public string AllyTag { get { return "Ally"; } }
+        #endregion
+
         #region UnityMessages
         protected virtual void OnEnable()
         {
@@ -514,7 +518,7 @@ namespace RTSCoreFramework
                     //Friendly Kill, give punishment
                     _instigator.PartyPoints += GetPendingPunishment(_instigator, RTSGameMode.ERTSPunishmentTypes.Punishment_KilledAnAlly);
                 }
-                _instigator.npcMaster.CallEventKilledEnemy();
+                _instigator.allyEventHandler.CallEventKilledEnemy();
             }
 
             //Update GameModeStats in the end

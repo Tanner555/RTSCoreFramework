@@ -69,6 +69,9 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
 
         //For event initialization checking
         bool hasStarted = false;
+
+        //Call OnMouseCursorChange Every Iteration also
+        //RTSTimer MyCursorChangeTimer = new RTSTimer(0.2f);
         #endregion
 
         #region UnityMessages
@@ -85,6 +88,8 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
             {
                 gamemaster.GameOverEvent += DestroyRaycaster;
             }
+
+            //MyCursorChangeTimer.StartTimer();
         }
 
         private void OnDisable()
@@ -123,8 +128,13 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
                 gObject = rayHit.collider.gameObject;
                 gObjectRoot = rayHit.collider.gameObject.transform.root.gameObject;
                 rayHitType = GetHitType();
-                if (rayHitType != rayHitTypeLastFrame)
+                //if (rayHitType != rayHitTypeLastFrame || 
+                //    MyCursorChangeTimer.IsTimerFinished())
+                if(rayHitType != rayHitTypeLastFrame)
                 {
+                    //Timer created issues, retracted for now
+                    //Update Cursor Change Every So Often To Resolve Cursor Bugs
+                    //MyCursorChangeTimer.StartTimer();
                     //Layer has Changed
                     gamemaster.CallEventOnMouseCursorChange(rayHitType, rayHit);
                 }
@@ -186,7 +196,7 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
                 Destroy(this);
                 return true;
             }
-            if (uimaster.isUiAlreadyInUse) return true;
+            if (uimaster.isUiAlreadyInUse) return true; 
             if (noMoreChecking) return true;
             // Check if pointer is over an interactable UI element
             if (EventSystem.current.IsPointerOverGameObject()) return true;

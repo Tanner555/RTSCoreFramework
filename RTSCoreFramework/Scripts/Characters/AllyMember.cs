@@ -15,6 +15,12 @@ namespace RTSCoreFramework
         public bool Debug_InfiniteHealth = false;
         public bool Debug_DoNotShoot = false;
 
+        [Header("Camera Follow Transforms")]
+        [SerializeField]
+        protected Transform chestTransform;
+        [SerializeField]
+        protected Transform headTransform;
+
         //Gun Properties, Can Delete in the Future
         protected float lowAmmoThreshold = 14.0f;
         protected float firerate = 0.3f;
@@ -34,6 +40,14 @@ namespace RTSCoreFramework
         public PartyManager partyManager { get; protected set; }
         public int FactionPlayerCount { get { return gamemode.GetAllyFactionPlayerCount((AllyMember)this); } }
         public int GeneralPlayerCount { get { return gamemode.GetAllyGeneralPlayerCount((AllyMember)this); } }
+        //Camera Follow Transforms
+        public Transform ChestTransform { get { return chestTransform; } }
+        public Transform HeadTransform { get { return headTransform; } }
+
+        public virtual AllyMember enemyTarget
+        {
+            get { return aiController.currentTargettedEnemy; }
+        }
 
         public int PartyKills
         {
@@ -50,27 +64,68 @@ namespace RTSCoreFramework
             get { return partyManager.PartyDeaths; }
             set { partyManager.PartyDeaths = value; }
         }
+
+        //Health Properties
+        public virtual int AllyHealth
+        {
+            get { return _allyHealth; }
+            protected set { _allyHealth = value; }
+        }
+        private int _allyHealth = 100;
+        public virtual int AllyMaxHealth
+        {
+            get { return _allyMaxHealth; }
+            protected set { _allyMaxHealth = value; }
+        }
+        private int _allyMaxHealth = 100;
+
+        public virtual int AllyMinHealth
+        {
+            get { return _allyMinHealth; }
+        }
+        private int _allyMinHealth = 0;
+
+        public virtual bool IsAlive
+        {
+            get { return AllyHealth > AllyMinHealth; }
+        }
+
+        //Ammo Properties
+        public virtual int CurrentEquipedAmmo
+        {
+            get { return 0; }
+        }
+
+        //AI Props
+        public float FollowDistance { get { return aiController.followDistance; } }
+
         #endregion
 
         #region PlayerComponents
-        public AllyEventHandler npcMaster { get; protected set; }
+        protected Rigidbody myRigidbody
+        {
+            get
+            {
+                if (_myRigidbody == null)
+                    _myRigidbody = GetComponent<Rigidbody>();
+
+                return _myRigidbody;
+            }
+        }
+        Rigidbody _myRigidbody = null;
+        public AllyEventHandler allyEventHandler { get; protected set; }
         public AllyAIController aiController { get; protected set; }
         #endregion
 
         #region BooleanProperties
-        public bool AllComponentsAreValid
+        protected virtual bool AllComponentsAreValid
         {
-            get { return npcMaster && aiController; }
+            get { return allyEventHandler && aiController; }
         }
 
-        //public bool IsAlive
-        //{
-        //    get { return npcHealth.npcHealth > 0; }
-        //}
-
-        public bool isCurrentPlayer { get { return partyManager ? partyManager.AllyIsCurrentPlayer(this) : false; } }
-        public bool pManIsGeneralCommander { get { return partyManager.isCurrentPlayerCommander; } }
-        //public bool IsCarryingWeapon { get { return AllComponentsAreValid && pWeaponHandler.CurrentWeapon; } }
+        public bool bIsCurrentPlayer { get { return partyManager ? partyManager.AllyIsCurrentPlayer(this) : false; } }
+        public bool bIsGeneralInCommand { get { return partyManager ? partyManager.AllyIsGeneralInCommand(this) : false; } }
+        public bool bIsInGeneralCommanderParty { get { return partyManager.isCurrentPlayerCommander; } }
         #endregion
 
         #region UnityMessages
@@ -104,7 +159,27 @@ namespace RTSCoreFramework
         #endregion
 
         #region Handlers
-        void SetDamageInstigator(AllyMember _instigator)
+        public virtual void AllyTakeDamage(int amount, Vector3 position, Vector3 force, AllyMember _instigator, GameObject hitGameObject)
+        {
+            SetDamageInstigator(_instigator);
+            if (IsAlive == false) return;
+            if (AllyHealth > AllyMinHealth)
+            {
+                AllyHealth = Mathf.Max(AllyMinHealth, AllyHealth - amount);
+            }
+            // Apply a force to the hit rigidbody if the force is greater than 0.
+            if (myRigidbody != null && !myRigidbody.isKinematic && force.sqrMagnitude > 0)
+            {
+                myRigidbody.AddForceAtPosition(force, position);
+            }
+
+            if (IsAlive == false)
+            {
+                allyEventHandler.CallEventAllyDied();
+            }
+        }
+
+        protected virtual void SetDamageInstigator(AllyMember _instigator)
         {
             if (_instigator != null && _instigator != DamageInstigator)
             {
@@ -112,7 +187,7 @@ namespace RTSCoreFramework
             }
         }
 
-        public void AllyOnDeath()
+        public virtual void AllyOnDeath()
         {
             //if gamemode, find allies and exclude this ally
             if (gamemode != null && partyManager != null)
@@ -149,19 +224,23 @@ namespace RTSCoreFramework
             return player.AllyFaction != AllyFaction;
         }
 
+        public virtual int GetDamageRate()
+        {
+            return 1;
+        }
         #endregion
 
         #region Initialization
-        protected void SetInitialReferences()
+        protected virtual void SetInitialReferences()
         {
-            npcMaster = GetComponent<AllyEventHandler>();
+            allyEventHandler = GetComponent<AllyEventHandler>();
             aiController = GetComponent<AllyAIController>();
             TryFindingPartyManager();
 
             if (partyManager == null)
                 Debug.LogError("No partymanager on allymember!");
-            if (npcMaster == null)
-                Debug.LogError("No npcmaster on allymember!");
+            if (allyEventHandler == null)
+                Debug.LogError("No eventHandler on allymember!");
             if (aiController == null)
                 Debug.LogError("No aiController on allymember!");
 
@@ -174,12 +253,12 @@ namespace RTSCoreFramework
 
         protected void SubToEvents()
         {
-            npcMaster.EventNpcDie += AllyOnDeath;
+            allyEventHandler.EventAllyDied += AllyOnDeath;
         }
 
         protected void UnSubFromEvents()
         {
-            npcMaster.EventNpcDie -= AllyOnDeath;
+            allyEventHandler.EventAllyDied -= AllyOnDeath;
         }
 
         public bool TryFindingPartyManager()

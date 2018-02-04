@@ -159,7 +159,7 @@ namespace RTSCoreFramework
                 {
                     //TODO: RTSPrototype Fix null exception from foreach loop, this should not happen
                     if (_ally != null)
-                        _ally.npcMaster.CallEventPartySwitching();
+                        _ally.allyEventHandler.CallEventPartySwitching();
                 }
                 gamemaster.CallOnAllySwitch((PartyManager)this, _setToCommand, AllyInCommand);
                 if (AllyInCommand != null)
@@ -210,6 +210,10 @@ namespace RTSCoreFramework
         {
             return isCurrentPlayerCommander && _ally == AllyInCommand;
         }
+        public bool AllyIsGeneralInCommand(AllyMember _ally)
+        {
+            return _ally == AllyInCommand;
+        }
         public bool AllyIsAPartyMember(AllyMember _ally)
         {
             return PartyMembers.Contains(_ally);
@@ -250,12 +254,12 @@ namespace RTSCoreFramework
                 case rtsHitType.Enemy:
                     GameObject _root = hit.collider.gameObject.transform.root.gameObject;
                     AllyMember _enemy = _root.GetComponent<AllyMember>();
-                    AllyInCommand.npcMaster.CallEventCommandAttackEnemy(_enemy);
+                    AllyInCommand.allyEventHandler.CallEventPlayerCommandAttackEnemy(_enemy);
                     break;
                 case rtsHitType.Cover:
                     break;
                 case rtsHitType.Walkable:
-                    AllyInCommand.npcMaster.CallEventCommandMove(hitType, hit);
+                    AllyInCommand.allyEventHandler.CallEventCommandMove(hitType, hit);
                     break;
                 case rtsHitType.Unwalkable:
                     break;

@@ -10,7 +10,7 @@ namespace RTSCoreFramework
         public delegate void GeneralEventHandler();
         public delegate void MenuToggleHandler(bool enable);
         public event MenuToggleHandler EventMenuToggle;
-        public event MenuToggleHandler EventInventoryUIToggle;
+        //public event MenuToggleHandler EventInventoryUIToggle;
         public event MenuToggleHandler EventIGBPIToggle;
         public event MenuToggleHandler EventAnyUIToggle;
         //IGBPI Events
@@ -40,20 +40,13 @@ namespace RTSCoreFramework
         public RTSCamRaycaster rayCaster { get { return RTSCamRaycaster.thisInstance; } }
 
         //For Ui Conflict Checking
-        public bool isUiAlreadyInUse
+        public virtual bool isUiAlreadyInUse
         {
-            get { return isInventoryUIOn || isPauseMenuOn || isIGBPIOn; }
+            get { return isPauseMenuOn || isIGBPIOn; }
         }
-
-        public bool isInventoryUIOn
-        {
-            get { return uiManager.InventoryUi.activeSelf; }
-        }
-        public bool isPauseMenuOn
-        {
-            get { return uiManager.PauseMenuUi.activeSelf; }
-        }
-        public bool isIGBPIOn
+        //Override Inside Wrapper Class
+        public virtual bool isPauseMenuOn { get { return false; } }
+        public virtual bool isIGBPIOn
         {
             get { return uiManager.IGBPIUi.activeSelf; }
         }
@@ -70,37 +63,34 @@ namespace RTSCoreFramework
             if (thisInstance != null)
                 Debug.LogWarning("More than one instance of UIManagerMaster in scene.");
             else
+            {
                 thisInstance = this;
+            }
         }
         #endregion
 
         #region EventCalls
-        public void CallEventMenuToggle()
+        public virtual void CallEventMenuToggle()
         {
-            if (EventMenuToggle != null /*&& !isUiAlreadyInUse*/)
-            {
-                CallEventAnyUIToggle(!isPauseMenuOn);
-                EventMenuToggle(!isPauseMenuOn);
-                EnableRayCaster(!isPauseMenuOn);
-            }
+            //If Ui Item isn't being used or Pause Menu is turned on
+            if (isUiAlreadyInUse == false || isPauseMenuOn)
+                WaitToCallEventMenuToggle();
         }
 
-        public void CallEventInventoryUIToggle()
+        private void WaitToCallEventMenuToggle()
         {
-            if (EventInventoryUIToggle != null /*&& !isUiAlreadyInUse*/)
-            {
-                CallEventAnyUIToggle(!isInventoryUIOn);
-                EventInventoryUIToggle(!isInventoryUIOn);
-                EnableRayCaster(!isInventoryUIOn);
-            }
+            CallEventAnyUIToggle(isPauseMenuOn);
+            if (EventMenuToggle != null) EventMenuToggle(isPauseMenuOn);
+            EnableRayCaster(!isPauseMenuOn);
         }
 
         public void CallEventIGBPIToggle()
         {
-            if (EventIGBPIToggle != null /*&& !isUiAlreadyInUse*/)
+            //If Ui Item isn't being used or IGBPI Menu is turned on
+            if (isUiAlreadyInUse == false || isIGBPIOn)
             {
                 CallEventAnyUIToggle(!isIGBPIOn);
-                EventIGBPIToggle(!isIGBPIOn);
+                if (EventIGBPIToggle != null) EventIGBPIToggle(!isIGBPIOn);
                 EnableRayCaster(!isIGBPIOn);
             }
         }

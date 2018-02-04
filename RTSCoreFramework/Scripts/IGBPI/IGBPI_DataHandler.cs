@@ -16,7 +16,7 @@ namespace RTSCoreFramework
         }
         public enum ActionFilters
         {
-            Movement, Weapon, AI
+            Movement, Weapon, AI, Debugging
         }
 
         public ConditionFilters conditionFilter { get; protected set; }
@@ -88,39 +88,47 @@ namespace RTSCoreFramework
         #region ConditionDictionary
         public Dictionary<string, IGBPI_Condition> IGBPI_Conditions = new Dictionary<string, IGBPI_Condition>()
         {
-            //{"Self: Any", new IGBPI_Condition((_ally) => true, ConditionFilters.Standard) },
-            //{"Self: Health < 100", new IGBPI_Condition((_ally) =>
-            //{ return _ally.AllyHealth < 100; }, ConditionFilters.AllyHealth) },
-            //{"Self: Health < 90", new IGBPI_Condition((_ally) =>
-            //{ return _ally.AllyHealth < 90; }, ConditionFilters.AllyHealth) },
-            //{"Self: Health < 75", new IGBPI_Condition((_ally) =>
-            //{ return _ally.AllyHealth < 75; }, ConditionFilters.AllyHealth) },
-            //{"Self: Health < 50", new IGBPI_Condition((_ally) =>
-            //{ return _ally.AllyHealth < 50; }, ConditionFilters.AllyHealth) },
-            //{"Self: Health < 25", new IGBPI_Condition((_ally) =>
-            //{ return _ally.AllyHealth < 25; }, ConditionFilters.AllyHealth) },
-            //{"Self: Health < 10", new IGBPI_Condition((_ally) =>
-            //{ return _ally.AllyHealth < 10; }, ConditionFilters.AllyHealth) },
-            //{"Self: CurAmmo < 10", new IGBPI_Condition((_ally) =>
-            //{ return _ally.CurrentAmmo < 10; }, ConditionFilters.AllyGun) },
-            //{"Self: CurAmmo = 0", new IGBPI_Condition((_ally) =>
-            //{ return _ally.CurrentAmmo == 0; }, ConditionFilters.AllyGun) },
-            //{"Self: CurAmmo > 0", new IGBPI_Condition((_ally) =>
-            //{ return _ally.CurrentAmmo > 0; }, ConditionFilters.AllyGun) }
+            {"Self: Any", new IGBPI_Condition((_ally) => true, ConditionFilters.Standard) },
+            {"Leader: Not Within Follow Distance", new IGBPI_Condition((_ally) => 
+            { return !_ally.aiController.IsWithinFollowingDistance(); }, ConditionFilters.Standard) },
+            {"Leader: Within Follow Distance", new IGBPI_Condition((_ally) =>
+            { return _ally.aiController.IsWithinFollowingDistance(); }, ConditionFilters.Standard) },
+            {"Self: Health < 100", new IGBPI_Condition((_ally) =>
+            { return _ally.AllyHealth < 100; }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 90", new IGBPI_Condition((_ally) =>
+            { return _ally.AllyHealth < 90; }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 75", new IGBPI_Condition((_ally) =>
+            { return _ally.AllyHealth < 75; }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 50", new IGBPI_Condition((_ally) =>
+            { return _ally.AllyHealth < 50; }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 25", new IGBPI_Condition((_ally) =>
+            { return _ally.AllyHealth < 25; }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 10", new IGBPI_Condition((_ally) =>
+            { return _ally.AllyHealth < 10; }, ConditionFilters.AllyHealth) },
+            {"Self: CurAmmo < 10", new IGBPI_Condition((_ally) =>
+            { return _ally.CurrentEquipedAmmo < 10; }, ConditionFilters.AllyGun) },
+            {"Self: CurAmmo = 0", new IGBPI_Condition((_ally) =>
+            { return _ally.CurrentEquipedAmmo == 0; }, ConditionFilters.AllyGun) },
+            {"Self: CurAmmo > 0", new IGBPI_Condition((_ally) =>
+            { return _ally.CurrentEquipedAmmo > 0; }, ConditionFilters.AllyGun) }
         };
         #endregion
 
         #region ActionDictionary
         public Dictionary<string, IGBPI_Action> IGBPI_Actions = new Dictionary<string, IGBPI_Action>()
         {
-            //{"Self: Attack Targetted Enemy", new IGBPI_Action((_ally) =>
-            //{ _ally.aiController.StartEngage(); }, ActionFilters.AI) },
-            //{"Self: Attack Nearest Enemy", new IGBPI_Action((_ally) =>
-            //{ _ally.aiController.Tactics_AttackClosestEnemy(); }, ActionFilters.AI) },
-            //{"Self: SwitchToNextWeapon", new IGBPI_Action((_ally) =>
-            //{ _ally.pEventHandler.SetNextWeapon.Try(); }, ActionFilters.Weapon) },
-            //{"Self: SwitchToPrevWeapon", new IGBPI_Action((_ally) =>
-            //{ _ally.pEventHandler.SetPrevWeapon.Try(); }, ActionFilters.Weapon) }
+            {"Self: Attack Targetted Enemy", new IGBPI_Action((_ally) =>
+            { _ally.aiController.AttackTargettedEnemy(); }, ActionFilters.AI) },
+            {"Self: Attack Nearest Enemy", new IGBPI_Action((_ally) =>
+            { _ally.aiController.Tactics_AttackClosestEnemy(); }, ActionFilters.AI) },
+            {"Self: SwitchToNextWeapon", new IGBPI_Action((_ally) =>
+            { _ally.allyEventHandler.CallOnSwitchToNextItem(); }, ActionFilters.Weapon) },
+            {"Self: SwitchToPrevWeapon", new IGBPI_Action((_ally) =>
+            { _ally.allyEventHandler.CallOnSwitchToPrevItem(); }, ActionFilters.Weapon) },
+            {"Self: FollowLeader", new IGBPI_Action((_ally) =>
+            { _ally.aiController.Tactics_MoveToLeader(); }, ActionFilters.Movement) },
+            {"Debug: Log True Message", new IGBPI_Action((_ally) => 
+            Debug.Log("Condition is true, called from: " + _ally), ActionFilters.Debugging) }
         };
         #endregion
 

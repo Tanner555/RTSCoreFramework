@@ -82,8 +82,8 @@ namespace RTSCoreFramework
         {
             if (Input.GetKeyDown(KeyCode.Escape))
                 CallMenuToggle();
-            if (Input.GetKeyDown(KeyCode.I))
-                CallInventoryToggle();
+            //if (Input.GetKeyDown(KeyCode.I))
+            //    CallInventoryToggle();
             if (Input.GetKeyDown(KeyCode.B))
                 CallIGBPIToggle();
             if (UiIsEnabled) return;
@@ -101,6 +101,8 @@ namespace RTSCoreFramework
                 CallTryReload();
             if (Input.GetKeyDown(KeyCode.Space))
                 CallTryFire();
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                CallSprintToggle();
 
             //if (Input.GetKey(KeyCode.LeftShift))
             //    SprintingSetup();
@@ -298,50 +300,16 @@ namespace RTSCoreFramework
 
         #region InputCalls
         void CallMenuToggle() { uiMaster.CallEventMenuToggle(); }
-        void CallInventoryToggle() { uiMaster.CallEventInventoryUIToggle(); }
+        //void CallInventoryToggle() { uiMaster.CallEventInventoryUIToggle(); }
         void CallIGBPIToggle() { uiMaster.CallEventIGBPIToggle(); }
         void CallPossessAllyAdd() { gamemode.GeneralInCommand.PossessAllyAdd(); }
         void CallPossessAllySubtract() { gamemode.GeneralInCommand.PossessAllySubtract(); }
-        //TPC Events
-        void CallSelectPrevWeapon() { gamemode.GeneralInCommand.AllyInCommand.npcMaster.CallOnSwitchToPrevItem(); }
-        void CallSelectNextWeapon() { gamemode.GeneralInCommand.AllyInCommand.npcMaster.CallOnSwitchToNextItem(); }
-        void CallTryFire() { gamemode.GeneralInCommand.AllyInCommand.npcMaster.CallOnTryFire(); }
-        void CallTryReload() { gamemode.GeneralInCommand.AllyInCommand.npcMaster.CallOnTryReload(); }
-        void CallCoverToggle() { gamemode.GeneralInCommand.AllyInCommand.npcMaster.CallOnTryCrouch(); }
-        //void CallSelectNextWeapon() { gamemode.GeneralInCommand.AllyInCommand.pEventHandler.SetNextWeapon.Try(); }
-        //void CallSelectPrevWeapon() { gamemode.GeneralInCommand.AllyInCommand.pEventHandler.SetPrevWeapon.Try(); }
-
-        //void SprintingSetup()
-        //{
-        //    if (isSprinting == false)
-        //    {
-        //        isSprinting = true;
-        //        setupSprintAlly = gamemode.GeneralInCommand.AllyInCommand;
-        //        var _npc = setupSprintAlly.npcMaster;
-        //        setupMoveSpeed = _npc.myMoveSpeed;
-        //        _npc.InputSprintResponse(true, setupMoveSpeed);
-        //        _npc.CallEventSetNavSpeed(AllyMoveSpeed.sprinting);
-        //    }
-        //}
-        //void EndSprintingSetup()
-        //{
-        //    if (isSprinting == true)
-        //    {
-        //        isSprinting = false;
-        //        var _curAlly = gamemode.GeneralInCommand.AllyInCommand;
-        //        if (_curAlly == setupSprintAlly)
-        //        {
-        //            var _npc = _curAlly.npcMaster;
-        //            var _speed = _npc.myMoveSpeed;
-        //            _npc.InputSprintResponse(false, _speed);
-        //            if (_speed == AllyMoveSpeed.sprinting)
-        //            {
-        //                _npc.CallEventSetNavSpeed(setupMoveSpeed);
-        //            }
-        //        }
-        //        setupSprintAlly = null;
-        //    }
-        //}
+        void CallSelectPrevWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToPrevItem(); }
+        void CallSelectNextWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToNextItem(); }
+        void CallTryFire() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryFire(); }
+        void CallTryReload() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryReload(); }
+        void CallCoverToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryCrouch(); }
+        void CallSprintToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallEventToggleIsSprinting(); }
 
         #region Testing JobQueues
         //List<GameObject> TestGObjects;

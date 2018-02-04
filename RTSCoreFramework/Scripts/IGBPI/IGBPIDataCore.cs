@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RTSCoreFramework
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(menuName = "RTSPrototype/IGBPIData")]
     public class IGBPIDataCore : ScriptableObject
     {
         public List<IGBPIPanelValue> IGBPIPanelData = new List<IGBPIPanelValue>();

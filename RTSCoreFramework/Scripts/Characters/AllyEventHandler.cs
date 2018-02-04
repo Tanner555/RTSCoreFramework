@@ -6,25 +6,41 @@ namespace RTSCoreFramework
 {
     public class AllyEventHandler : MonoBehaviour
     {
+        #region FieldsAndProps
+        public bool isSprinting { get; protected set; }
+        public bool bIsTacticsEnabled { get; protected set; }
+        //Is moving through nav mesh agent, regardless of
+        //whether it's ai or a command
+        public bool bIsNavMoving { get { return bIsCommandMoving || bIsAIMoving; } }
+        public bool bIsCommandMoving { get; protected set; }
+        public bool bIsAIMoving { get; protected set; }
+        public bool bIsFreeMoving { get; protected set; }
+        public bool bIsCommandAttacking { get; protected set; }
+        public bool bIsAiAttacking { get; protected set; }
+        public bool bIsAimingToShoot { get; protected set; }
+        public bool bCanEnableAITactics
+        {
+            get { return (bIsCommandMoving || 
+                    bIsFreeMoving) == false && 
+                    bIsCommandAttacking == false; }
+        }
+        
+        #endregion
+
         #region DelegatesAndEvents
         public delegate void GeneralEventHandler();
         public delegate void GeneralOneBoolHandler(bool _enable);
-        public event GeneralEventHandler EventNpcDie;
-        public event GeneralEventHandler EventNpcLowHealth;
-        public event GeneralEventHandler EventNpcHealthRecovered;
-        public event GeneralEventHandler EventNpcWalkAnim;
-        public event GeneralEventHandler EventNpcStruckAnim;
-        public event GeneralEventHandler EventNpcAttackAnim;
-        public event GeneralEventHandler EventNpcRecoveredAnim;
-        public event GeneralEventHandler EventNpcIdleAnim;
-        public event GeneralEventHandler EventInventoryChanged;
-        public event GeneralEventHandler EventHandsEmpty;
-        public event GeneralEventHandler EventAmmoChanged;
+        public event GeneralEventHandler EventAllyDied;
         public event GeneralEventHandler EventSwitchingFromCom;
         public event GeneralEventHandler EventPartySwitching;
         public event GeneralEventHandler EventSetAsCommander;
         public event GeneralEventHandler EventKilledEnemy;
         public event GeneralEventHandler EventStopTargettingEnemy;
+        public event GeneralEventHandler EventFinishedMoving;
+        public event GeneralEventHandler EventToggleIsSprinting;
+        public event GeneralOneBoolHandler EventToggleAllyTactics;
+        public event GeneralOneBoolHandler EventTogglebIsFreeMoving;
+        public event GeneralOneBoolHandler EventToggleIsShooting;
         //Opsive TPC Events
         public event GeneralEventHandler OnSwitchToPrevItem;
         public event GeneralEventHandler OnSwitchToNextItem;
@@ -33,35 +49,27 @@ namespace RTSCoreFramework
         public event GeneralEventHandler OnTryCrouch;
         public event GeneralOneBoolHandler OnTryAim;
 
-        //public delegate void AmmoChangeEventHandler(Gun_Master gun, string ammoType, int currentAmmo, int carriedAmmo);
-        //public event AmmoChangeEventHandler EventAmmoChanged;
-
-        public delegate void HealthEventHandler(float health);
-        public event HealthEventHandler EventNpcDeductHealth;
-        public event HealthEventHandler EventNpcIncreaseHealth;
-
-        public delegate void AmmoPickupEventHandler(string ammoName, int quantity);
-        public event AmmoPickupEventHandler EventPickedUpAmmo;
-
-        public delegate void NPCRelationsChangeEventHandler();
-        public event NPCRelationsChangeEventHandler EventNPCRelationsChange;
-
         public delegate void RtsHitTypeAndRayCastHitHandler(rtsHitType hitType, RaycastHit hit);
         public event RtsHitTypeAndRayCastHitHandler OnHoverOver;
         public event RtsHitTypeAndRayCastHitHandler OnHoverLeave;
-        public event RtsHitTypeAndRayCastHitHandler EventCommandMove;
+
+        public delegate void GeneralVector3Handler(Vector3 _point);
+        public event GeneralVector3Handler EventCommandMove;
 
         public delegate void AllyHandler(AllyMember ally);
         public event AllyHandler EventCommandAttackEnemy;
 
-        //public delegate void NavSpeedHandler(AllyMoveSpeed _navSpeed);
-        //public event NavSpeedHandler EventSetNavSpeed;
         #endregion
 
         #region UnityMessages
         protected virtual void Awake()
         {
-
+            isSprinting = true;
+            bIsTacticsEnabled = false;
+            bIsAimingToShoot = false;
+            bIsFreeMoving = false;
+            bIsCommandAttacking = false;
+            bIsAiAttacking = false;
         }
 
         protected virtual void OnDisable()
@@ -71,74 +79,41 @@ namespace RTSCoreFramework
         #endregion
 
         #region EventCalls
-        public void CallEventNpcDie()
+        public virtual void CallEventAllyDied()
         {
-            if (EventNpcDie != null)
+            if (EventAllyDied != null)
             {
-                EventNpcDie();
+                EventAllyDied();
                 this.enabled = false;
             }
         }
 
-        public void CallEventNpcLowHealth()
+        public void CallEventToggleIsShooting(bool _enable)
         {
-            if (EventNpcLowHealth != null)
+            bIsAimingToShoot = _enable;
+            if (EventToggleIsShooting != null)
             {
-                EventNpcLowHealth();
+                EventToggleIsShooting(_enable);
             }
         }
 
-        public void CallEventNpcHealthRecovered()
+        public void CallEventToggleIsSprinting()
         {
-            if (EventNpcHealthRecovered != null)
-            {
-                EventNpcHealthRecovered();
-            }
+            isSprinting = !isSprinting;
+            if (EventToggleIsSprinting != null) EventToggleIsSprinting();
         }
 
-        public void CallEventNpcWalkAnim()
+        public void CallEventFinishedMoving()
         {
-            if (EventNpcWalkAnim != null)
+            bIsCommandMoving = false;
+            bIsAIMoving = false;
+            if (bCanEnableAITactics)
             {
-                EventNpcWalkAnim();
-            }
+                CallEventToggleAllyTactics(true);
+            }          
+            if (EventFinishedMoving != null) EventFinishedMoving();
         }
 
-        public void CallEventNpcStruckAnim()
-        {
-            if (EventNpcStruckAnim != null)
-            {
-                EventNpcStruckAnim();
-            }
-        }
-
-        public void CallEventNpcAttackAnim()
-        {
-            if (EventNpcAttackAnim != null)
-            {
-                EventNpcAttackAnim();
-            }
-        }
-
-        public void CallEventNpcRecoveredAnim()
-        {
-            if (EventNpcRecoveredAnim != null)
-            {
-                EventNpcRecoveredAnim();
-            }
-        }
-
-        public void CallEventNpcIdleAnim()
-        {
-            if (EventNpcIdleAnim != null)
-            {
-                EventNpcIdleAnim();
-            }
-        }
-        #endregion
-
-        #region OpsiveEventCalls
-        //Opsive TPC Events
         public void CallOnSwitchToPrevItem()
         {
             if (OnSwitchToPrevItem != null) OnSwitchToPrevItem();
@@ -169,64 +144,9 @@ namespace RTSCoreFramework
             if (OnTryAim != null) OnTryAim(_enable);
         }
 
-        public void CallEventNpcDeductHealth(float health)
-        {
-            if (EventNpcDeductHealth != null)
-            {
-                EventNpcDeductHealth(health);
-            }
-        }
-
-        public void CallEventNpcIncreaseHealth(float health)
-        {
-            if (EventNpcIncreaseHealth != null)
-            {
-                EventNpcIncreaseHealth(health);
-            }
-        }
-
-        public void CallEventNPCRelationsChange()
-        {
-            if (EventNPCRelationsChange != null)
-            {
-                EventNPCRelationsChange();
-            }
-        }
-
-        public void CallEventPickedUpAmmo(string ammoName, int quantity)
-        {
-            if (EventPickedUpAmmo != null)
-            {
-                EventPickedUpAmmo(ammoName, quantity);
-            }
-        }
-
-        public void CallEventInventoryChanged()
-        {
-            if (EventInventoryChanged != null)
-            {
-                EventInventoryChanged();
-            }
-        }
-
-        public void CallEventHandsEmpty()
-        {
-            if (EventHandsEmpty != null)
-            {
-                EventHandsEmpty();
-            }
-        }
-
-        public void CallEventAmmoChanged()
-        {
-            if (EventAmmoChanged != null)
-            {
-                EventAmmoChanged();
-            }
-        }
-
         public void CallEventSwitchingFromCom()
         {
+            if (bIsFreeMoving) CallEventTogglebIsFreeMoving(false);
             if (EventSwitchingFromCom != null) EventSwitchingFromCom();
         }
 
@@ -237,6 +157,7 @@ namespace RTSCoreFramework
 
         public void CallEventSetAsCommander()
         {
+            CallEventFinishedMoving();
             if (EventSetAsCommander != null) EventSetAsCommander();
         }
 
@@ -263,13 +184,43 @@ namespace RTSCoreFramework
 
         public void CallEventCommandMove(rtsHitType hitType, RaycastHit hit)
         {
-            if (EventCommandMove != null)
-            {
-                EventCommandMove(hitType, hit);
-            }
+            bIsAimingToShoot = bIsCommandAttacking = bIsAiAttacking = false;
+            bIsCommandMoving = true;
+            bIsAIMoving = false;
+            CallEventCommandMove(hit.point);
         }
 
-        public void CallEventCommandAttackEnemy(AllyMember ally)
+        public void CallEventAIMove(Vector3 _point)
+        {
+            bIsAimingToShoot = false;
+            bIsCommandAttacking = false;
+            bIsAIMoving = true;
+            bIsCommandMoving = false;
+            CallEventCommandMove(_point);
+        }
+
+        private void CallEventCommandMove(Vector3 _point)
+        {
+            if (EventCommandMove != null) EventCommandMove(_point);
+        }
+
+        public void CallEventPlayerCommandAttackEnemy(AllyMember ally)
+        {
+            bIsAIMoving = bIsCommandMoving = false;
+            bIsCommandAttacking = true;
+            bIsAiAttacking = false;
+            CallEventCommandAttackEnemy(ally);
+        }
+
+        public void CallEventAICommandAttackEnemy(AllyMember ally)
+        {
+            bIsAIMoving = bIsCommandMoving = false;
+            bIsAiAttacking = true;
+            bIsCommandAttacking = false;
+            CallEventCommandAttackEnemy(ally);
+        }
+
+        private void CallEventCommandAttackEnemy(AllyMember ally)
         {
             if (EventCommandAttackEnemy != null)
             {
@@ -279,7 +230,24 @@ namespace RTSCoreFramework
 
         public void CallEventStopTargettingEnemy()
         {
+            bIsCommandAttacking = bIsAiAttacking = bIsAimingToShoot = false;
             if (EventStopTargettingEnemy != null) EventStopTargettingEnemy();
+        }
+
+        public void CallEventTogglebIsFreeMoving(bool _enable)
+        {
+            bIsFreeMoving = _enable;
+            //If Free Moving Is Enabled, Diable Tactics
+            bool _enableTactics = !_enable && bCanEnableAITactics;
+            CallEventToggleAllyTactics(_enableTactics);
+            if (EventTogglebIsFreeMoving != null) EventTogglebIsFreeMoving(_enable);
+        }
+
+        //Event handler controls bIsTacticsEnabled, makes code more centralized
+        private void CallEventToggleAllyTactics(bool _enable)
+        {
+            bIsTacticsEnabled = _enable;
+            if (EventToggleAllyTactics != null) EventToggleAllyTactics(_enable);
         }
         #endregion
 
