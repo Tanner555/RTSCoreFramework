@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if RTSCore_StandardAssets_OLD
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,12 +21,12 @@ namespace RTSCoreFramework.StandardAssets
         protected override void Start()
         {
             base.Start();
-            gamemaster.EventEnableCameraMovement += ToggleMoveCamera;
+            gamemaster.EventHoldingRightMouseDown += ToggleMoveCamera;
         }
 
         private void OnDisable()
         {
-            gamemaster.EventEnableCameraMovement -= ToggleMoveCamera;
+            gamemaster.EventHoldingRightMouseDown -= ToggleMoveCamera;
         }
 
         protected virtual void Update()
@@ -41,7 +42,7 @@ namespace RTSCoreFramework.StandardAssets
             moveCamera = enable;
         }
 
-        #region BoilerPlateCode
+#region BoilerPlateCode
 
         // This script is designed to be placed on the root object of a camera rig,
         // comprising 3 gameobjects, each parented to the next:
@@ -130,7 +131,8 @@ namespace RTSCoreFramework.StandardAssets
             }
         }
 
-        #endregion
+#endregion
     }
 
 }
+#endif
