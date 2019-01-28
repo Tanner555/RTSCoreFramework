@@ -1,0 +1,3 @@
+[submodule "BaseFramework"]
+	path = BaseFramework
+	url = https://github.com/Tanner555/BaseFramework.git
