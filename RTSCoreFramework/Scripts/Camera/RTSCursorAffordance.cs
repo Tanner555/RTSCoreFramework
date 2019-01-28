@@ -23,10 +23,11 @@ namespace RTSCoreFramework
         {
             gamemaster.OnMouseCursorChange -= OnLayerChanged;
             gamemaster.GameOverEvent -= HandleGameOver;
+            gamemaster.EventAllObjectivesCompleted -= HandleGameOver;
+            gamemaster.GoToMenuSceneEvent -= SetCursorToNull;
             uimaster.EventAnyUIToggle -= HandleUIEnabled;
             //uimaster.EventIGBPIToggle -= HandleUIEnabled;
             //uimaster.EventInventoryUIToggle -= HandleUIEnabled;
-            //uimaster.EventMenuToggle -= HandleUIEnabled;
         }
 
         // Use this for initialization
@@ -34,14 +35,23 @@ namespace RTSCoreFramework
         {
             gamemaster.OnMouseCursorChange += OnLayerChanged;
             gamemaster.GameOverEvent += HandleGameOver;
+            gamemaster.EventAllObjectivesCompleted += HandleGameOver;
+            gamemaster.GoToMenuSceneEvent += SetCursorToNull;
             uimaster.EventAnyUIToggle += HandleUIEnabled;
             //uimaster.EventIGBPIToggle += HandleUIEnabled;
             //uimaster.EventInventoryUIToggle += HandleUIEnabled;
-            //uimaster.EventMenuToggle += HandleUIEnabled;
         }
 
         void OnLayerChanged(rtsHitType hitType, RaycastHit hit)
         {
+            //TODO: RTSPrototype Set Cursor To Null Whenever UI is in use
+            //[Doesn't Work]Temporary Fix Whenever OnLayerChange is called
+            //and Ui is being used
+            //if (uimaster.isUiAlreadyInUse)
+            //{
+            //    Cursor.SetCursor(null, cursorHotspot, CursorMode.Auto);
+            //    return;
+            //}
             switch (hitType)
             {
                 case rtsHitType.Ally:
@@ -81,6 +91,11 @@ namespace RTSCoreFramework
             {
                 Cursor.SetCursor(null, cursorHotspot, CursorMode.Auto);
             }
+        }
+
+        void SetCursorToNull()
+        {
+            Cursor.SetCursor(null, cursorHotspot, CursorMode.Auto);
         }
 
         void HandleGameOver()

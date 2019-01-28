@@ -1,29 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BaseFramework;
 
 namespace RTSCoreFramework
 {
-    public class RTSInputManager : MonoBehaviour
+    public class RTSInputManager : InputManager
     {
-        #region Properties
-        RTSUiMaster uiMaster { get { return RTSUiMaster.thisInstance; } }
-
-        RTSUiManager uiManager
-        {
-            get { return RTSUiManager.thisInstance; }
-        }
-
-        RTSGameMode gamemode
-        {
-            get { return RTSGameMode.thisInstance; }
-        }
-
-        RTSGameMaster gamemaster
-        {
-            get { return RTSGameMaster.thisInstance; }
-        }
-
+        #region Properties       
         RTSCamRaycaster raycaster
         {
             get { return RTSCamRaycaster.thisInstance; }
@@ -31,19 +15,31 @@ namespace RTSCoreFramework
 
         #endregion
 
+        #region OverrideAndHideProperties
+        new protected RTSUiMaster uiMaster { get { return RTSUiMaster.thisInstance; } }
+
+        new protected RTSUiManager uiManager
+        {
+            get { return RTSUiManager.thisInstance; }
+        }
+
+        new protected RTSGameMode gamemode
+        {
+            get { return RTSGameMode.thisInstance; }
+        }
+
+        new protected RTSGameMaster gamemaster
+        {
+            get { return RTSGameMaster.thisInstance; }
+        }
+
+        new public static RTSInputManager thisInstance
+        {
+            get { return InputManager.thisInstance as RTSInputManager; }
+        }
+        #endregion
+
         #region Fields
-        //Handles Right Mouse Down Input
-        [Header("Right Mouse Down Config")]
-        public float RMHeldThreshold = 0.15f;
-        private bool isRMHeldDown = false;
-        private bool isRMHeldPastThreshold = false;
-        private float RMCurrentTimer = 5f;
-        //Handles Left Mouse Down Input
-        [Header("Left Mouse Down Config")]
-        public float LMHeldThreshold = 0.15f;
-        private bool isLMHeldDown = false;
-        private bool isLMHeldPastThreshold = false;
-        private float LMCurrentTimer = 5f;
         //Handles Multi Unit Selection
         [Header("Selection Config")]
         [SerializeField]
@@ -54,53 +50,52 @@ namespace RTSCoreFramework
         private bool isSprinting = false;
         //private AllyMoveSpeed setupMoveSpeed;
         private AllyMember setupSprintAlly = null;
-        //UI is enabled
-        private bool UiIsEnabled = false;
         #endregion
 
         #region UnityMessages
-        private void Start()
+        protected override void Start()
         {
-            uiMaster.EventIGBPIToggle += HandleUiActiveSelf;
+            base.Start();
+            
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
-            uiMaster.EventIGBPIToggle -= HandleUiActiveSelf;
+            base.OnDisable();
+            
         }
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
-            InputSetup();
-            LeftMouseDownSetup();
-            RightMouseDownSetup();
+            base.Update();
         }
         #endregion
 
         #region InputSetup
-        void InputSetup()
+        protected override void InputSetup()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-                CallMenuToggle();
+            base.InputSetup();
             //if (Input.GetKeyDown(KeyCode.I))
             //    CallInventoryToggle();
             if (Input.GetKeyDown(KeyCode.B))
                 CallIGBPIToggle();
             if (UiIsEnabled) return;
+            //All Input That Shouldn't Happen When 
+            //Ui is Enabled
             if (Input.GetKeyDown(KeyCode.Keypad1))
                 CallPossessAllyAdd();
             if (Input.GetKeyDown(KeyCode.Keypad3))
                 CallPossessAllySubtract();
             if (Input.GetKeyDown(KeyCode.C))
                 CallCoverToggle();
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                CallSelectNextWeapon();
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                CallSelectPrevWeapon();
+            //if (Input.GetKeyDown(KeyCode.Alpha2))
+            //    CallSelectNextWeapon();
+            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //    CallSelectPrevWeapon();
             if (Input.GetKeyDown(KeyCode.R))
                 CallTryReload();
             if (Input.GetKeyDown(KeyCode.Space))
-                CallTryFire();
+                CallToggleIsInPauseControl();
             if (Input.GetKeyDown(KeyCode.LeftShift))
                 CallSprintToggle();
 
@@ -108,97 +103,6 @@ namespace RTSCoreFramework
             //    SprintingSetup();
             //else
             //    EndSprintingSetup();
-
-        }
-
-        #endregion
-
-        #region MouseSetup
-
-        void LeftMouseDownSetup()
-        {
-            if (UiIsEnabled) return;
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                if (isRMHeldDown) return;
-                if (isLMHeldDown == false)
-                {
-                    isLMHeldDown = true;
-                    LMCurrentTimer = Time.time + LMHeldThreshold;
-                }
-
-                if (Time.time > LMCurrentTimer)
-                {
-                    //Calls Every Update
-                    //CreateSelectionSquare();
-                    if (isLMHeldPastThreshold == false)
-                    {
-                        //OnMouseDown Code Goes Here
-                        isLMHeldPastThreshold = true;
-                    }
-                }
-            }
-            else
-            {
-                if (isLMHeldDown == true)
-                {
-                    isLMHeldDown = false;
-                    if (isLMHeldPastThreshold == true)
-                    {
-                        //When MouseDown Code Exits
-                        isLMHeldPastThreshold = false;
-                    }
-                    else
-                    {
-                        //Mouse Button Was Let Go Before the Threshold
-                        //Call the Click Event
-                        gamemaster.CallEventOnLeftClickSendHit();
-                    }
-                }
-            }
-        }
-
-        void RightMouseDownSetup()
-        {
-            if (UiIsEnabled) return;
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                if (isLMHeldDown) return;
-                if (isRMHeldDown == false)
-                {
-                    isRMHeldDown = true;
-                    RMCurrentTimer = Time.time + RMHeldThreshold;
-                }
-
-                if (Time.time > RMCurrentTimer)
-                {
-                    if (isRMHeldPastThreshold == false)
-                    {
-                        //OnMouseDown Code Goes Here
-                        isRMHeldPastThreshold = true;
-                        gamemaster.CallEventEnableCameraMovement(true);
-                    }
-                }
-            }
-            else
-            {
-                if (isRMHeldDown == true)
-                {
-                    isRMHeldDown = false;
-                    if (isRMHeldPastThreshold == true)
-                    {
-                        //When MouseDown Code Exits
-                        isRMHeldPastThreshold = false;
-                        gamemaster.CallEventEnableCameraMovement(false);
-                    }
-                    else
-                    {
-                        //Mouse Button Was Let Go Before the Threshold
-                        //Call the Click Event
-                        gamemaster.CallEventOnRightClickSendHit();
-                    }
-                }
-            }
 
         }
 
@@ -256,57 +160,15 @@ namespace RTSCoreFramework
 
         #endregion
 
-        #region Handlers
-        void HandleUiActiveSelf(bool _state)
-        {
-            UiIsEnabled = _state;
-            if (_state == true)
-            {
-                if (isRMHeldPastThreshold)
-                {
-                    isRMHeldPastThreshold = false;
-                    gamemaster.CallEventEnableCameraMovement(false);
-                }
-                if (isLMHeldPastThreshold)
-                {
-                    isLMHeldPastThreshold = false;
-                    //gamemaster.CallEventEnableSelectionBox(false);
-                }
-                isLMHeldDown = false;
-                isRMHeldDown = false;
-            }
-        }
-
-        void HandleUiActiveSelf()
-        {
-            UiIsEnabled = uiMaster.isUiAlreadyInUse;
-            if (uiMaster.isUiAlreadyInUse)
-            {
-                if (isRMHeldPastThreshold)
-                {
-                    isRMHeldPastThreshold = false;
-                    gamemaster.CallEventEnableCameraMovement(false);
-                }
-                if (isLMHeldPastThreshold)
-                {
-                    isLMHeldPastThreshold = false;
-                    //gamemaster.CallEventEnableSelectionBox(false);
-                }
-                isLMHeldDown = false;
-                isRMHeldDown = false;
-            }
-        }
-        #endregion
-
         #region InputCalls
-        void CallMenuToggle() { uiMaster.CallEventMenuToggle(); }
         //void CallInventoryToggle() { uiMaster.CallEventInventoryUIToggle(); }
+        void CallToggleIsInPauseControl() { gamemaster.CallOnTogglebIsInPauseControlMode(); }
         void CallIGBPIToggle() { uiMaster.CallEventIGBPIToggle(); }
         void CallPossessAllyAdd() { gamemode.GeneralInCommand.PossessAllyAdd(); }
         void CallPossessAllySubtract() { gamemode.GeneralInCommand.PossessAllySubtract(); }
-        void CallSelectPrevWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToPrevItem(); }
-        void CallSelectNextWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToNextItem(); }
-        void CallTryFire() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryFire(); }
+        //void CallSelectPrevWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToPrevItem(); }
+        //void CallSelectNextWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToNextItem(); }
+        void CallTryFire() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryUseWeapon(); }
         void CallTryReload() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryReload(); }
         void CallCoverToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryCrouch(); }
         void CallSprintToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallEventToggleIsSprinting(); }

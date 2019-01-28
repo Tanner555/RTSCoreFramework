@@ -2,23 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BaseFramework;
 
 namespace RTSCoreFramework
 {
-    public class RTSUiManager : MonoBehaviour
+    public class RTSUiManager : UiManager
     {
-        #region Components
-        public RTSUiMaster uiMaster { get { return RTSUiMaster.thisInstance; } }
-        #endregion
-
-        #region Properties
-        public static RTSUiManager thisInstance
-        {
-            get; protected set;
-        }
-
+        #region Properties      
         public IGBPI_DataHandler dataHandler { get { return IGBPI_DataHandler.thisInstance; } }
         public RTSSaveManager saveManager { get { return RTSSaveManager.thisInstance; } }
+        public RTSStatHandler statHandler { get { return RTSStatHandler.thisInstance; } }
 
         //UGBPI
         public bool isBehaviorUIOn { get { return IGBPIUi != null && IGBPIUi.activeSelf; } }
@@ -32,6 +25,13 @@ namespace RTSCoreFramework
             get; protected set;
         }
 
+        public override bool AllUiCompsAreValid
+        {
+            get { return IGBPICompsAreValid && CharacterStatsPanels &&
+                    CharacterStatsPrefab && MenuUiPanel && WinnerUiPanel &&
+                    NextLevelButton && GameOverUiPanel; }
+        }
+
         public bool IGBPICompsAreValid
         {
             get
@@ -40,10 +40,32 @@ namespace RTSCoreFramework
 ButtonChoicePrefab && behaviorContentTransform &&
 choiceMenuTransform && choiceIndicatorText &&
 choiceNavigateLeft && choiceNavigateRight &&
-conditionButton && actionButton;
+conditionButton && actionButton && IGBPITitleText;
             }
         }
-        
+
+        #endregion
+
+        #region OverrideAndHideProperties
+        new public RTSGameMaster gamemaster { get { return RTSGameMaster.thisInstance; } }
+        new public RTSGameMode gamemode { get { return RTSGameMode.thisInstance; } }
+        new public RTSGameInstance gameInstance { get { return RTSGameInstance.thisInstance; } }
+
+        new public RTSUiMaster uiMaster
+        {
+            get
+            {
+                if (RTSUiMaster.thisInstance != null)
+                    return RTSUiMaster.thisInstance;
+
+                return GetComponent<RTSUiMaster>();
+            }
+        }
+
+        new public static RTSUiManager thisInstance
+        {
+            get { return UiManager.thisInstance as RTSUiManager; }
+        }
         #endregion
 
         #region Fields
@@ -53,17 +75,14 @@ conditionButton && actionButton;
         }
         choiceEditModes ChoiceEditMode = choiceEditModes.none;
         string choiceFilterNameNone = "Filters";
-        bool hasStarted = false;
         //Used as a parameter for adding a dropdown instance
         bool usePanelCreationValues = false;
         IGBPIPanelValue panelCreationValues;
         #endregion
 
         #region UIGameObjects
-        [Header("Main Ui GameObjects")]
-        public GameObject IGBPIUi;
-
         [Header("IGBPI Objects")]
+        public GameObject IGBPIUi;
         public GameObject UI_Panel_Prefab;
         public GameObject ButtonChoicePrefab;
         public Transform behaviorContentTransform;
@@ -73,44 +92,37 @@ conditionButton && actionButton;
         public Button choiceNavigateRight;
         public Button conditionButton;
         public Button actionButton;
+        //Used To Indicate Which Character Contains Tactics
+        public Text IGBPITitleText;
+
+        [Header("Character Stats Objects")]
+        public GameObject CharacterStatsPanels;
+        public GameObject CharacterStatsPrefab;
         #endregion
 
         #region UnityMessages
-        private void OnEnable()
+        protected override void OnEnable()
         {
-            if (thisInstance != null)
-                Debug.LogWarning("More than one instance of UIManager in scene.");
-            else
-                thisInstance = this;
-
-            if (!IGBPICompsAreValid)
+            base.OnEnable();
+            if (!AllUiCompsAreValid)
                 Debug.LogError("Please drag components into their slots");
 
             UI_Panel_Members = new List<IGBPI_UI_Panel>();
             DisableIGBPIEditButtons();
-
-            if (hasStarted == true)
-                SubToEvents();
-
-
         }
 
-        private void Start()
+        protected override void Start()
         {
-            if (hasStarted == false)
-            {
-                SubToEvents();
-                hasStarted = true;
-            }
+            base.Start();
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
-            UnsubEvents();
+            base.OnDisable();
         }
         #endregion
 
-        #region ButtonCalls
+        #region ButtonCalls-IGBPI
         public void CallAddDropdown()
         {
             if (uiMaster != null) uiMaster.CallEventAddDropdownInstance();
@@ -187,14 +199,7 @@ conditionButton && actionButton;
         }
         #endregion
 
-        #region Handlers
-        //Toggles Ui GameObjects
-        void TogglePauseMenuUi(bool enable)
-        {
-            //if (PauseMenuUi != null)
-            //    PauseMenuUi.SetActive(enable);
-        }
-
+        #region Handlers-General/Toggles
         void ToggleInventoryUi(bool enable)
         {
             //if (InventoryUi != null)
@@ -203,6 +208,7 @@ conditionButton && actionButton;
 
         void ToggleIGBPIUi(bool enable)
         {
+            if (AllUiCompsAreValid == false) return;
             if (enable == false)
             {
                 uiMaster.CallEventUIPanelSelectionChanged(null);
@@ -215,9 +221,18 @@ conditionButton && actionButton;
 
             if (IGBPIUi != null)
                 IGBPIUi.SetActive(enable);
-            
-        }
 
+            if (IGBPIUi.activeSelf)
+            {
+                //Indicate Who Owns These Tactics
+                IGBPITitleText.text =
+                    gamemode.CurrentPlayer.CharacterType.ToString() +
+                    "'s Tactics";
+            }
+        }
+        #endregion
+
+        #region Handlers-IGBPI
         void SelectUIPanel(IGBPI_UI_Panel _info)
         {
             if (_info && _info.gameObject && _info.AllTextAreValid)
@@ -298,6 +313,23 @@ conditionButton && actionButton;
 
                     _count++;
                 }
+            }
+        }
+        #endregion
+
+        #region Handlers-CharactersStats
+        void RegisterAllyToCharacterStatMonitor(PartyManager _party, AllyMember _ally)
+        {
+            if (AllUiCompsAreValid == false || 
+                _party == null || _ally == null) return;
+
+            var _statGameObject = GameObject.Instantiate(CharacterStatsPrefab, 
+                CharacterStatsPanels.transform) as GameObject;
+            var _statsMonitor = _statGameObject.GetComponent<RTSCharacterStatsMonitor>();
+            if (_statsMonitor != null &&
+                _statsMonitor.bUiTargetIsSet == false)
+            {
+                _statsMonitor.HookAllyCharacter(_ally);
             }
         }
         #endregion
@@ -396,23 +428,27 @@ conditionButton && actionButton;
                     uiMaster.CallEventRemoveDropdownInstance(_invalidPanel);
                 }
 
-                yield return new WaitForSeconds(0.8f);
+                yield return new WaitForSecondsRealtime(0.8f);
 
                 if (_saveData.Count > 0)
                 {
-                    saveManager.Save_IGBPI_PanelValues(_saveData);
+                    var _cType = gamemode.CurrentPlayer.CharacterType;
+                    saveManager.Save_IGBPI_PanelValues(_cType, _saveData);
                     uiMaster.CallEventOnSaveIGBPIComplete();
                     Debug.Log("Save Successful");
                 }
                 else
+                {
                     Debug.Log("There is no IGBPI Data to save");
+                }
             }
         }
 
         IEnumerator LoadIGBPIDataAfterWait(float _seconds)
         {
-            yield return new WaitForSeconds(_seconds);
-            foreach (var _data in saveManager.Load_IGBPI_PanelValues())
+            yield return new WaitForSecondsRealtime(_seconds);
+            var _cType = gamemode.CurrentPlayer.CharacterType;
+            foreach (var _data in saveManager.Load_IGBPI_PanelValues(_cType))
             {
                 panelCreationValues = _data;
                 usePanelCreationValues = true;
@@ -432,7 +468,7 @@ conditionButton && actionButton;
                 UI_Panel_Members.Remove(_info);
                 Destroy(_info.gameObject);
             }
-            yield return new WaitForSeconds(_seconds);
+            yield return new WaitForSecondsRealtime(_seconds);
             uiMaster.CallEventReorderIGBPIPanels();
         }
 
@@ -478,7 +514,7 @@ conditionButton && actionButton;
             List<string> _filteredKeys = new List<string>();
             foreach (var _item in dataHandler.IGBPI_Actions)
             {
-                if (_item.Value.filter == _filter)
+                if (_item.Value.actionFilter == _filter)
                     _filteredKeys.Add(_item.Key);
             }
             foreach (var _key in _filteredKeys)
@@ -549,7 +585,7 @@ conditionButton && actionButton;
 
         IEnumerator RemoveAllIGBPIPanelsAfterWait(float _seconds)
         {
-            yield return new WaitForSeconds(_seconds);
+            yield return new WaitForSecondsRealtime(_seconds);
             foreach (Transform _trans in behaviorContentTransform)
             {
                 if (_trans.GetComponent<IGBPI_UI_Panel>())
@@ -564,28 +600,36 @@ conditionButton && actionButton;
         #endregion
 
         #region Initialization
-        void SubToEvents()
+        protected override void SubToEvents()
         {
-            uiMaster.EventMenuToggle += TogglePauseMenuUi;
+            base.SubToEvents();
+            //Toggles
             //uiMaster.EventInventoryUIToggle += ToggleInventoryUi;
             uiMaster.EventIGBPIToggle += ToggleIGBPIUi;
+            //IGBPI
             uiMaster.EventAddDropdownInstance += AddDropdownInstance;
             uiMaster.EventRemoveDropdownInstance += DeregisterDropdownMenu;
             uiMaster.EventUIPanelSelectionChanged += SelectUIPanel;
             uiMaster.EventReorderIGBPIPanels += ReorderIGBPIPanels;
             uiMaster.EventMovePanelUI += MoveIGBPIPanel;
+            //CharacterStats
+            uiMaster.RegisterAllyToCharacterStatMonitor += RegisterAllyToCharacterStatMonitor;
         }
 
-        void UnsubEvents()
+        protected override void UnsubEvents()
         {
-            uiMaster.EventMenuToggle -= TogglePauseMenuUi;
+            base.UnsubEvents();
+            //Toggles
             //uiMaster.EventInventoryUIToggle -= ToggleInventoryUi;
             uiMaster.EventIGBPIToggle -= ToggleIGBPIUi;
+            //IGBPI
             uiMaster.EventAddDropdownInstance -= AddDropdownInstance;
             uiMaster.EventRemoveDropdownInstance -= DeregisterDropdownMenu;
             uiMaster.EventUIPanelSelectionChanged -= SelectUIPanel;
             uiMaster.EventReorderIGBPIPanels -= ReorderIGBPIPanels;
             uiMaster.EventMovePanelUI -= MoveIGBPIPanel;
+            //CharacterStats
+            uiMaster.RegisterAllyToCharacterStatMonitor -= RegisterAllyToCharacterStatMonitor;
         }
         #endregion
 

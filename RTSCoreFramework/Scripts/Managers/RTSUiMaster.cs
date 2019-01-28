@@ -1,18 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BaseFramework;
 
 namespace RTSCoreFramework
 {
-    public class RTSUiMaster : MonoBehaviour
+    public class RTSUiMaster : UiMaster
     {
-        #region DelegatesAndEvents
-        public delegate void GeneralEventHandler();
-        public delegate void MenuToggleHandler(bool enable);
-        public event MenuToggleHandler EventMenuToggle;
+        #region DelegatesAndEvents     
         //public event MenuToggleHandler EventInventoryUIToggle;
         public event MenuToggleHandler EventIGBPIToggle;
-        public event MenuToggleHandler EventAnyUIToggle;
         //IGBPI Events
         public delegate void UI_PanelHandler(IGBPI_UI_Panel _info);
         public delegate void UI_MovePanelHandler(IGBPI_UI_Panel _info, int _order);
@@ -24,31 +21,44 @@ namespace RTSCoreFramework
         public event GeneralEventHandler EventResetAllPaneUIMenus;
         public event GeneralEventHandler EventReorderIGBPIPanels;
         public event GeneralEventHandler EventOnSaveIGBPIComplete;
+        //Character Stat Events
+        public delegate void RegisterAllyToStatHandler(PartyManager _party, AllyMember _ally);
+        public event RegisterAllyToStatHandler RegisterAllyToCharacterStatMonitor;
         #endregion
 
         #region Properties
-        public static RTSUiMaster thisInstance
-        {
-            get; protected set;
-        }
-
-        public RTSUiManager uiManager
-        {
-            get { return RTSUiManager.thisInstance; }
-        }
-
         public RTSCamRaycaster rayCaster { get { return RTSCamRaycaster.thisInstance; } }
 
         //For Ui Conflict Checking
-        public virtual bool isUiAlreadyInUse
+        public override bool isUiAlreadyInUse
         {
             get { return isPauseMenuOn || isIGBPIOn; }
         }
         //Override Inside Wrapper Class
-        public virtual bool isPauseMenuOn { get { return false; } }
+        public override bool isPauseMenuOn
+        {
+            get { return uiManager.MenuUiPanel.activeSelf; }
+        }
         public virtual bool isIGBPIOn
         {
             get { return uiManager.IGBPIUi.activeSelf; }
+        }
+        #endregion
+
+        #region OverrideAndHideProperties
+        new RTSGameMaster gamemaster
+        {
+            get { return RTSGameMaster.thisInstance; }
+        }
+
+        new public RTSUiManager uiManager
+        {
+            get { return RTSUiManager.thisInstance; }
+        }
+
+        new public static RTSUiMaster thisInstance
+        {
+            get { return UiMaster.thisInstance as RTSUiMaster; }
         }
         #endregion
 
@@ -58,29 +68,16 @@ namespace RTSCoreFramework
 
         #region UnityMessages
         // Use this for initialization
-        private void OnEnable()
+        protected override void OnEnable()
         {
-            if (thisInstance != null)
-                Debug.LogWarning("More than one instance of UIManagerMaster in scene.");
-            else
-            {
-                thisInstance = this;
-            }
+            base.OnEnable();
         }
         #endregion
 
-        #region EventCalls
-        public virtual void CallEventMenuToggle()
+        #region EventCalls-General/Toggles
+        protected override void WaitToCallEventMenuToggle()
         {
-            //If Ui Item isn't being used or Pause Menu is turned on
-            if (isUiAlreadyInUse == false || isPauseMenuOn)
-                WaitToCallEventMenuToggle();
-        }
-
-        private void WaitToCallEventMenuToggle()
-        {
-            CallEventAnyUIToggle(isPauseMenuOn);
-            if (EventMenuToggle != null) EventMenuToggle(isPauseMenuOn);
+            base.WaitToCallEventMenuToggle();
             EnableRayCaster(!isPauseMenuOn);
         }
 
@@ -95,12 +92,9 @@ namespace RTSCoreFramework
             }
         }
 
-        private void CallEventAnyUIToggle(bool _enabled)
-        {
-            if (EventAnyUIToggle != null) EventAnyUIToggle(_enabled);
-        }
+        #endregion
 
-        //IGBPI
+        #region EventCalls-IGBPI
         public void CallEventAddDropdownInstance()
         {
             if (EventAddDropdownInstance != null)
@@ -157,6 +151,18 @@ namespace RTSCoreFramework
         {
             if (EventOnSaveIGBPIComplete != null)
                 EventOnSaveIGBPIComplete();
+        }
+        #endregion
+
+        #region EventCalls-CharacterStats
+        public void CallRegisterAllyToCharacterStatMonitor(PartyManager _party, AllyMember _ally)
+        {
+            //Only Call if PartyManager is the Current Player's General
+            if (RegisterAllyToCharacterStatMonitor != null &&
+                _party && _party.bIsCurrentPlayerCommander)
+            {
+                RegisterAllyToCharacterStatMonitor(_party, _ally);
+            }
         }
         #endregion
 

@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BaseFramework;
 
 namespace RTSCoreFramework
 {
-    public class RTSGameMode : MonoBehaviour
+    public class RTSGameMode : GameMode
     {
         #region Enums
         [HideInInspector]
@@ -90,29 +91,35 @@ namespace RTSCoreFramework
 
         #endregion
 
-        #region Properties
-        public PartyManager GeneralInCommand { get; protected set; }
+        #region OverrideAndHideProperties
         //GameMode must access GameMaster sooner than On Start
         //To Subscribe Events and Prevent Errors when AllySwitching
-        public RTSGameMaster gamemaster
+        new public RTSGameMaster gamemaster
         {
-            get
-            {
-                if (RTSGameMaster.thisInstance != null)
-                    return RTSGameMaster.thisInstance;
-                else if (GetComponent<RTSGameMaster>() != null)
-                    return GetComponent<RTSGameMaster>();
-                else
-                    return GameObject.FindObjectOfType<RTSGameMaster>();
-            }
+            get { return RTSGameMaster.thisInstance; }
         }
-        public RTSUiManager uiManager { get { return RTSUiManager.thisInstance; } }
+
+        new public RTSUiManager uiManager { get { return RTSUiManager.thisInstance; } }
+        new public RTSUiMaster uiMaster { get { return RTSUiMaster.thisInstance; } }
+        new protected RTSGameInstance gameInstance
+        {
+            get { return RTSGameInstance.thisInstance; }
+        }
         //Static GameMode Instance For Easy Access
         [HideInInspector]
-        public static RTSGameMode thisInstance
+        new public static RTSGameMode thisInstance
         {
-            get; protected set;
+            get { return GameMode.thisInstance as RTSGameMode; }
         }
+        #endregion
+
+        #region Properties
+        public PartyManager GeneralInCommand { get; protected set; }
+        public AllyMember CurrentPlayer
+        {
+            get { return GeneralInCommand.AllyInCommand; }
+        }
+        
         public bool IsSpectatingEnemy
         {
             get { return GeneralInCommand.PartyMembers.Count <= 0; }
@@ -132,20 +139,49 @@ namespace RTSCoreFramework
 
         #endregion
 
-        #region Tags
+        #region LayersAndTags
+        //Layers
+        [Header("Layers For AI and Raycasting")]
+        [SerializeField]
+        private LayerMask allyLayers;
+        [SerializeField]
+        private LayerMask sightLayers;
+        [SerializeField]
+        private LayerMask sightNoCurrentPlayerLayers;
+        [SerializeField]
+        private LayerMask ignoreInvisibleLayersAndAllies;
+
+        [Header("Single Layers for Easy Retrieval")]
+        [SerializeField]
+        private string singleAllyLayerName = "Ally";
+        [SerializeField]
+        private string singleCurrentPlayerLayerName = "CurrentPlayerAlly";
+
+        //Layer Getters
+        public LayerMask AllyLayers { get { return allyLayers; } }
+        public LayerMask SightLayers { get { return sightLayers; } }
+        public LayerMask SightNoCurrentPlayerLayers { get { return sightNoCurrentPlayerLayers; } }
+        public LayerMask IgnoreInvisibleLayersAndAllies { get { return ignoreInvisibleLayersAndAllies; } }
+
+        public LayerMask SingleAllyLayer
+        {
+            get { return LayerMask.NameToLayer(singleAllyLayerName); }
+        }
+        public LayerMask SingleCurrentPlayerLayer
+        {
+            get { return LayerMask.NameToLayer(singleCurrentPlayerLayerName); }
+        }
+
+        //Tag Getters
         public string AllyTag { get { return "Ally"; } }
+        public string CoverTag { get { return "Cover"; } }
+
         #endregion
 
         #region UnityMessages
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
-            ResetGameModeStats();
-            InitializeGameModeValues();
-            SubscribeToEvents();
-            if (thisInstance != null)
-                Debug.LogWarning("More than one instance of RTSGameMode in scene.");
-            else
-                thisInstance = (RTSGameMode)this;
+            base.OnEnable();
 
             PartyManager firstGeneralFound = FindGenerals(false, null);
             if (firstGeneralFound == null)
@@ -169,22 +205,21 @@ namespace RTSCoreFramework
             }
         }
 
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
-            UnsubscribeFromEvents();
+            base.OnDisable();
         }
         //// Use this for initialization
-        protected virtual void Start()
+        protected override void Start()
         {
-            if (uiManager == null)
-                Debug.LogWarning("There is no uimanager in the scene!");
+            base.Start();
 
-            StartServices();
         }
 
         //// Update is called once per frame
-        protected virtual void Update()
+        protected override void Update()
         {
+            base.Update();
             if (MatchState == ERTSGameState.EWaitingToStart)
             {
                 waitingTillBeginMatch();
@@ -203,9 +238,20 @@ namespace RTSCoreFramework
         {
             if (GeneralInCommand.AllyInCommand != null)
             {
-                return GeneralInCommand.AllyInCommand.aiController.isSurfaceWalkable(hit);
+                return GeneralInCommand.AllyInCommand.isSurfaceWalkable(hit);
             }
             return false;
+        }
+
+        public bool isEveryEnemyDead()
+        {
+            bool _allDead = true;
+            foreach (var _gen in GeneralMembers)
+            {
+                if (_gen.bIsCurrentPlayerCommander) continue;
+                if (_gen.PartyMembers.Count > 0) _allDead = false;
+            }
+            return _allDead;
         }
 
         public int GetAllyFactionPlayerCount(AllyMember teamMember)
@@ -382,8 +428,9 @@ namespace RTSCoreFramework
         #endregion
 
         #region Updaters and Resetters
-        public void UpdateGameModeStats()
+        protected override void UpdateGameModeStats()
         {
+            base.UpdateGameModeStats();
             EFactions allyFac = EFactions.Faction_Allies;
             EFactions enemyFac = EFactions.Faction_Enemies;
             GetFactionKills(true, allyFac);
@@ -394,8 +441,9 @@ namespace RTSCoreFramework
             GetFactionDeaths(true, enemyFac);
         }
 
-        public void ResetGameModeStats()
+        protected override void ResetGameModeStats()
         {
+            base.ResetGameModeStats();
             Ally_Kills = 0;
             Enemy_Kills = 0;
             Ally_Points = 0;
@@ -449,10 +497,10 @@ namespace RTSCoreFramework
         }
         #endregion
 
-        #region AllyProcessing
+        #region Handlers
         public virtual void ProcessAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
-            if (_toSet != null && _party.isCurrentPlayerCommander)
+            if (_toSet != null && _party.bIsCurrentPlayerCommander)
             {
                 SetThirdPersonCam(_party, _toSet, _current);
                 SetUiTargetAlly(_toSet);
@@ -463,22 +511,49 @@ namespace RTSCoreFramework
         #region UIAndCameraProcessing
         void SetThirdPersonCam(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
-            if (!_party.isCurrentPlayerCommander) return;
+            if (!_party.bIsCurrentPlayerCommander) return;
             SetCameraCharacter(_toSet);
         }
 
         protected virtual void SetCameraCharacter(AllyMember _target)
         {
-
+            //Base Method, Override to Add Functionality
         }
 
         protected void SetUiTargetAlly(AllyMember _allyToSet)
         {
             if (_allyToSet != null)
             {
+                SetupUITargetHandlers(UiTargetAlly, _allyToSet);
                 //Set to Command
                 UiTargetAlly = _allyToSet;
             }
+        }
+
+        protected virtual void SetupUITargetHandlers(AllyMember _previousAlly, AllyMember _currentAlly)
+        {
+            if(_previousAlly != null)
+            {
+                UnsubscribeFromUiTargetHandlers(_previousAlly);
+            }
+            if(_currentAlly != null)
+            {
+                SubscribeToUiTargetHandlers(_currentAlly);
+            }
+        }
+
+        protected virtual void SubscribeToUiTargetHandlers(AllyMember _target)
+        {
+            if (_target == null) return;
+            var _handler = _target.allyEventHandler;
+            gamemaster.CallOnRegisterUiTarget(_target, _handler, _target.partyManager);
+        }
+
+        protected virtual void UnsubscribeFromUiTargetHandlers(AllyMember _target)
+        {
+            if (_target == null) return;
+            var _handler = _target.allyEventHandler;
+            gamemaster.CallOnDeregisterUiTarget(_target, _handler, _target.partyManager);
         }
         #endregion
 
@@ -486,8 +561,7 @@ namespace RTSCoreFramework
         //Ui and Ally Processing
         public void HandlePartyMemberWOutAllies(PartyManager _partyMan, AllyMember _lAlly, bool _onDeath)
         {
-            Debug.Log("No party members called on gamemode!");
-            if (_onDeath && _partyMan.isCurrentPlayerCommander)
+            if (_onDeath && _partyMan.bIsCurrentPlayerCommander)
             {
                 Debug.Log("All player allies are dead, Game Over!");
                 gamemaster.CallEventGameOver();
@@ -499,6 +573,12 @@ namespace RTSCoreFramework
                     SetUiTargetAlly(_enemy);
                 }
             }
+            else if(_onDeath && isEveryEnemyDead())
+            {
+                Debug.Log("All enemies are dead, you won!");
+                gamemaster.CallEventAllEnemiesAreDead();
+            }
+
         }
 
         public virtual void ProcessAllyDeath(AllyMember _ally)
@@ -611,8 +691,9 @@ namespace RTSCoreFramework
         #endregion
 
         #region GameModeSetupFunctions
-        public void InitializeGameModeValues()
+        protected override void InitializeGameModeValues()
         {
+            base.InitializeGameModeValues();
             DefaultKillPoints = 3;
             DefaultFriendlyFirePoints = -1;
             DefaultMatchTimeLimit = 60.0f * 5.0f;
@@ -621,18 +702,21 @@ namespace RTSCoreFramework
             SetMatchState(waitingstate);
         }
 
-        protected virtual void SubscribeToEvents()
+        protected override void SubscribeToEvents()
         {
+            base.SubscribeToEvents();
             gamemaster.OnAllySwitch += ProcessAllySwitch;
         }
 
-        protected virtual void UnsubscribeFromEvents()
+        protected override void UnsubscribeFromEvents()
         {
+            base.UnsubscribeFromEvents();
             gamemaster.OnAllySwitch -= ProcessAllySwitch;
         }
 
-        protected virtual void StartServices()
+        protected override void StartServices()
         {
+            base.StartServices();
             //InvokeRepeating("SE_UpdateTargetUI", 0.1f, 0.1f);
         }
         #endregion

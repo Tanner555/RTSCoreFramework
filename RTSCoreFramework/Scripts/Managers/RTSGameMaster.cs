@@ -1,58 +1,74 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using BaseFramework;
 
 namespace RTSCoreFramework
 {
-    public class RTSGameMaster : MonoBehaviour
+    public class RTSGameMaster : GameMaster
     {
         #region Properties
-        public static RTSGameMaster thisInstance
+        public RTSCamRaycaster rayCaster { get { return RTSCamRaycaster.thisInstance; } }
+
+        #endregion
+
+        #region OverrideAndHideProperties
+        new public RTSGameInstance gameInstance
         {
-            get; protected set;
+            get { return RTSGameInstance.thisInstance; }
         }
 
-        public RTSGameMode gamemode
+        new public RTSGameMode gamemode
         {
             get { return RTSGameMode.thisInstance; }
         }
 
-        public RTSCamRaycaster rayCaster { get { return RTSCamRaycaster.thisInstance; } }
+        new RTSUiMaster uiMaster
+        {
+            get { return RTSUiMaster.thisInstance; }
+        }
+
+        new public static RTSGameMaster thisInstance
+        {
+            get { return GameMaster.thisInstance as RTSGameMaster; }
+        }
         #endregion
 
         #region Fields
-        public bool isGameOver;
         public bool isInventoryUIOn;
-        public bool isMenuOn;
+
         #endregion
 
         #region UnityMessages
-        private void OnEnable()
+        protected override void OnEnable()
         {
-            if (thisInstance != null)
-                Debug.LogWarning("More than one instance of GameManagerMaster in scene.");
-            else
-                thisInstance = this;
-
-            //Listen to Opsive TPC Events
+            base.OnEnable();
 
         }
 
-        private void OnDisable()
+        protected override void Start()
         {
-            //UnSub from TPC Events
+            base.Start();
 
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+        }
+
+        protected override void Update()
+        {
+            base.Update();
         }
         #endregion
 
         #region Events and Delegates
-        public delegate void GameManagerEventHandler();
-        public event GameManagerEventHandler RestartLevelEvent;
-        public event GameManagerEventHandler GoToMenuSceneEvent;
-        public event GameManagerEventHandler GameOverEvent;
-
-        public delegate void OneBoolArgsHandler(bool enable);
-        public event OneBoolArgsHandler EventEnableCameraMovement;
+        public event GameManagerEventHandler EventAllEnemiesAreDead;
+        public event GameManagerEventHandler EventUpdateCharacterStats;
         //public event OneBoolArgsHandler EventEnableSelectionBox;
 
         //Used by CamRaycaster to broadcast mouse hit type
@@ -74,51 +90,61 @@ namespace RTSCoreFramework
         public delegate void AllySwitchHandler(PartyManager _party, AllyMember _toSet, AllyMember _current);
         public event AllySwitchHandler OnAllySwitch;
 
+        public delegate void UiTargetHookHandler(AllyMember _target, AllyEventHandler _eventHandler, PartyManager _party);
+        public event UiTargetHookHandler OnRegisterUiTarget;
+        public event UiTargetHookHandler OnDeregisterUiTarget;
+
         #endregion
 
-        #region EventCalls
-        public void CallEventRestartLevel()
+        #region EventCalls      
+        public override void CallEventGameOver()
         {
-            if (RestartLevelEvent != null)
-            {
-                RestartLevelEvent();
-            }
+            EnableRayCaster(false);
+            base.CallEventGameOver();
         }
 
-        public void CallEventGoToMenuScene()
+        public virtual void CallEventUpdateCharacterStats()
         {
-            if (GoToMenuSceneEvent != null)
-            {
-                GoToMenuSceneEvent();
-            }
+            if (EventUpdateCharacterStats != null) EventUpdateCharacterStats();
         }
 
-        public void CallEventGameOver()
+        public void CallEventAllEnemiesAreDead()
         {
-            if (GameOverEvent != null)
-            {
-                if (!isGameOver)
-                {
-                    isGameOver = true;
-                    GameOverEvent();
-                }
-            }
+            if (EventAllEnemiesAreDead != null) EventAllEnemiesAreDead();
         }
 
-        public void CallEventEnableCameraMovement(bool enable)
+        public override void CallEventAllObjectivesCompleted()
         {
-            if (EventEnableCameraMovement != null)
-            {
-                EventEnableCameraMovement(enable);
-            }
+            EnableRayCaster(false);
+            base.CallEventAllObjectivesCompleted();
         }
 
+        /// <summary>
+        /// Called Before The AllyInCommand has been set by RTSGameMaster
+        /// </summary>
+        /// <param name="_party"></param>
+        /// <param name="_toSet"></param>
+        /// <param name="_current"></param>
         public void CallOnAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
             if (OnAllySwitch != null)
                 OnAllySwitch(_party, _toSet, _current);
         }
 
+        public void CallOnRegisterUiTarget(AllyMember _target, AllyEventHandler _eventHandler, PartyManager _party)
+        {
+            if (OnRegisterUiTarget != null)
+                OnRegisterUiTarget(_target, _eventHandler, _party);
+        }
+
+        public void CallOnDeregisterUiTarget(AllyMember _target, AllyEventHandler _eventHandler, PartyManager _party)
+        {
+            if (OnDeregisterUiTarget != null)
+                OnDeregisterUiTarget(_target, _eventHandler, _party);
+        }
+        #endregion
+
+        #region EventCalls-MouseCursorAndClickHandlers
         public void CallEventOnMouseCursorChange(rtsHitType hitType, RaycastHit hit)
         {
             bool isNull = hit.collider == null || hit.collider.gameObject == null ||
@@ -134,6 +160,7 @@ namespace RTSCoreFramework
             if (gamemode.hasPrevHighAlly && _notAlly)
             {
                 gamemode.hasPrevHighAlly = false;
+                //TODO: RTSPrototype See if OnMouseCursor Change Should Return if PrevHighAlly is Null
                 if (gamemode.prevHighAlly == null) return;
                 //if (OnHoverLeaveAlly != null) OnHoverLeaveAlly(gamemode.prevHighAlly);
                 gamemode.prevHighAlly.allyEventHandler.CallEventOnHoverLeave(hitType, hit);
@@ -176,9 +203,11 @@ namespace RTSCoreFramework
             }
         }
 
-        public void CallEventOnLeftClickSendHit()
+        public override void CallEventOnLeftClick()
         {
-            if (rayCaster != null && rayCaster.enabled == true)
+            base.CallEventOnLeftClick();
+            if (rayCaster != null && rayCaster.enabled == true &&
+                !EventSystem.current.IsPointerOverGameObject())
             {
                 var _info = rayCaster.GetRaycastInfo();
                 CallEventOnLeftClickSendHit(_info._hitType, _info._rayHit);
@@ -225,9 +254,11 @@ namespace RTSCoreFramework
             }
         }
 
-        public void CallEventOnRightClickSendHit()
+        public override void CallEventOnRightClick()
         {
-            if (rayCaster != null && rayCaster.enabled == true)
+            base.CallEventOnRightClick();
+            if (rayCaster != null && rayCaster.enabled == true &&
+                !EventSystem.current.IsPointerOverGameObject())
             {
                 var _info = rayCaster.GetRaycastInfo();
                 CallEventOnRightClickSendHit(_info._hitType, _info._rayHit);
@@ -274,5 +305,34 @@ namespace RTSCoreFramework
             }
         }
         #endregion
+
+        #region Handlers
+        void HandleAnyUIToggle(bool _enable)
+        {
+            CallOnToggleIsGamePaused(_enable);
+        }
+        #endregion
+
+        #region Initialization
+        protected override void SubToEvents()
+        {
+            base.SubToEvents();
+            uiMaster.EventAnyUIToggle += HandleAnyUIToggle;
+        }
+
+        protected override void UnsubFromEvents()
+        {
+            base.UnsubFromEvents();
+            uiMaster.EventAnyUIToggle -= HandleAnyUIToggle;
+        }
+        #endregion
+
+        #region Helpers
+        void EnableRayCaster(bool _enable)
+        {
+            if (rayCaster != null) rayCaster.enabled = _enable;
+        }
+        #endregion
+
     }
 }
