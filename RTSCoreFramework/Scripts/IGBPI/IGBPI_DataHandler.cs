@@ -137,7 +137,7 @@ namespace RTSCoreFramework
             {"Self: FollowLeader", new RTSActionItem((_ally) =>
             { _ally.aiController.Tactics_MoveToLeader(); },
                 (_ally) => true,
-                ActionFilters.Movement, false, false, false, true, _ally => true, _ally => false, _ally => _ally.allyEventHandler.CallEventFinishedMoving()) },
+                ActionFilters.Movement, false, false, false, true, _ally => true, _ally => _ally.aiController.IsWithinFollowingDistance(), _ally => _ally.allyEventHandler.CallEventFinishedMoving()) },
             {"Debug: Log True Message", new RTSActionItem((_ally) =>
             Debug.Log("Condition is true, called from: " + _ally.CharacterName),
                 (_ally) => true,

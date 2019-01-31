@@ -548,6 +548,19 @@ namespace RTSCoreFramework
         /// </summary>
         public Action<AllyMember> stopPerformingTask;
 
+        /// <summary>
+        /// Used For Queueing Actions Inside AllyActionQueueController
+        /// </summary>
+        /// <param name="actionToPerform">From IGBPI_Action Struct.</param>
+        /// <param name="canPerformAction">From IGBPI_Action Struct. Only Needed For Testing Action Condition Inside AllyTacticsController Script. Use (_ally) => true If No Additional Condition is Needed</param>
+        /// <param name="actionFilter">From IGBPI_Action Struct.</param>
+        /// <param name="isCommandAction">Not Being Performed By AI</param>
+        /// <param name="requiresFullActionBar">Full Action Bar is Needed To Perform Action</param>
+        /// <param name="requiresActiveBarRegeneration">Action requires Action Bar Regeneration, But Doesn't Necessarily Need a Full Bar to Perform</param>
+        /// <param name="executeMultipleTimes">Set to False if Action Should Only Be Executed Once</param>
+        /// <param name="preparationIsComplete">Use (_ally) => true If No Preparation is Required</param>
+        /// <param name="taskIsFinished">Essential To Telling When the Given Task Is Completed. Will Execute Once Even If Task Is Already Finished</param>
+        /// <param name="stopPerformingTask">Optional Action That Will Stop The Execution Of A Task. Use (_ally) => {} if Stopping Isn't Needed</param>
         public RTSActionItem(
             Action<AllyMember> actionToPerform,
             Func<AllyMember, bool> canPerformAction,
