@@ -145,6 +145,8 @@ namespace RTSCoreFramework
         [SerializeField]
         private LayerMask allyLayers;
         [SerializeField]
+        private LayerMask allyAndCharacterLayers;
+        [SerializeField]
         private LayerMask sightLayers;
         [SerializeField]
         private LayerMask sightNoCurrentPlayerLayers;
@@ -159,6 +161,7 @@ namespace RTSCoreFramework
 
         //Layer Getters
         public LayerMask AllyLayers { get { return allyLayers; } }
+        public LayerMask AllyAndCharacterLayers { get { return allyAndCharacterLayers; } }
         public LayerMask SightLayers { get { return sightLayers; } }
         public LayerMask SightNoCurrentPlayerLayers { get { return sightNoCurrentPlayerLayers; } }
         public LayerMask IgnoreInvisibleLayersAndAllies { get { return ignoreInvisibleLayersAndAllies; } }
