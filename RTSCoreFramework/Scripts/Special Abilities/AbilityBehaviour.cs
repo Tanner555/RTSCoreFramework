@@ -61,6 +61,26 @@ namespace RTSCoreFramework
         }
         #endregion
 
+        #region UnityMessages
+        private void OnEnable()
+        {
+            allyEventHandler.EventAllyDied += OnAllyDeath;
+        }
+
+        private void OnDisable()
+        {
+            allyEventHandler.EventAllyDied -= OnAllyDeath;
+        }
+        #endregion
+
+        #region Handlers
+        protected virtual void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
+        {
+            StopAllCoroutines();
+            //Override And Stop Ability When Ally Dies
+        }
+        #endregion
+
         public abstract void Use(GameObject target = null);
 
         public virtual void SetConfig(AbilityConfig configToSet)
