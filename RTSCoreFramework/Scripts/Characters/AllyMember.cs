@@ -469,6 +469,7 @@ namespace RTSCoreFramework
         public virtual void AllyTakeDamage(int amount, AllyMember _instigator)
         {
             SetDamageInstigator(_instigator);
+
             if (IsAlive == false) return;
             if (AllyHealth > AllyMinHealth)
             {
@@ -476,7 +477,7 @@ namespace RTSCoreFramework
             }
             if (IsAlive == false)
             {
-                allyEventHandler.CallEventAllyDied();
+                allyEventHandler.CallEventAllyDied(ChestTransform.position, Vector3.zero, _instigator.gameObject);
             }
         }
 
@@ -496,7 +497,7 @@ namespace RTSCoreFramework
 
             if (IsAlive == false)
             {
-                allyEventHandler.CallEventAllyDied();
+                allyEventHandler.CallEventAllyDied(position, force, _instigator.gameObject);
             }
         }
 
@@ -555,7 +556,7 @@ namespace RTSCoreFramework
             }
         }
 
-        public virtual void AllyOnDeath()
+        public virtual void AllyOnDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             //if gamemode, find allies and exclude this ally
             if (gamemode != null && partyManager != null)

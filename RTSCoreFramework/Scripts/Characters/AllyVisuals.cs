@@ -258,7 +258,7 @@ namespace RTSCoreFramework
             bHasSwitched = false;
         }
 
-        protected virtual void HandleDeath()
+        protected virtual void HandleDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             DestroyOnDeath();
         }

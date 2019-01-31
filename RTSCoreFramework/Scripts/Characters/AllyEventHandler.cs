@@ -168,7 +168,8 @@ namespace RTSCoreFramework
         #region DelegatesAndEvents
         public delegate void GeneralEventHandler();
         public delegate void GeneralOneBoolHandler(bool _enable);
-        public event GeneralEventHandler EventAllyDied;
+        public delegate void GeneralTwoVectorOneGObjectHandler(Vector3 position, Vector3 force, GameObject attacker);
+        public event GeneralTwoVectorOneGObjectHandler EventAllyDied;
         public event GeneralEventHandler EventSwitchingFromCom;
         public event GeneralEventHandler EventPartySwitching;
         public event GeneralEventHandler EventSetAsCommander;
@@ -289,11 +290,11 @@ namespace RTSCoreFramework
         #endregion
 
         #region EventCalls
-        public virtual void CallEventAllyDied()
+        public virtual void CallEventAllyDied(Vector3 position, Vector3 force, GameObject attacker)
         {
             if (EventAllyDied != null)
             {
-                EventAllyDied();
+                EventAllyDied(position, force, attacker);
                 this.enabled = false;
             }
         }

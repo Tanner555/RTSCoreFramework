@@ -306,7 +306,7 @@ namespace RTSCoreFramework
             }
         }
 
-        protected virtual void UiTargetHandle_OnAllyDeath()
+        protected virtual void UiTargetHandle_OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             if (uiTarget != null && uiTarget.bAllyIsUiTarget)
             {

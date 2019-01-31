@@ -31,7 +31,7 @@ namespace RTSCoreFramework
             rootEventHandler.EventAllyDied -= OnDeath;
         }
 
-        void OnDeath()
+        void OnDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             CancelInvoke();
             Destroy(this);

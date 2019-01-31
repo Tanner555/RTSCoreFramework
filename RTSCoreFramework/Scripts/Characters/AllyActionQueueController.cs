@@ -282,7 +282,7 @@ namespace RTSCoreFramework
             }
         }
 
-        protected virtual void OnDeath()
+        protected virtual void OnDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             StopServices();
             Destroy(this);

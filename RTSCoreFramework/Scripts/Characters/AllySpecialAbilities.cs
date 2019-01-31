@@ -197,7 +197,7 @@ namespace RTSCoreFramework
             AttemptSpecialAbility(_index);
         }
 
-        protected virtual void OnAllyDeath()
+        protected virtual void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             CancelInvoke();
         }
