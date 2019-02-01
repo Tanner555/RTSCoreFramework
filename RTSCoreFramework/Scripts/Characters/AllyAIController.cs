@@ -499,6 +499,7 @@ namespace RTSCoreFramework
                 {
                     if(bIsMeleeing == false)
                     {
+                        myEventHandler.CallEventFinishedMoving();
                         StartMeleeAttackBehavior();
                     }
                 }
@@ -520,6 +521,7 @@ namespace RTSCoreFramework
                 {
                     if (bIsShooting == false)
                     {
+                        myEventHandler.CallEventFinishedMoving();
                         StartShootingBehavior();
                     }
                 }
