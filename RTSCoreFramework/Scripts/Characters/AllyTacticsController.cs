@@ -110,7 +110,19 @@ namespace RTSCoreFramework
         // Use this for initialization
         protected virtual void Start()
         {
+            Invoke("OnStartDelayed", 1f);
+        }
 
+        protected virtual void OnStartDelayed()
+        {
+            //If Tactics Haven't Been Enabled Yet,
+            //and Ally is Either an Enemy or Not the Current Player
+            if(bEnableTactics == false &&
+                (allyMember.bIsInGeneralCommanderParty == false ||
+                allyMember.bIsCurrentPlayer == false))
+            {
+                CallToggleTactics(true);
+            }
         }
 
         // Update is called once per frame

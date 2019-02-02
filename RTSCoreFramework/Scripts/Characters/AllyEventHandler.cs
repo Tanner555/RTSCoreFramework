@@ -170,8 +170,14 @@ namespace RTSCoreFramework
         public delegate void GeneralOneBoolHandler(bool _enable);
         public delegate void GeneralTwoVectorOneGObjectHandler(Vector3 position, Vector3 force, GameObject attacker);
         public event GeneralTwoVectorOneGObjectHandler EventAllyDied;
+        /// <summary>
+        /// Currently Called Before Ally Is Set
+        /// </summary>
         public event GeneralEventHandler EventSwitchingFromCom;
         public event GeneralEventHandler EventPartySwitching;
+        /// <summary>
+        /// Currently Called After Ally Is Set
+        /// </summary>
         public event GeneralEventHandler EventSetAsCommander;
         public event GeneralEventHandler EventKilledEnemy;
         public event GeneralEventHandler EventStopTargettingEnemy;

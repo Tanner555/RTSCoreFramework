@@ -88,6 +88,9 @@ namespace RTSCoreFramework
         public event AllyMemberHandler OnRightClickEnemy;
 
         public delegate void AllySwitchHandler(PartyManager _party, AllyMember _toSet, AllyMember _current);
+        /// <summary>
+        /// OnAllySwitch Won't Be Called On All Allies At Start Of Game Because Switch Happens Before They All Spawn.
+        /// </summary>
         public event AllySwitchHandler OnAllySwitch;
 
         public delegate void UiTargetHookHandler(AllyMember _target, AllyEventHandler _eventHandler, PartyManager _party);

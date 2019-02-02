@@ -188,10 +188,10 @@ namespace RTSCoreFramework
             {
                 gamemaster.CallOnAllySwitch(this, _setToCommand, AllyInCommand);
                 if (AllyInCommand != null)
-                    AllyInCommand.GetComponent<AllyEventHandler>().CallEventSwitchingFromCom();
+                    AllyInCommand.allyEventHandler.CallEventSwitchingFromCom();
 
                 AllyInCommand = _setToCommand;
-                AllyInCommand.GetComponent<AllyEventHandler>().CallEventSetAsCommander();
+                AllyInCommand.allyEventHandler.CallEventSetAsCommander();
                 //Set PartySwitching Event Afterwards for more accurate party data retreival
                 foreach (var _ally in PartyMembers)
                 {
