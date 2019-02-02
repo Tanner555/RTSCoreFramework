@@ -58,6 +58,7 @@ namespace RTSCoreFramework
         //Set to -1 to compare an unset layer
         private LayerMask __allyLayers = -1;
         private LayerMask __sightLayers = -1;
+        private LayerMask __allyAndCharacterLayers = -1;
 
         protected Collider[] colliders;
         protected List<Transform> uniqueTransforms = new List<Transform>();
@@ -113,6 +114,17 @@ namespace RTSCoreFramework
                     __sightLayers = gamemode.SightLayers;
 
                 return __sightLayers;
+            }
+        }
+
+        public LayerMask allyAndCharacterLayers
+        {
+            get
+            {
+                if (__allyAndCharacterLayers == -1)
+                    __allyAndCharacterLayers = gamemode.AllyAndCharacterLayers;
+
+                return __allyAndCharacterLayers;
             }
         }
 
@@ -395,7 +407,7 @@ namespace RTSCoreFramework
                 Debug.LogError("No head assigned on AIController, cannot run look service");
                 return _closestEnemy;
             }
-            colliders = Physics.OverlapSphere(transform.position, sightRange, allyLayers);
+            colliders = Physics.OverlapSphere(transform.position, sightRange, allyAndCharacterLayers);
             AllyMember _enemy = null;
             scanEnemyList.Clear();
             uniqueTransforms.Clear();
