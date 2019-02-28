@@ -13,6 +13,10 @@ namespace RTSCoreFramework
         public ECharacterType CharacterType;
         public RTSGameMode.EFactions AllyFaction;
         public RTSGameMode.ECommanders GeneralCommander;
+
+        [Header("Character Builder")]
+        [Tooltip("Should The Character Be Spawned As A GameObject, Or Built Using The CharacterBuilder?")]
+        public bool bBuildCharacterCompletely = false;
         
         [Header("Child Prefab Info")]
         //HealthBar
