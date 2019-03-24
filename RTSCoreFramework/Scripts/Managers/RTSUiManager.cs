@@ -29,7 +29,7 @@ namespace RTSCoreFramework
         {
             get { return IGBPICompsAreValid && CharacterStatsPanels &&
                     CharacterStatsPrefab && MenuUiPanel && WinnerUiPanel &&
-                    NextLevelButton && GameOverUiPanel; }
+                    NextLevelButton && GameOverUiPanel && LuaPanel; }
         }
 
         public bool IGBPICompsAreValid
@@ -98,6 +98,9 @@ conditionButton && actionButton && IGBPITitleText;
         [Header("Character Stats Objects")]
         public GameObject CharacterStatsPanels;
         public GameObject CharacterStatsPrefab;
+
+        [Header("Prototype Lua Scripting Objects")]
+        public GameObject LuaPanel;
         #endregion
 
         #region UnityMessages
@@ -229,6 +232,13 @@ conditionButton && actionButton && IGBPITitleText;
                     gamemode.CurrentPlayer.CharacterType.ToString() +
                     "'s Tactics";
             }
+        }
+
+        void ToggleLuaEditorUI(bool enable)
+        {
+            if (AllUiCompsAreValid == false) return;
+
+            if (LuaPanel != null) LuaPanel.SetActive(enable);
         }
         #endregion
 
@@ -606,6 +616,7 @@ conditionButton && actionButton && IGBPITitleText;
             //Toggles
             //uiMaster.EventInventoryUIToggle += ToggleInventoryUi;
             uiMaster.EventIGBPIToggle += ToggleIGBPIUi;
+            uiMaster.EventLuaEditorToggle += ToggleLuaEditorUI;
             //IGBPI
             uiMaster.EventAddDropdownInstance += AddDropdownInstance;
             uiMaster.EventRemoveDropdownInstance += DeregisterDropdownMenu;
@@ -622,6 +633,7 @@ conditionButton && actionButton && IGBPITitleText;
             //Toggles
             //uiMaster.EventInventoryUIToggle -= ToggleInventoryUi;
             uiMaster.EventIGBPIToggle -= ToggleIGBPIUi;
+            uiMaster.EventLuaEditorToggle -= ToggleLuaEditorUI;
             //IGBPI
             uiMaster.EventAddDropdownInstance -= AddDropdownInstance;
             uiMaster.EventRemoveDropdownInstance -= DeregisterDropdownMenu;

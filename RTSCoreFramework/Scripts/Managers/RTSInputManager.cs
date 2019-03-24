@@ -79,6 +79,9 @@ namespace RTSCoreFramework
             //    CallInventoryToggle();
             if (Input.GetKeyDown(KeyCode.B))
                 CallIGBPIToggle();
+            if (Input.GetKeyDown(KeyCode.L))
+                CallLuaEditorToggle();
+
             if (UiIsEnabled) return;
             //All Input That Shouldn't Happen When 
             //Ui is Enabled
@@ -164,6 +167,7 @@ namespace RTSCoreFramework
         //void CallInventoryToggle() { uiMaster.CallEventInventoryUIToggle(); }
         void CallToggleIsInPauseControl() { gamemaster.CallOnTogglebIsInPauseControlMode(); }
         void CallIGBPIToggle() { uiMaster.CallEventIGBPIToggle(); }
+        void CallLuaEditorToggle() { uiMaster.CallEventLuaEditorToggle(); }
         void CallPossessAllyAdd() { gamemode.GeneralInCommand.PossessAllyAdd(); }
         void CallPossessAllySubtract() { gamemode.GeneralInCommand.PossessAllySubtract(); }
         //void CallSelectPrevWeapon() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnSwitchToPrevItem(); }

@@ -531,7 +531,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224939229077131026}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3699,7 +3699,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 441, y: -402}
   m_SizeDelta: {x: 233, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222031653499326498
@@ -4066,7 +4066,7 @@ RectTransform:
   - {fileID: 224095025820933684}
   - {fileID: 224587168243483188}
   m_Father: {fileID: 224939229077131026}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -6128,6 +6128,7 @@ GameObject:
   - component: {fileID: 224752279416502180}
   - component: {fileID: 222382710001677822}
   - component: {fileID: 114440507977636078}
+  - component: {fileID: 1400902528}
   m_Layer: 5
   m_Name: Lua Code Editor
   m_TagString: Untagged
@@ -6150,7 +6151,7 @@ RectTransform:
   - {fileID: 224648999967380252}
   - {fileID: 224552452622806590}
   m_Father: {fileID: 224939229077131026}
-  m_RootOrder: 3
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6194,6 +6195,21 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &1400902528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461103265771400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b15d9c55b455f5048b82f5921c127cab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RunButton: {fileID: 114529221598876338}
+  CancelButton: {fileID: 114626709993379862}
+  CodeInputField: {fileID: 114048331563140890}
 --- !u!1 &1463528488978084
 GameObject:
   m_ObjectHideFlags: 0
@@ -7039,11 +7055,11 @@ RectTransform:
   - {fileID: 224196862272174552}
   - {fileID: 224613256977431526}
   - {fileID: 224360411274128968}
-  - {fileID: 224752279416502180}
   - {fileID: 224812076713501780}
   - {fileID: 4975137853034836}
   - {fileID: 224777065460641360}
   - {fileID: 224128233470675818}
+  - {fileID: 224752279416502180}
   - {fileID: 224011594787033574}
   - {fileID: 224484928703141544}
   - {fileID: 224229459933821704}
@@ -7148,6 +7164,7 @@ MonoBehaviour:
   CharacterStatsPanels: {fileID: 1036266877865324}
   CharacterStatsPrefab: {fileID: 1534986942412352, guid: 385dc4c45f93ed2468ca54c81ed61ed4,
     type: 3}
+  LuaPanel: {fileID: 1461103265771400}
 --- !u!114 &114250213364930262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8031,7 +8048,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224939229077131026}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10101,7 +10118,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -379, y: -402}
   m_SizeDelta: {x: 233, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222547494183158966
@@ -12377,7 +12394,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224939229077131026}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114450078930352138
 MonoBehaviour:

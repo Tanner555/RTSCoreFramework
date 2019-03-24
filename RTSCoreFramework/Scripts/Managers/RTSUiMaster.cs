@@ -10,6 +10,7 @@ namespace RTSCoreFramework
         #region DelegatesAndEvents     
         //public event MenuToggleHandler EventInventoryUIToggle;
         public event MenuToggleHandler EventIGBPIToggle;
+        public event MenuToggleHandler EventLuaEditorToggle;
         //IGBPI Events
         public delegate void UI_PanelHandler(IGBPI_UI_Panel _info);
         public delegate void UI_MovePanelHandler(IGBPI_UI_Panel _info, int _order);
@@ -32,7 +33,7 @@ namespace RTSCoreFramework
         //For Ui Conflict Checking
         public override bool isUiAlreadyInUse
         {
-            get { return isPauseMenuOn || isIGBPIOn; }
+            get { return isPauseMenuOn || isIGBPIOn || isLuaScriptingOn; }
         }
         //Override Inside Wrapper Class
         public override bool isPauseMenuOn
@@ -42,6 +43,11 @@ namespace RTSCoreFramework
         public virtual bool isIGBPIOn
         {
             get { return uiManager.IGBPIUi.activeSelf; }
+        }
+
+        public virtual bool isLuaScriptingOn
+        {
+            get { return uiManager.LuaPanel.activeSelf; }
         }
         #endregion
 
@@ -89,6 +95,16 @@ namespace RTSCoreFramework
                 CallEventAnyUIToggle(!isIGBPIOn);
                 if (EventIGBPIToggle != null) EventIGBPIToggle(!isIGBPIOn);
                 EnableRayCaster(!isIGBPIOn);
+            }
+        }
+
+        public void CallEventLuaEditorToggle()
+        {
+            if(isUiAlreadyInUse == false || isLuaScriptingOn)
+            {
+                CallEventAnyUIToggle(!isLuaScriptingOn);
+                if (EventLuaEditorToggle != null) EventLuaEditorToggle(!isLuaScriptingOn);
+                EnableRayCaster(!isLuaScriptingOn);
             }
         }
 
