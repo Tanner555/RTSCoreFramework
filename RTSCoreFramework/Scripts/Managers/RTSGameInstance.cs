@@ -22,12 +22,6 @@ namespace RTSCoreFramework
         {
             base.OnEnable();            
         }
-
-        // Update is called once per frame
-        protected override void Update()
-        {
-            base.Update();
-        }
         #endregion
 
     }
