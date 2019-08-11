@@ -64,11 +64,15 @@ namespace RTSCoreFramework
             base.OnDisable();
             
         }
-        // Update is called once per frame
-        protected override void Update()
+        #endregion
+
+        #region Handlers
+
+        protected override void OnUpdate()
         {
-            base.Update();
+            base.OnUpdate();
         }
+
         #endregion
 
         #region InputSetup
