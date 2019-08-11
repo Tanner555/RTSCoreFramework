@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using BaseFramework;
 
 namespace RTSCoreFramework
 {
@@ -38,6 +39,8 @@ namespace RTSCoreFramework
         {
             get { return RTSGameMode.thisInstance; }
         }
+
+        UnityMsgManager myUnityMsgManager { get { return UnityMsgManager.thisInstance;} }
 
         public static RTSCamRaycaster thisInstance { get; protected set; }
 
@@ -151,42 +154,6 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
 
             hasStarted = true;
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-            //Makes Sure Code is Valid Before Running
-            if (TimeToReturn()) return;
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out rayHit, maxRaycastDepth, sightNoCurrentPlayerLayer))
-            {
-                gObject = rayHit.collider.gameObject;
-                gObjectRoot = rayHit.collider.gameObject.transform.root.gameObject;
-                rayHitType = GetHitType();
-                //if (rayHitType != rayHitTypeLastFrame || 
-                //    MyCursorChangeTimer.IsTimerFinished())
-                if(rayHitType != rayHitTypeLastFrame)
-                {
-                    //Timer created issues, retracted for now
-                    //Update Cursor Change Every So Often To Resolve Cursor Bugs
-                    //MyCursorChangeTimer.StartTimer();
-                    //Layer has Changed
-                    gamemaster.CallEventOnMouseCursorChange(rayHitType, rayHit);
-                }
-                gObjectLastFrame = gObject;
-                rayHitTypeLastFrame = rayHitType;
-            }
-            else
-            {
-                if (gObjectLastFrame != null)
-                {
-                    gamemaster.CallEventOnMouseCursorChange(rtsHitType.Unknown, rayHit);
-                }
-                gObjectLastFrame = null;
-                rayHitTypeLastFrame = rtsHitType.Unknown;
-            }
-
-        }
         #endregion
 
         #region RayFunctions
@@ -238,8 +205,42 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
             return false;
         }
         #endregion
-
+        
         #region Handlers
+        void OnUpdateHandler()
+        {
+            //Makes Sure Code is Valid Before Running
+            if (TimeToReturn()) return;
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out rayHit, maxRaycastDepth, sightNoCurrentPlayerLayer))
+            {
+                gObject = rayHit.collider.gameObject;
+                gObjectRoot = rayHit.collider.gameObject.transform.root.gameObject;
+                rayHitType = GetHitType();
+                //if (rayHitType != rayHitTypeLastFrame || 
+                //    MyCursorChangeTimer.IsTimerFinished())
+                if (rayHitType != rayHitTypeLastFrame)
+                {
+                    //Timer created issues, retracted for now
+                    //Update Cursor Change Every So Often To Resolve Cursor Bugs
+                    //MyCursorChangeTimer.StartTimer();
+                    //Layer has Changed
+                    gamemaster.CallEventOnMouseCursorChange(rayHitType, rayHit);
+                }
+                gObjectLastFrame = gObject;
+                rayHitTypeLastFrame = rayHitType;
+            }
+            else
+            {
+                if (gObjectLastFrame != null)
+                {
+                    gamemaster.CallEventOnMouseCursorChange(rtsHitType.Unknown, rayHit);
+                }
+                gObjectLastFrame = null;
+                rayHitTypeLastFrame = rtsHitType.Unknown;
+            }
+        }
+
         void OnUIToggleChanged(bool _isEnabled)
         {
             //Change Layer If UI is toggled to false
@@ -258,12 +259,14 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
         {
             uimaster.EventAnyUIToggle += OnUIToggleChanged;
             gamemaster.GameOverEvent += DestroyRaycaster;
+            myUnityMsgManager.RegisterOnUpdate(OnUpdateHandler);
         }
 
         void UnsubFromEvents()
         {
             uimaster.EventAnyUIToggle -= OnUIToggleChanged;
             gamemaster.GameOverEvent -= DestroyRaycaster;
+            myUnityMsgManager.DeregisterOnUpdate(OnUpdateHandler);
         }
         #endregion
     }
