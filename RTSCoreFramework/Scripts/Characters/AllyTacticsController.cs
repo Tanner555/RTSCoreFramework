@@ -89,7 +89,7 @@ namespace RTSCoreFramework
         protected bool bPreviouslyEnabledTactics = false;
         protected List<AllyTacticsItem> evalTactics = new List<AllyTacticsItem>();
         public List<AllyTacticsItem> AllyTacticsList = new List<AllyTacticsItem>();
-        public int executionsPerSec = 5;
+        protected int executionsPerSec = 5;
         protected AllyTacticsItem currentExecutionItem = null;
         protected AllyTacticsItem previousExecutionItem = null;
         #endregion
