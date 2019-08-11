@@ -35,12 +35,6 @@ namespace RTSCoreFramework
         {
             InitializePartyStats();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         #endregion
 
         void InitializePartyStats()

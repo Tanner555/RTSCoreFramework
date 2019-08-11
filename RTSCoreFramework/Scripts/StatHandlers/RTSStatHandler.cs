@@ -243,12 +243,6 @@ namespace RTSCoreFramework
 
         }
 
-        // Update is called once per frame
-        protected virtual void Update()
-        {
-
-        }
-
         protected virtual void OnDisable()
         {
 

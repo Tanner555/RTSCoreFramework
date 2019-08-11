@@ -59,11 +59,6 @@ namespace RTSCoreFramework
             base.OnDisable();
 
         }
-
-        protected override void Update()
-        {
-            base.Update();
-        }
         #endregion
 
         #region Events and Delegates

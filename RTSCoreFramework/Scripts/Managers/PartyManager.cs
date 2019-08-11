@@ -89,12 +89,6 @@ namespace RTSCoreFramework
         {
 
         }
-
-        // Update is called once per frame
-        protected virtual void Update()
-        {
-
-        }
         #endregion
 
         #region Find-Set-Possess-AllyInCommand
