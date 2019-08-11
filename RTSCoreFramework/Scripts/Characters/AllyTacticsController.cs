@@ -124,12 +124,6 @@ namespace RTSCoreFramework
                 CallToggleTactics(true);
             }
         }
-
-        // Update is called once per frame
-        protected virtual void Update()
-        {
-
-        }
         #endregion
 
         #region Handlers

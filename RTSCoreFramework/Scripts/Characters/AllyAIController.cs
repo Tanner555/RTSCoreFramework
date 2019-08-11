@@ -176,25 +176,10 @@ namespace RTSCoreFramework
             StartServices();
         }
 
-        protected virtual void Update()
-        {
-
-        }
-
-        protected virtual void LateUpdate()
-        {
-
-        }
-
         protected virtual void OnDisable()
         {
             UnSubFromEvents();
             CancelServices();
-        }
-
-        protected virtual void OnDrawGizmos()
-        {
-
         }
         #endregion
 
