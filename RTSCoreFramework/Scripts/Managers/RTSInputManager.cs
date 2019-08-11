@@ -68,9 +68,9 @@ namespace RTSCoreFramework
 
         #region Handlers
 
-        protected override void OnUpdate()
+        protected override void OnUpdateHandler()
         {
-            base.OnUpdate();
+            base.OnUpdateHandler();
         }
 
         #endregion

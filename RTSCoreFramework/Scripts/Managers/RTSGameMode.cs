@@ -218,20 +218,6 @@ namespace RTSCoreFramework
             base.Start();
 
         }
-
-        //// Update is called once per frame
-        protected override void Update()
-        {
-            base.Update();
-            if (MatchState == ERTSGameState.EWaitingToStart)
-            {
-                waitingTillBeginMatch();
-            }
-            else if (MatchState == ERTSGameState.EPlaying)
-            {
-                playTheMatch();
-            }
-        }
         #endregion
 
         #region Getters
@@ -501,6 +487,20 @@ namespace RTSCoreFramework
         #endregion
 
         #region Handlers
+        protected override void OnUpdateHandler()
+        {
+            base.OnUpdateHandler();
+
+            if (MatchState == ERTSGameState.EWaitingToStart)
+            {
+                waitingTillBeginMatch();
+            }
+            else if (MatchState == ERTSGameState.EPlaying)
+            {
+                playTheMatch();
+            }
+        }
+
         public virtual void ProcessAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
             if (_toSet != null && _party.bIsCurrentPlayerCommander)
