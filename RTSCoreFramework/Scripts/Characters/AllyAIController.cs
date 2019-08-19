@@ -289,6 +289,13 @@ namespace RTSCoreFramework
         {
             bIsShooting = _enable;
         }
+
+        private void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
+        {
+            StopAllCoroutines();
+            CancelInvoke();
+            this.enabled = false;
+        }
         #endregion
 
         #region AITacticsCommands
@@ -572,7 +579,7 @@ namespace RTSCoreFramework
 
         protected virtual void MakeFireRequest()
         {
-            if (allyMember.ActiveTimeBarIsFull())
+            if (allyMember != null && allyMember.ActiveTimeBarIsFull())
             {
                 // Pause Ally Tactics If Ally Is Paused
                 // Due to the Game Pausing Or Control Pause Mode
@@ -585,7 +592,7 @@ namespace RTSCoreFramework
 
         protected virtual void MakeMeleeAttackRequest()
         {
-            if (allyMember.ActiveTimeBarIsFull())
+            if (allyMember != null && allyMember.ActiveTimeBarIsFull())
             {
                 // Pause Ally Tactics If Ally Is Paused
                 // Due to the Game Pausing Or Control Pause Mode
@@ -607,6 +614,7 @@ namespace RTSCoreFramework
             myEventHandler.EventFinishedMoving += HandleOnAIStopMoving;
             myEventHandler.OnWeaponChanged += OnWeaponChanged;
             myEventHandler.InitializeAllyComponents += OnAllyInitComps;
+            myEventHandler.EventAllyDied += OnAllyDeath;
             gamemaster.EventHoldingRightMouseDown += OnEnableCameraMovement;
         }
 
@@ -619,6 +627,7 @@ namespace RTSCoreFramework
             myEventHandler.EventFinishedMoving -= HandleOnAIStopMoving;
             myEventHandler.OnWeaponChanged -= OnWeaponChanged;
             myEventHandler.InitializeAllyComponents -= OnAllyInitComps;
+            myEventHandler.EventAllyDied -= OnAllyDeath;
             gamemaster.EventHoldingRightMouseDown -= OnEnableCameraMovement;
         }
 
