@@ -1,9 +1,0 @@
-<UXML xmlns="UnityEngine.UIElements">
-    <VisualElement class="container">
-        <Label name="display" text="Display"/>
-        <SliderInt
-            binding-path="height"
-            low-value="0"
-            high-value="100" />
-    </VisualElement>
-</UXML>
