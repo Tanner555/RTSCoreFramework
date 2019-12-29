@@ -215,9 +215,9 @@ namespace RTSCoreFramework
         public delegate void OneRTSActionItemArgHandler(RTSActionItem _actionItem);
         public event GeneralEventHandler OnActiveTimeBarIsFull;
         public event GeneralEventHandler OnActiveTimeBarDepletion;
-        public event GeneralEventHandler OnRemoveCommandActionFromQueue;
-        public event GeneralEventHandler OnRemoveAIActionFromQueue;
-        public event OneRTSActionItemArgHandler OnAddActionItemToQueue;
+        //public event GeneralEventHandler OnRemoveCommandActionFromQueue;
+        //public event GeneralEventHandler OnRemoveAIActionFromQueue;
+        //public event OneRTSActionItemArgHandler OnAddActionItemToQueue;
         public event GeneralOneBoolHandler OnToggleActiveTimeRegeneration;
 
         //May use delegate in the future
@@ -420,20 +420,20 @@ namespace RTSCoreFramework
             if (OnActiveTimeBarDepletion != null) OnActiveTimeBarDepletion();
         }
 
-        public virtual void CallOnRemoveCommandActionFromQueue()
-        {
-            if (OnRemoveCommandActionFromQueue != null) OnRemoveCommandActionFromQueue();
-        }
+        //public virtual void CallOnRemoveCommandActionFromQueue()
+        //{
+        //    if (OnRemoveCommandActionFromQueue != null) OnRemoveCommandActionFromQueue();
+        //}
 
-        public virtual void CallOnRemoveAIActionFromQueue()
-        {
-            if (OnRemoveAIActionFromQueue != null) OnRemoveAIActionFromQueue();
-        }
+        //public virtual void CallOnRemoveAIActionFromQueue()
+        //{
+        //    if (OnRemoveAIActionFromQueue != null) OnRemoveAIActionFromQueue();
+        //}
 
-        public virtual void CallOnAddActionItemToQueue(RTSActionItem _actionItem)
-        {
-            if (OnAddActionItemToQueue != null) OnAddActionItemToQueue(_actionItem);
-        }
+        //public virtual void CallOnAddActionItemToQueue(RTSActionItem _actionItem)
+        //{
+        //    if (OnAddActionItemToQueue != null) OnAddActionItemToQueue(_actionItem);
+        //}
 
         public virtual void CallOnToggleActiveTimeRegeneration(bool _enable)
         {

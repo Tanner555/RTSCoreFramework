@@ -7,6 +7,7 @@ namespace RTSCoreFramework
 {
     public class AllyActionQueueController : MonoBehaviour
     {
+        /*
         #region Fields
         protected bool bHasCommandActionItem = false;
         protected bool bHasAIActionItem = false;
@@ -493,6 +494,7 @@ namespace RTSCoreFramework
             myEventHandler.EventAllyDied -= OnDeath;
         }
         #endregion
+        */
     }
 
     #region ActionItemClass

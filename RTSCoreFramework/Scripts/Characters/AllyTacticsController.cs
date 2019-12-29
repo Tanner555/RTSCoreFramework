@@ -6,6 +6,7 @@ namespace RTSCoreFramework
 {
     public class AllyTacticsController : MonoBehaviour
     {
+        /*
         #region Properties
         protected AllyEventHandler myEventHandler
         {
@@ -365,6 +366,6 @@ namespace RTSCoreFramework
             }
         }
         #endregion
-
+        */
     }
 }

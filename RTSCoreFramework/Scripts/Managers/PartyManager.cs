@@ -284,28 +284,30 @@ namespace RTSCoreFramework
                 case rtsHitType.Enemy:
                     GameObject _root = hit.collider.gameObject.transform.root.gameObject;
                     AllyMember _enemy = _root.GetComponent<AllyMember>();
+                    AllyInCommand.allyEventHandler.CallEventPlayerCommandAttackEnemy(_enemy);
                     //Adding Command Attack Event Call To ActionItem Queue
-                    AllyInCommand.allyEventHandler.CallOnAddActionItemToQueue(new RTSActionItem(
-                        _ally => _ally.allyEventHandler.CallEventPlayerCommandAttackEnemy(_enemy),
-                        _ally => true, ActionFilters.AI, true, false, true, false, _ally => true,
-                        _ally => _ally.bIsAttacking == false, (_ally) =>
-                        {
-                            _ally.allyEventHandler.CallEventStopTargettingEnemy();
-                            _ally.allyEventHandler.CallEventFinishedMoving();
-                        }));
+                    //AllyInCommand.allyEventHandler.CallOnAddActionItemToQueue(new RTSActionItem(
+                    //    _ally => _ally.allyEventHandler.CallEventPlayerCommandAttackEnemy(_enemy),
+                    //    _ally => true, ActionFilters.AI, true, false, true, false, _ally => true,
+                    //    _ally => _ally.bIsAttacking == false, (_ally) =>
+                    //    {
+                    //        _ally.allyEventHandler.CallEventStopTargettingEnemy();
+                    //        _ally.allyEventHandler.CallEventFinishedMoving();
+                    //    }));
                     break;
                 case rtsHitType.Cover:
                     break;
                 case rtsHitType.Walkable:
                     if (AllyInCommand.allyEventHandler.bIsFreeMoving == false)
                     {
+                        AllyInCommand.allyEventHandler.CallEventCommandMove(hitType, hit);
                         //Adding Command Move Event Call To ActionItem Queue
-                        AllyInCommand.allyEventHandler.CallOnAddActionItemToQueue(new RTSActionItem(
-                            _ally => _ally.allyEventHandler.CallEventCommandMove(hitType, hit),
-                            _ally => true, ActionFilters.Movement, true, false, false, false,
-                            _ally => true, _ally => _ally.bIsFreeMoving || _ally.bIsNavMoving == false,
-                            _ally => _ally.allyEventHandler.CallEventFinishedMoving()
-                            ));
+                        //AllyInCommand.allyEventHandler.CallOnAddActionItemToQueue(new RTSActionItem(
+                        //    _ally => _ally.allyEventHandler.CallEventCommandMove(hitType, hit),
+                        //    _ally => true, ActionFilters.Movement, true, false, false, false,
+                        //    _ally => true, _ally => _ally.bIsFreeMoving || _ally.bIsNavMoving == false,
+                        //    _ally => _ally.allyEventHandler.CallEventFinishedMoving()
+                        //    ));
                     }
                     break;
                 case rtsHitType.Unwalkable:

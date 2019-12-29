@@ -117,13 +117,14 @@ namespace RTSCoreFramework
             if (energyCost <= AllyStamina &&
                 _behaviour.CanUseAbility())
             {
-                eventhandler.CallOnAddActionItemToQueue(
-                    new RTSActionItem(
-                        _ally => AttemptSpecialAbility(_config, _behaviour), 
-                        _ally => energyCost <= AllyStamina && _behaviour.CanUseAbility(),
-                        ActionFilters.Abilities, true, true, true, false, _ally => true,
-                        _ally => true, _ally => { }
-                    ));
+                AttemptSpecialAbility(_config, _behaviour);
+                //eventhandler.CallOnAddActionItemToQueue(
+                //    new RTSActionItem(
+                //        _ally => AttemptSpecialAbility(_config, _behaviour), 
+                //        _ally => energyCost <= AllyStamina && _behaviour.CanUseAbility(),
+                //        ActionFilters.Abilities, true, true, true, false, _ally => true,
+                //        _ally => true, _ally => { }
+                //    ));
             }
         }
 
