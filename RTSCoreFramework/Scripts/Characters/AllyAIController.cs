@@ -290,6 +290,11 @@ namespace RTSCoreFramework
             bIsShooting = _enable;
         }
 
+        protected virtual void HandleAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
+        {
+
+        }
+
         private void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             StopAllCoroutines();
@@ -614,8 +619,9 @@ namespace RTSCoreFramework
             myEventHandler.EventFinishedMoving += HandleOnAIStopMoving;
             myEventHandler.OnWeaponChanged += OnWeaponChanged;
             myEventHandler.InitializeAllyComponents += OnAllyInitComps;
-            myEventHandler.EventAllyDied += OnAllyDeath;
+            myEventHandler.EventAllyDied += OnAllyDeath;            
             gamemaster.EventHoldingRightMouseDown += OnEnableCameraMovement;
+            gamemaster.OnAllySwitch += HandleAllySwitch;
         }
 
         protected virtual void UnSubFromEvents()
@@ -629,6 +635,7 @@ namespace RTSCoreFramework
             myEventHandler.InitializeAllyComponents -= OnAllyInitComps;
             myEventHandler.EventAllyDied -= OnAllyDeath;
             gamemaster.EventHoldingRightMouseDown -= OnEnableCameraMovement;
+            gamemaster.OnAllySwitch -= HandleAllySwitch;
         }
 
         protected virtual void StartServices()
