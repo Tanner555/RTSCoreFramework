@@ -354,7 +354,7 @@ namespace RTSCoreFramework
             CharacterNameText.text = $"{uiTarget.CharacterName}: Attacking";
         }
 
-        protected virtual void UiTargetHandle_CommandMove(Vector3 _location)
+        protected virtual void UiTargetHandle_CommandMove(Vector3 _location, bool _isCommandMove)
         {
             if (uiTargetHandler.bIsAttacking) return;
             CharacterNameText.text = $"{uiTarget.CharacterName}: Moving";

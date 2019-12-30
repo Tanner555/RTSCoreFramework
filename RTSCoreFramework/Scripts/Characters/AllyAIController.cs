@@ -266,7 +266,7 @@ namespace RTSCoreFramework
             CancelInvoke();
         }
 
-        protected virtual void HandleOnMoveAlly(Vector3 _point)
+        protected virtual void HandleOnMoveAlly(Vector3 _point, bool _isCommandMove)
         {
             if (myEventHandler.bIsCommandMoving)
             {

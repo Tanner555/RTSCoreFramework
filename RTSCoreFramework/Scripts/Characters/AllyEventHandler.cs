@@ -226,7 +226,8 @@ namespace RTSCoreFramework
         public event GeneralEventHandler OnHoverLeave;
 
         public delegate void GeneralVector3Handler(Vector3 _point);
-        public event GeneralVector3Handler EventCommandMove;
+        public delegate void GeneralVector3AndBooleanHandler(Vector3 _point, bool _enable);
+        public event GeneralVector3AndBooleanHandler EventCommandMove;
 
         public delegate void AllyHandler(AllyMember ally);
         public event AllyHandler EventCommandAttackEnemy;
@@ -500,7 +501,7 @@ namespace RTSCoreFramework
             bIsAimingToShoot = bIsCommandAttacking = bIsAiAttacking = false;
             bIsCommandMoving = true;
             bIsAIMoving = false;
-            CallEventCommandMove(hit.point);
+            CallEventCommandMove(hit.point, true);
         }
 
         public virtual void CallEventAIMove(Vector3 _point)
@@ -508,12 +509,12 @@ namespace RTSCoreFramework
             bIsAimingToShoot = false;
             bIsAIMoving = true;
             bIsCommandMoving = false;
-            CallEventCommandMove(_point);
+            CallEventCommandMove(_point, false);
         }
 
-        protected virtual void CallEventCommandMove(Vector3 _point)
+        protected virtual void CallEventCommandMove(Vector3 _point, bool _isCommandMove)
         {
-            if (EventCommandMove != null) EventCommandMove(_point);
+            if (EventCommandMove != null) EventCommandMove(_point, _isCommandMove);
         }
 
         public virtual void CallEventPlayerCommandAttackEnemy(AllyMember ally)

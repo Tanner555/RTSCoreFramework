@@ -202,7 +202,7 @@ namespace RTSCoreFramework
             GameObject.Instantiate(BloodParticles, position, Quaternion.identity);
         }
 
-        protected virtual void SetupWaypointRenderer(Vector3 _point)
+        protected virtual void SetupWaypointRenderer(Vector3 _point, bool _isCommandMove)
         {
             if (IsInvoking("UpdateWaypointRenderer"))
             {
