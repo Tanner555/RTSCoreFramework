@@ -256,23 +256,23 @@ namespace RTSCoreFramework
 
         protected virtual void HandleCommandAttackEnemy(AllyMember enemy)
         {
-            CommandAttackEnemy(enemy);
+            //CommandAttackEnemy(enemy);
         }
 
         protected virtual void HandleStopTargetting()
         {
-            currentTargettedEnemy = null;
-            StopBattleBehavior();
-            CancelInvoke();
+            //currentTargettedEnemy = null;
+            //StopBattleBehavior();
+            //CancelInvoke();
         }
 
         protected virtual void HandleOnMoveAlly(Vector3 _point, bool _isCommandMove)
         {
-            if (myEventHandler.bIsCommandMoving)
-            {
-                if (IsInvoking("UpdateBattleBehavior"))
-                    StopBattleBehavior();
-            }
+            //if (myEventHandler.bIsCommandMoving)
+            //{
+            //    if (IsInvoking("UpdateBattleBehavior"))
+            //        StopBattleBehavior();
+            //}
         }
 
         protected virtual void HandleOnAIStopMoving()
@@ -345,11 +345,11 @@ namespace RTSCoreFramework
             //An Enemy After They Are Set To Command 
             //After Tactics Have Been Followed when Switching
             //From Command
-            if (IsInvoking("UpdateBattleBehavior"))
-            {
-                StopBattleBehavior();
-                myEventHandler.CallEventStopTargettingEnemy();
-            }
+            //if (IsInvoking("UpdateBattleBehavior"))
+            //{
+            //    StopBattleBehavior();
+            //    myEventHandler.CallEventStopTargettingEnemy();
+            //}
 
             if (IsWithinFollowingDistance() == false)
             {
@@ -472,141 +472,141 @@ namespace RTSCoreFramework
         #endregion
 
         #region ShootingAndBattleBehavior
-        protected virtual void CommandAttackEnemy(AllyMember enemy)
-        {
-            previousTargettedEnemy = currentTargettedEnemy;
-            currentTargettedEnemy = enemy;
-            if (IsInvoking("UpdateBattleBehavior") == false)
-            {
-                StartBattleBehavior();
-            }
-            else if (IsInvoking("UpdateBattleBehavior") && previousTargettedEnemy != currentTargettedEnemy)
-            {
-                StopBattleBehavior();
-                Invoke("StartBattleBehavior", 0.05f);
-            }
-        }
+        //protected virtual void CommandAttackEnemy(AllyMember enemy)
+        //{
+        //    previousTargettedEnemy = currentTargettedEnemy;
+        //    currentTargettedEnemy = enemy;
+        //    if (IsInvoking("UpdateBattleBehavior") == false)
+        //    {
+        //        StartBattleBehavior();
+        //    }
+        //    else if (IsInvoking("UpdateBattleBehavior") && previousTargettedEnemy != currentTargettedEnemy)
+        //    {
+        //        StopBattleBehavior();
+        //        Invoke("StartBattleBehavior", 0.05f);
+        //    }
+        //}
 
-        protected virtual void UpdateBattleBehavior()
-        {
-            // Pause Ally Tactics If Ally Is Paused
-            // Due to the Game Pausing Or Control Pause Mode
-            // Is Active
-            if (myEventHandler.bAllyIsPaused) return;
+        //protected virtual void UpdateBattleBehavior()
+        //{
+        //    // Pause Ally Tactics If Ally Is Paused
+        //    // Due to the Game Pausing Or Control Pause Mode
+        //    // Is Active
+        //    if (myEventHandler.bAllyIsPaused) return;
 
-            if (bStopUpdatingBattleBehavior)
-            {
-                myEventHandler.CallEventStopTargettingEnemy();
-                myEventHandler.CallEventFinishedMoving();
-                return;
-            }
+        //    if (bStopUpdatingBattleBehavior)
+        //    {
+        //        myEventHandler.CallEventStopTargettingEnemy();
+        //        myEventHandler.CallEventFinishedMoving();
+        //        return;
+        //    }
 
-            if (allyMember.bIsCarryingMeleeWeapon)
-            {
-                //Melee Behavior
-                if (IsTargetInMeleeRange(currentTargettedEnemy.gameObject))
-                {
-                    if(bIsMeleeing == false)
-                    {
-                        myEventHandler.CallEventFinishedMoving();
-                        StartMeleeAttackBehavior();
-                    }
-                }
-                else
-                {
-                    if (bIsMeleeing == true)
-                    {
-                        StopMeleeAttackBehavior();
-                    }
+        //    if (allyMember.bIsCarryingMeleeWeapon)
+        //    {
+        //        //Melee Behavior
+        //        if (IsTargetInMeleeRange(currentTargettedEnemy.gameObject))
+        //        {
+        //            if(bIsMeleeing == false)
+        //            {
+        //                myEventHandler.CallEventFinishedMoving();
+        //                StartMeleeAttackBehavior();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (bIsMeleeing == true)
+        //            {
+        //                StopMeleeAttackBehavior();
+        //            }
                     
-                    myEventHandler.CallEventAIMove(currentTargettedEnemy.transform.position);
-                }
-            }
-            else
-            {
-                //Shooting Behavior
-                RaycastHit _hit;
-                if (hasLOSWithinRange(currentTargettedEnemy, out _hit))
-                {
-                    if (bIsShooting == false)
-                    {
-                        myEventHandler.CallEventFinishedMoving();
-                        StartShootingBehavior();
-                    }
-                }
-                else
-                {
-                    if (bIsShooting == true)
-                        StopShootingBehavior();
+        //            myEventHandler.CallEventAIMove(currentTargettedEnemy.transform.position);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //Shooting Behavior
+        //        RaycastHit _hit;
+        //        if (hasLOSWithinRange(currentTargettedEnemy, out _hit))
+        //        {
+        //            if (bIsShooting == false)
+        //            {
+        //                myEventHandler.CallEventFinishedMoving();
+        //                StartShootingBehavior();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (bIsShooting == true)
+        //                StopShootingBehavior();
 
-                    if (bIsMoving == false)
-                    {
-                        myEventHandler.CallEventAIMove(currentTargettedEnemy.transform.position);
-                    }
-                }
-            }
-        }
+        //            if (bIsMoving == false)
+        //            {
+        //                myEventHandler.CallEventAIMove(currentTargettedEnemy.transform.position);
+        //            }
+        //        }
+        //    }
+        //}
 
-        protected virtual void StartBattleBehavior()
-        {
-            InvokeRepeating("UpdateBattleBehavior", 0f, 0.2f);
-        }
+        //protected virtual void StartBattleBehavior()
+        //{
+        //    InvokeRepeating("UpdateBattleBehavior", 0f, 0.2f);
+        //}
 
-        protected virtual void StopBattleBehavior()
-        {
-            CancelInvoke("UpdateBattleBehavior");
-            StopShootingBehavior();
-        }
+        //protected virtual void StopBattleBehavior()
+        //{
+        //    CancelInvoke("UpdateBattleBehavior");
+        //    StopShootingBehavior();
+        //}
 
-        protected virtual void StartShootingBehavior()
-        {
-            myEventHandler.CallEventToggleIsShooting(true);
-            InvokeRepeating("MakeFireRequest", 0.0f, GetAttackRate());
-        }
+        //protected virtual void StartShootingBehavior()
+        //{
+        //    myEventHandler.CallEventToggleIsShooting(true);
+        //    InvokeRepeating("MakeFireRequest", 0.0f, GetAttackRate());
+        //}
 
-        protected virtual void StopShootingBehavior()
-        {
-            myEventHandler.CallEventToggleIsShooting(false);
-            CancelInvoke("MakeFireRequest");
-        }
+        //protected virtual void StopShootingBehavior()
+        //{
+        //    myEventHandler.CallEventToggleIsShooting(false);
+        //    CancelInvoke("MakeFireRequest");
+        //}
 
-        protected virtual void StartMeleeAttackBehavior()
-        {
-            myEventHandler.CallEventToggleIsMeleeing(true);
-            InvokeRepeating("MakeMeleeAttackRequest", 0.0f, GetAttackRate());
-        }
+        //protected virtual void StartMeleeAttackBehavior()
+        //{
+        //    myEventHandler.CallEventToggleIsMeleeing(true);
+        //    InvokeRepeating("MakeMeleeAttackRequest", 0.0f, GetAttackRate());
+        //}
 
-        protected virtual void StopMeleeAttackBehavior()
-        {
-            myEventHandler.CallEventToggleIsMeleeing(false);
-            CancelInvoke("MakeMeleeAttackRequest");
-        }
+        //protected virtual void StopMeleeAttackBehavior()
+        //{
+        //    myEventHandler.CallEventToggleIsMeleeing(false);
+        //    CancelInvoke("MakeMeleeAttackRequest");
+        //}
 
-        protected virtual void MakeFireRequest()
-        {
-            if (allyMember != null && allyMember.ActiveTimeBarIsFull())
-            {
-                // Pause Ally Tactics If Ally Is Paused
-                // Due to the Game Pausing Or Control Pause Mode
-                // Is Active
-                if (myEventHandler.bAllyIsPaused) return;
+        //protected virtual void MakeFireRequest()
+        //{
+        //    if (allyMember != null && allyMember.ActiveTimeBarIsFull())
+        //    {
+        //        // Pause Ally Tactics If Ally Is Paused
+        //        // Due to the Game Pausing Or Control Pause Mode
+        //        // Is Active
+        //        if (myEventHandler.bAllyIsPaused) return;
 
-                myEventHandler.CallOnTryUseWeapon();
-            }
-        }
+        //        myEventHandler.CallOnTryUseWeapon();
+        //    }
+        //}
 
-        protected virtual void MakeMeleeAttackRequest()
-        {
-            if (allyMember != null && allyMember.ActiveTimeBarIsFull())
-            {
-                // Pause Ally Tactics If Ally Is Paused
-                // Due to the Game Pausing Or Control Pause Mode
-                // Is Active
-                if (myEventHandler.bAllyIsPaused) return;
+        //protected virtual void MakeMeleeAttackRequest()
+        //{
+        //    if (allyMember != null && allyMember.ActiveTimeBarIsFull())
+        //    {
+        //        // Pause Ally Tactics If Ally Is Paused
+        //        // Due to the Game Pausing Or Control Pause Mode
+        //        // Is Active
+        //        if (myEventHandler.bAllyIsPaused) return;
 
-                myEventHandler.CallOnTryUseWeapon();
-            }
-        }
+        //        myEventHandler.CallOnTryUseWeapon();
+        //    }
+        //}
         #endregion
 
         #region Initialization

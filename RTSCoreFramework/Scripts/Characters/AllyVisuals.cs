@@ -89,7 +89,7 @@ namespace RTSCoreFramework
 
         protected bool cameraIsMoving = false;
 
-        protected bool bHasSwitched = false;
+        //protected bool bHasSwitched = false;
 
         protected float waypointUpdateRate = 0.5f;
         #endregion
@@ -104,7 +104,7 @@ namespace RTSCoreFramework
             //myEventHandler.EventTogglebIsFreeMoving += CheckToDisableWaypointRenderer;
             //myEventHandler.EventFinishedMoving += DisableWaypointRenderer;
             myEventHandler.EventPartySwitching += OnPartySwitch;
-            myEventHandler.EventCommandAttackEnemy += OnCmdAttackEnemy;
+            //myEventHandler.EventCommandAttackEnemy += OnCmdAttackEnemy;
             //myEventHandler.EventCommandAttackEnemy += DisableWaypointRenderer;
             myEventHandler.OnAllyTakeDamage += SpawnBloodParticles;
             myEventHandler.OnHealthChanged += OnHealthUpdate;
@@ -124,7 +124,7 @@ namespace RTSCoreFramework
             //myEventHandler.EventTogglebIsFreeMoving -= CheckToDisableWaypointRenderer;
             //myEventHandler.EventFinishedMoving -= DisableWaypointRenderer;
             myEventHandler.EventPartySwitching -= OnPartySwitch;
-            myEventHandler.EventCommandAttackEnemy -= OnCmdAttackEnemy;
+            //myEventHandler.EventCommandAttackEnemy -= OnCmdAttackEnemy;
             //myEventHandler.EventCommandAttackEnemy -= DisableWaypointRenderer;
             myEventHandler.OnAllyTakeDamage -= SpawnBloodParticles;
             myEventHandler.OnHealthChanged -= OnHealthUpdate;
@@ -242,21 +242,21 @@ namespace RTSCoreFramework
         protected virtual void OnPartySwitch()
         {
             //DisableWaypointRenderer();
-            bHasSwitched = true;
-            Invoke("SetbHasSwitchedToFalse", 0.2f);
+            //bHasSwitched = true;
+            //Invoke("SetbHasSwitchedToFalse", 0.2f);
         }
 
         protected virtual void OnCmdAttackEnemy(AllyMember _ally)
         {
             //DisableWaypointRenderer();
-            bHasSwitched = true;
-            Invoke("SetbHasSwitchedToFalse", 0.2f);
+            //bHasSwitched = true;
+            //Invoke("SetbHasSwitchedToFalse", 0.2f);
         }
 
-        protected virtual void SetbHasSwitchedToFalse()
-        {
-            bHasSwitched = false;
-        }
+        //protected virtual void SetbHasSwitchedToFalse()
+        //{
+        //    bHasSwitched = false;
+        //}
 
         protected virtual void HandleDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
@@ -312,7 +312,7 @@ namespace RTSCoreFramework
         #region Helpers
         protected virtual void UpdateWaypointRenderer()
         {
-            if (bHasSwitched || myNavMesh == null ||
+            if (/*bHasSwitched || */myNavMesh == null ||
                 myNavMesh.path == null ||
                 myEventHandler.bIsAIMoving)
                 return;
