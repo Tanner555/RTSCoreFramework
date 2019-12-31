@@ -100,12 +100,12 @@ namespace RTSCoreFramework
             myEventHandler.OnHoverOver += OnCursEnter;
             myEventHandler.OnHoverLeave += OnCursExit;
             myEventHandler.EventAllyDied += HandleDeath;
-            myEventHandler.EventCommandMove += SetupWaypointRenderer;
-            myEventHandler.EventTogglebIsFreeMoving += CheckToDisableWaypointRenderer;
-            myEventHandler.EventFinishedMoving += DisableWaypointRenderer;
+            //myEventHandler.EventCommandMove += SetupWaypointRenderer;
+            //myEventHandler.EventTogglebIsFreeMoving += CheckToDisableWaypointRenderer;
+            //myEventHandler.EventFinishedMoving += DisableWaypointRenderer;
             myEventHandler.EventPartySwitching += OnPartySwitch;
             myEventHandler.EventCommandAttackEnemy += OnCmdAttackEnemy;
-            myEventHandler.EventCommandAttackEnemy += DisableWaypointRenderer;
+            //myEventHandler.EventCommandAttackEnemy += DisableWaypointRenderer;
             myEventHandler.OnAllyTakeDamage += SpawnBloodParticles;
             myEventHandler.OnHealthChanged += OnHealthUpdate;
             myEventHandler.OnActiveTimeChanged += OnActiveTimeBarUpdate;
@@ -120,12 +120,12 @@ namespace RTSCoreFramework
             myEventHandler.OnHoverOver -= OnCursEnter;
             myEventHandler.OnHoverLeave -= OnCursExit;
             myEventHandler.EventAllyDied -= HandleDeath;
-            myEventHandler.EventCommandMove -= SetupWaypointRenderer;
-            myEventHandler.EventTogglebIsFreeMoving -= CheckToDisableWaypointRenderer;
-            myEventHandler.EventFinishedMoving -= DisableWaypointRenderer;
+            //myEventHandler.EventCommandMove -= SetupWaypointRenderer;
+            //myEventHandler.EventTogglebIsFreeMoving -= CheckToDisableWaypointRenderer;
+            //myEventHandler.EventFinishedMoving -= DisableWaypointRenderer;
             myEventHandler.EventPartySwitching -= OnPartySwitch;
             myEventHandler.EventCommandAttackEnemy -= OnCmdAttackEnemy;
-            myEventHandler.EventCommandAttackEnemy -= DisableWaypointRenderer;
+            //myEventHandler.EventCommandAttackEnemy -= DisableWaypointRenderer;
             myEventHandler.OnAllyTakeDamage -= SpawnBloodParticles;
             myEventHandler.OnHealthChanged -= OnHealthUpdate;
             myEventHandler.OnActiveTimeChanged -= OnActiveTimeBarUpdate;
@@ -241,14 +241,14 @@ namespace RTSCoreFramework
 
         protected virtual void OnPartySwitch()
         {
-            DisableWaypointRenderer();
+            //DisableWaypointRenderer();
             bHasSwitched = true;
             Invoke("SetbHasSwitchedToFalse", 0.2f);
         }
 
         protected virtual void OnCmdAttackEnemy(AllyMember _ally)
         {
-            DisableWaypointRenderer();
+            //DisableWaypointRenderer();
             bHasSwitched = true;
             Invoke("SetbHasSwitchedToFalse", 0.2f);
         }
