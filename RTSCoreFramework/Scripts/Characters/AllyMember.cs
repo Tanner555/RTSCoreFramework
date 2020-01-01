@@ -373,32 +373,6 @@ namespace RTSCoreFramework
             StartServices();
         }
 
-        protected virtual void OnActiveTimeBarDepletion()
-        {
-            //Reset Active Time Bar
-            AllyActiveTimeBar = AllyMinActiveTimeBar;
-            bActiveTimeBarFullBeenCalled = false;
-        }
-
-        protected virtual void OnToggleActiveTimeRegeneration(bool _enable)
-        {
-            if (_enable)
-            {
-                if (IsInvoking("SE_UpdateActiveTimeBar") == false)
-                {
-                    InvokeRepeating("SE_UpdateActiveTimeBar", 0.5f, 0.2f);
-                }
-            }
-            else
-            {
-                if (IsInvoking("SE_UpdateActiveTimeBar"))
-                {
-                    CancelInvoke("SE_UpdateActiveTimeBar");
-                }
-                allyEventHandler.CallOnActiveTimeBarDepletion();
-            }
-        }
-
         /// <summary>
         /// Called Before AllyInCommand has been set
         /// </summary>
@@ -662,6 +636,13 @@ namespace RTSCoreFramework
         #endregion
 
         #region Setters - Updaters
+        public virtual void DepleteActiveTimeBar()
+        {
+            //Reset Active Time Bar
+            AllyActiveTimeBar = AllyMinActiveTimeBar;
+            bActiveTimeBarFullBeenCalled = false;
+        }
+
         public void UpdateAbilityDictionary(Dictionary<AbilityConfig, AbilityBehaviour> _abilityDic)
         {
             AbilityDictionary.Clear();
@@ -670,19 +651,19 @@ namespace RTSCoreFramework
         #endregion
 
         #region Services
-        protected virtual void SE_UpdateActiveTimeBar()
-        {
-            if (AllyActiveTimeBar < AllyMaxActiveTimeBar)
-            {
-                AllyActiveTimeBar = Mathf.Min(AllyActiveTimeBar + ActiveTimeBarRefillRate, AllyMaxActiveTimeBar);
-            }
-            else if(bActiveTimeBarFullBeenCalled == false)
-            {
-                bActiveTimeBarFullBeenCalled = true;
-                //Reached Max and Haven't Called Event
-                allyEventHandler.CallOnActiveTimeBarIsFull();
-            }
-        }
+        //protected virtual void SE_UpdateActiveTimeBar()
+        //{
+        //    if (AllyActiveTimeBar < AllyMaxActiveTimeBar)
+        //    {
+        //        AllyActiveTimeBar = Mathf.Min(AllyActiveTimeBar + ActiveTimeBarRefillRate, AllyMaxActiveTimeBar);
+        //    }
+        //    else if(bActiveTimeBarFullBeenCalled == false)
+        //    {
+        //        bActiveTimeBarFullBeenCalled = true;
+        //        //Reached Max and Haven't Called Event
+        //        allyEventHandler.CallOnActiveTimeBarIsFull();
+        //    }
+        //}
         #endregion
 
         #region Initialization
@@ -722,8 +703,6 @@ namespace RTSCoreFramework
             allyEventHandler.OnTryHitscanFire += OnTryHitscanFire;
             allyEventHandler.OnTryMeleeAttack += OnTryMeleeAttack;
             allyEventHandler.OnAllyTakeDamage += AllyTakeDamage;
-            allyEventHandler.OnActiveTimeBarDepletion += OnActiveTimeBarDepletion;
-            allyEventHandler.OnToggleActiveTimeRegeneration += OnToggleActiveTimeRegeneration;
             allyEventHandler.InitializeAllyComponents += InitializeAlly;
             //Called Before AllyInCommand has been set
             gamemaster.OnAllySwitch += HandleOnAllySwitch;
@@ -738,8 +717,6 @@ namespace RTSCoreFramework
             allyEventHandler.OnTryHitscanFire -= OnTryHitscanFire;
             allyEventHandler.OnTryMeleeAttack -= OnTryMeleeAttack;
             allyEventHandler.OnAllyTakeDamage -= AllyTakeDamage;
-            allyEventHandler.OnActiveTimeBarDepletion -= OnActiveTimeBarDepletion;
-            allyEventHandler.OnToggleActiveTimeRegeneration -= OnToggleActiveTimeRegeneration;
             allyEventHandler.InitializeAllyComponents -= InitializeAlly;
             //Called Before AllyInCommand has been set
             gamemaster.OnAllySwitch -= HandleOnAllySwitch;

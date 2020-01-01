@@ -135,8 +135,7 @@ namespace RTSCoreFramework
             if (energyCost <= AllyStamina)
             {
                 if (_behaviour.CanUseAbility())
-                {
-                    eventhandler.CallOnActiveTimeBarDepletion();
+                {                    
                     ConsumeEnergy(energyCost);
                     _behaviour.Use(target);
                 }
