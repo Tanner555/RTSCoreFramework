@@ -33,10 +33,6 @@ namespace RTSCoreFramework
         protected bool wantsFreedomToMove;
         protected float freeMoveThreshold;
         protected float DefaultShootDelay;
-
-        //Active Time Bar
-        protected bool bActiveTimeBarFullBeenCalled = false;
-        protected int ActiveTimeBarRefillRate = 5;
         #endregion
 
         #region Properties
@@ -640,7 +636,6 @@ namespace RTSCoreFramework
         {
             //Reset Active Time Bar
             AllyActiveTimeBar = AllyMinActiveTimeBar;
-            bActiveTimeBarFullBeenCalled = false;
         }
 
         public void UpdateAbilityDictionary(Dictionary<AbilityConfig, AbilityBehaviour> _abilityDic)
@@ -648,22 +643,6 @@ namespace RTSCoreFramework
             AbilityDictionary.Clear();
             AbilityDictionary = _abilityDic;
         }
-        #endregion
-
-        #region Services
-        //protected virtual void SE_UpdateActiveTimeBar()
-        //{
-        //    if (AllyActiveTimeBar < AllyMaxActiveTimeBar)
-        //    {
-        //        AllyActiveTimeBar = Mathf.Min(AllyActiveTimeBar + ActiveTimeBarRefillRate, AllyMaxActiveTimeBar);
-        //    }
-        //    else if(bActiveTimeBarFullBeenCalled == false)
-        //    {
-        //        bActiveTimeBarFullBeenCalled = true;
-        //        //Reached Max and Haven't Called Event
-        //        allyEventHandler.CallOnActiveTimeBarIsFull();
-        //    }
-        //}
         #endregion
 
         #region Initialization

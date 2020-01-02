@@ -295,7 +295,7 @@ namespace RTSCoreFramework
 
         }
 
-        private void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
+        protected virtual void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             StopAllCoroutines();
             CancelInvoke();
