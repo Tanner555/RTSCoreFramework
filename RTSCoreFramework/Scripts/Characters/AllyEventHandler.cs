@@ -173,6 +173,7 @@ namespace RTSCoreFramework
         public delegate void GeneralEventHandler();
         public delegate void GeneralOneBoolHandler(bool _enable);
         public delegate void GeneralTwoVectorOneGObjectHandler(Vector3 position, Vector3 force, GameObject attacker);
+        public delegate void GeneralOneTransformHandler(Transform _target);
         public event GeneralTwoVectorOneGObjectHandler EventAllyDied;
         /// <summary>
         /// Currently Called Before Ally Is Set
@@ -202,7 +203,7 @@ namespace RTSCoreFramework
         //handles the attacking.
         public event GeneralEventHandler OnTryMeleeAttack;
         //Tries Using Primary Item, Used By RTSItemHandler
-        public event GeneralEventHandler OnTryUseWeapon;
+        public event GeneralOneTransformHandler OnTryUseWeapon;
         public event GeneralEventHandler OnTryReload;
         public event GeneralEventHandler OnTryCrouch;
         public event GeneralOneBoolHandler OnTryAim;
@@ -375,9 +376,9 @@ namespace RTSCoreFramework
         /// <summary>
         /// Called To Fire The TPC Weapon, Doesn't Do Damage Automatically
         /// </summary>
-        public virtual void CallOnTryUseWeapon()
+        public virtual void CallOnTryUseWeapon(Transform _target)
         {
-            if (OnTryUseWeapon != null) OnTryUseWeapon();
+            if (OnTryUseWeapon != null) OnTryUseWeapon(_target);
         }
 
         public virtual void CallOnTryReload()
