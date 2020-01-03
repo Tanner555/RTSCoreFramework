@@ -106,8 +106,8 @@ namespace RTSCoreFramework
             { return _ally.CurrentEquipedAmmo == 0; }, ConditionFilters.AllyGun) },
             {"Self: CurAmmo > 0", new IGBPI_Condition((_ally) =>
             { return _ally.CurrentEquipedAmmo > 0; }, ConditionFilters.AllyGun) },
-            {"Enemy: WithinSightRange", new IGBPI_Condition((_ally) =>
-            { return _ally.aiController.Tactics_IsEnemyWithinSightRange(); }, ConditionFilters.TargetedEnemy)  },
+            //{"Enemy: WithinSightRange", new IGBPI_Condition((_ally) =>
+            //{ return _ally.aiController.Tactics_IsEnemyWithinSightRange(); }, ConditionFilters.TargetedEnemy)  },
         };
         #endregion
 
@@ -119,11 +119,11 @@ namespace RTSCoreFramework
 
         protected Dictionary<string, RTSActionItem> _IGBPI_Actions = new Dictionary<string, RTSActionItem>()
         {
-            {"Self: Attack Targetted Enemy", new RTSActionItem((_ally) =>
-                { _ally.aiController.AttackTargettedEnemy(); },
-                (_ally) => { return _ally.bIsCarryingMeleeWeapon ||
-                _ally.CurrentEquipedAmmo > 0; },
-            ActionFilters.AI, false, false, true, false, _ally => true, _ally => _ally.bIsAttacking == false, _ally => _ally.allyEventHandler.CallEventStopTargettingEnemy()) },
+            //{"Self: Attack Targetted Enemy", new RTSActionItem((_ally) =>
+            //    { _ally.aiController.AttackTargettedEnemy(); },
+            //    (_ally) => { return _ally.bIsCarryingMeleeWeapon ||
+            //    _ally.CurrentEquipedAmmo > 0; },
+            //ActionFilters.AI, false, false, true, false, _ally => true, _ally => _ally.bIsAttacking == false, _ally => _ally.allyEventHandler.CallEventStopTargettingEnemy()) },
             //{"Self: Attack Nearest Enemy", new IGBPI_Action((_ally) =>
             //{ _ally.aiController.Tactics_AttackClosestEnemy(); }, ActionFilters.AI) },
             {"Self: SwitchToNextWeapon", new RTSActionItem((_ally) =>
@@ -134,10 +134,10 @@ namespace RTSCoreFramework
             { _ally.allyEventHandler.CallOnSwitchToPrevItem(); },
                 (_ally) => true,
                 ActionFilters.Weapon, false, false, false, false, _ally => true, _ally => true, _ally => { }) },
-            {"Self: FollowLeader", new RTSActionItem((_ally) =>
-            { _ally.aiController.Tactics_MoveToLeader(); },
-                (_ally) => true,
-                ActionFilters.Movement, false, false, false, true, _ally => true, _ally => _ally.aiController.IsWithinFollowingDistance(), _ally => _ally.allyEventHandler.CallEventFinishedMoving()) },
+            //{"Self: FollowLeader", new RTSActionItem((_ally) =>
+            //{ _ally.aiController.Tactics_MoveToLeader(); },
+            //    (_ally) => true,
+            //    ActionFilters.Movement, false, false, false, true, _ally => true, _ally => _ally.aiController.IsWithinFollowingDistance(), _ally => _ally.allyEventHandler.CallEventFinishedMoving()) },
             {"Debug: Log True Message", new RTSActionItem((_ally) =>
             Debug.Log("Condition is true, called from: " + _ally.CharacterName),
                 (_ally) => true,

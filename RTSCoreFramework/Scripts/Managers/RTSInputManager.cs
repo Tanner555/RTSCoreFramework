@@ -103,8 +103,8 @@ namespace RTSCoreFramework
                 CallTryReload();
             if (Input.GetKeyDown(KeyCode.Space))
                 CallToggleIsInPauseControl();
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-                CallSprintToggle();
+            //if (Input.GetKeyDown(KeyCode.LeftShift))
+            //    CallSprintToggle();
 
             //if (Input.GetKey(KeyCode.LeftShift))
             //    SprintingSetup();
@@ -179,7 +179,7 @@ namespace RTSCoreFramework
         //void CallTryFire() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryUseWeapon(); }
         void CallTryReload() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryReload(); }
         void CallCoverToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallOnTryCrouch(); }
-        void CallSprintToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallEventToggleIsSprinting(); }
+        //void CallSprintToggle() { gamemode.GeneralInCommand.AllyInCommand.allyEventHandler.CallEventToggleIsSprinting(); }
 
         #region Testing JobQueues
         //List<GameObject> TestGObjects;

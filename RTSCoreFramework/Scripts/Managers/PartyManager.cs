@@ -298,17 +298,18 @@ namespace RTSCoreFramework
                 case rtsHitType.Cover:
                     break;
                 case rtsHitType.Walkable:
-                    if (AllyInCommand.allyEventHandler.bIsFreeMoving == false)
-                    {
-                        AllyInCommand.allyEventHandler.CallEventCommandMove(hitType, hit);
-                        //Adding Command Move Event Call To ActionItem Queue
-                        //AllyInCommand.allyEventHandler.CallOnAddActionItemToQueue(new RTSActionItem(
-                        //    _ally => _ally.allyEventHandler.CallEventCommandMove(hitType, hit),
-                        //    _ally => true, ActionFilters.Movement, true, false, false, false,
-                        //    _ally => true, _ally => _ally.bIsFreeMoving || _ally.bIsNavMoving == false,
-                        //    _ally => _ally.allyEventHandler.CallEventFinishedMoving()
-                        //    ));
-                    }
+                    AllyInCommand.allyEventHandler.CallEventCommandMove(hitType, hit);
+                    //if (AllyInCommand.allyEventHandler.bIsFreeMoving == false)
+                    //{
+                    //    AllyInCommand.allyEventHandler.CallEventCommandMove(hitType, hit);
+                    //    //Adding Command Move Event Call To ActionItem Queue
+                    //    //AllyInCommand.allyEventHandler.CallOnAddActionItemToQueue(new RTSActionItem(
+                    //    //    _ally => _ally.allyEventHandler.CallEventCommandMove(hitType, hit),
+                    //    //    _ally => true, ActionFilters.Movement, true, false, false, false,
+                    //    //    _ally => true, _ally => _ally.bIsFreeMoving || _ally.bIsNavMoving == false,
+                    //    //    _ally => _ally.allyEventHandler.CallEventFinishedMoving()
+                    //    //    ));
+                    //}
                     break;
                 case rtsHitType.Unwalkable:
                     break;

@@ -100,33 +100,16 @@ namespace RTSCoreFramework
         #endregion
 
         #region FieldsAndProps
-        public bool bIsSprinting { get; protected set; }
-        public bool bActiveTimeBarIsRegenerating { get; protected set; }
-        public bool bIsTacticsEnabled { get; protected set; }
-        //Is moving through nav mesh agent, regardless of
-        //whether it's ai or a command
-        public bool bIsNavMoving { get { return bIsCommandMoving || bIsAIMoving; } }
-        public bool bIsCommandMoving { get; protected set; }
-        public bool bIsAIMoving { get; protected set; }
-        public bool bIsFreeMoving { get; protected set; }
-        public bool bIsAttacking
-        {
-            get { return bIsCommandAttacking || bIsAiAttacking; }
-        }
-        public bool bIsCommandAttacking { get; protected set; }
-        public bool bIsAiAttacking { get; protected set; }
-        public bool bIsAimingToShoot { get; protected set; }
-        public bool bIsMeleeingEnemy { get; protected set; }
         public bool bIsUsingAbility { get; protected set; }
-        public bool bCanEnableAITactics
-        {
-            get
-            {
-                return (bIsCommandMoving ||
-                  bIsFreeMoving) == false &&
-                  bIsCommandAttacking == false;
-            }
-        }
+        //public bool bCanEnableAITactics
+        //{
+        //    get
+        //    {
+        //        return (bIsCommandMoving ||
+        //          bIsFreeMoving) == false &&
+        //          bIsCommandAttacking == false;
+        //    }
+        //}
 
         //Ui Target Info
         public bool bAllyIsUiTarget { get; protected set; }
@@ -184,14 +167,6 @@ namespace RTSCoreFramework
         /// Currently Called After Ally Is Set
         /// </summary>
         public event GeneralEventHandler EventSetAsCommander;
-        public event GeneralEventHandler EventKilledEnemy;
-        public event GeneralEventHandler EventStopTargettingEnemy;
-        public event GeneralEventHandler EventFinishedMoving;
-        public event GeneralEventHandler EventToggleIsSprinting;
-        public event GeneralOneBoolHandler EventToggleAllyTactics;
-        public event GeneralOneBoolHandler EventTogglebIsFreeMoving;
-        public event GeneralOneBoolHandler EventToggleIsShooting;
-        public event GeneralOneBoolHandler EventToggleIsMeleeing;
         public event GeneralOneBoolHandler EventToggleIsUsingAbility;
         //Opsive TPC Events
         public event GeneralEventHandler OnSwitchToPrevItem;
@@ -246,15 +221,15 @@ namespace RTSCoreFramework
         #region UnityMessages
         protected virtual void Awake()
         {
-            bIsSprinting = true;
-            bIsTacticsEnabled = false;
-            bIsAimingToShoot = false;
-            bIsFreeMoving = false;
-            bIsCommandAttacking = false;
-            bIsAiAttacking = false;
-            bIsMeleeingEnemy = false;
+            //bIsSprinting = true;
+            //bIsTacticsEnabled = false;
+            //bIsAimingToShoot = false;
+            //bIsFreeMoving = false;
+            //bIsCommandAttacking = false;
+            //bIsAiAttacking = false;
+            //bIsMeleeingEnemy = false;
             bIsUsingAbility = false;
-            bActiveTimeBarIsRegenerating = false;
+            //bActiveTimeBarIsRegenerating = false;
         }
 
         protected virtual void Start()
@@ -302,31 +277,31 @@ namespace RTSCoreFramework
             }
         }
 
-        public virtual void CallEventToggleIsShooting(bool _enable)
-        {
-            bIsAimingToShoot = _enable;
-            if (EventToggleIsShooting != null)
-            {
-                EventToggleIsShooting(_enable);
-            }
-            if (bIsMeleeingEnemy)
-            {
-                CallEventToggleIsMeleeing(false);
-            }
-        }
+        //public virtual void CallEventToggleIsShooting(bool _enable)
+        //{
+        //    bIsAimingToShoot = _enable;
+        //    if (EventToggleIsShooting != null)
+        //    {
+        //        EventToggleIsShooting(_enable);
+        //    }
+        //    if (bIsMeleeingEnemy)
+        //    {
+        //        CallEventToggleIsMeleeing(false);
+        //    }
+        //}
 
-        public virtual void CallEventToggleIsMeleeing(bool _enable)
-        {
-            bIsMeleeingEnemy = _enable;
-            if(EventToggleIsMeleeing != null)
-            {
-                EventToggleIsMeleeing(_enable);
-            }
-            if (bIsAimingToShoot)
-            {
-                CallEventToggleIsShooting(false);
-            }
-        }
+        //public virtual void CallEventToggleIsMeleeing(bool _enable)
+        //{
+        //    bIsMeleeingEnemy = _enable;
+        //    if(EventToggleIsMeleeing != null)
+        //    {
+        //        EventToggleIsMeleeing(_enable);
+        //    }
+        //    if (bIsAimingToShoot)
+        //    {
+        //        CallEventToggleIsShooting(false);
+        //    }
+        //}
 
         public virtual void CallEventToggleIsUsingAbility(bool _enable)
         {
@@ -334,18 +309,18 @@ namespace RTSCoreFramework
             if (EventToggleIsUsingAbility != null) EventToggleIsUsingAbility(_enable);
         }
 
-        public virtual void CallEventToggleIsSprinting()
-        {
-            bIsSprinting = !bIsSprinting;
-            if (EventToggleIsSprinting != null) EventToggleIsSprinting();
-        }
+        //public virtual void CallEventToggleIsSprinting()
+        //{
+        //    bIsSprinting = !bIsSprinting;
+        //    if (EventToggleIsSprinting != null) EventToggleIsSprinting();
+        //}
 
-        public virtual void CallEventFinishedMoving()
-        {
-            bIsCommandMoving = false;
-            bIsAIMoving = false;
-            if (EventFinishedMoving != null) EventFinishedMoving();
-        }
+        //public virtual void CallEventFinishedMoving()
+        //{
+        //    bIsCommandMoving = false;
+        //    bIsAIMoving = false;
+        //    if (EventFinishedMoving != null) EventFinishedMoving();
+        //}
 
         public virtual void CallOnSwitchToPrevItem()
         {
@@ -418,7 +393,7 @@ namespace RTSCoreFramework
 
         public virtual void CallEventSwitchingFromCom()
         {
-            if (bIsFreeMoving) CallEventTogglebIsFreeMoving(false);
+            //if (bIsFreeMoving) CallEventTogglebIsFreeMoving(false);
             if (EventSwitchingFromCom != null) EventSwitchingFromCom();
         }
 
@@ -432,14 +407,14 @@ namespace RTSCoreFramework
 
         public virtual void CallEventSetAsCommander()
         {
-            CallEventFinishedMoving();
+            //CallEventFinishedMoving();
             if (EventSetAsCommander != null) EventSetAsCommander();
         }
 
-        public virtual void CallEventKilledEnemy()
-        {
-            if (EventKilledEnemy != null) EventKilledEnemy();
-        }
+        //public virtual void CallEventKilledEnemy()
+        //{
+        //    if (EventKilledEnemy != null) EventKilledEnemy();
+        //}
 
         public virtual void CallEventOnHoverOver(rtsHitType hitType, RaycastHit hit)
         {
@@ -469,17 +444,17 @@ namespace RTSCoreFramework
 
         public virtual void CallEventCommandMove(rtsHitType hitType, RaycastHit hit)
         {
-            bIsAimingToShoot = bIsCommandAttacking = bIsAiAttacking = false;
-            bIsCommandMoving = true;
-            bIsAIMoving = false;
+            //bIsAimingToShoot = bIsCommandAttacking = bIsAiAttacking = false;
+            //bIsCommandMoving = true;
+            //bIsAIMoving = false;
             CallEventCommandMove(hit.point, true);
         }
 
         public virtual void CallEventAIMove(Vector3 _point)
         {
-            bIsAimingToShoot = false;
-            bIsAIMoving = true;
-            bIsCommandMoving = false;
+            //bIsAimingToShoot = false;
+            //bIsAIMoving = true;
+            //bIsCommandMoving = false;
             CallEventCommandMove(_point, false);
         }
 
@@ -490,17 +465,17 @@ namespace RTSCoreFramework
 
         public virtual void CallEventPlayerCommandAttackEnemy(AllyMember ally)
         {
-            bIsAIMoving = bIsCommandMoving = false;
-            bIsCommandAttacking = true;
-            bIsAiAttacking = false;
+            //bIsAIMoving = bIsCommandMoving = false;
+            //bIsCommandAttacking = true;
+            //bIsAiAttacking = false;
             CallEventCommandAttackEnemy(ally);
         }
 
         public virtual void CallEventAICommandAttackEnemy(AllyMember ally)
         {
-            bIsAIMoving = bIsCommandMoving = false;
-            bIsAiAttacking = true;
-            bIsCommandAttacking = false;
+            //bIsAIMoving = bIsCommandMoving = false;
+            //bIsAiAttacking = true;
+            //bIsCommandAttacking = false;
             CallEventCommandAttackEnemy(ally);
         }
 
@@ -512,36 +487,36 @@ namespace RTSCoreFramework
             }
         }
 
-        public virtual void CallOnUpdateTargettedEnemy(AllyMember _ally)
-        {
-            if (OnUpdateTargettedEnemy != null) OnUpdateTargettedEnemy(_ally);
-        }
+        //public virtual void CallOnUpdateTargettedEnemy(AllyMember _ally)
+        //{
+        //    if (OnUpdateTargettedEnemy != null) OnUpdateTargettedEnemy(_ally);
+        //}
 
-        public virtual void CallEventStopTargettingEnemy()
-        {
-            bIsCommandAttacking = bIsAiAttacking = bIsAimingToShoot = false;
-            if (EventStopTargettingEnemy != null) EventStopTargettingEnemy();
-            CallEventToggleIsShooting(false);
-            CallEventToggleIsMeleeing(false);
-            CallOnTryAim(false);
-        }
+        //public virtual void CallEventStopTargettingEnemy()
+        //{
+        //    bIsCommandAttacking = bIsAiAttacking = bIsAimingToShoot = false;
+        //    if (EventStopTargettingEnemy != null) EventStopTargettingEnemy();
+        //    CallEventToggleIsShooting(false);
+        //    CallEventToggleIsMeleeing(false);
+        //    CallOnTryAim(false);
+        //}
 
-        public virtual void CallEventTogglebIsFreeMoving(bool _enable)
-        {
-            bIsFreeMoving = _enable;
-            if (EventTogglebIsFreeMoving != null) EventTogglebIsFreeMoving(_enable);
-        }
+        //public virtual void CallEventTogglebIsFreeMoving(bool _enable)
+        //{
+        //    bIsFreeMoving = _enable;
+        //    if (EventTogglebIsFreeMoving != null) EventTogglebIsFreeMoving(_enable);
+        //}
 
         /// <summary>
         /// Event handler controls bIsTacticsEnabled, makes code more centralized.
         /// Now is called inside TacticsController, Rather than being Handled by Controller
         /// </summary>
         /// <param name="_enable"></param>
-        public virtual void CallEventToggleAllyTactics(bool _enable)
-        {
-            bIsTacticsEnabled = _enable;
-            if (EventToggleAllyTactics != null) EventToggleAllyTactics(_enable);
-        }
+        //public virtual void CallEventToggleAllyTactics(bool _enable)
+        //{
+        //    bIsTacticsEnabled = _enable;
+        //    if (EventToggleAllyTactics != null) EventToggleAllyTactics(_enable);
+        //}
 
         public virtual void CallOnEquipTypeChanged(EEquipType _eType)
         {

@@ -230,11 +230,11 @@ namespace RTSCoreFramework
             _handler.OnHoverOver += UiTargetHandle_OnHoverOver;
             _handler.OnHoverLeave += UiTargetHandle_OnHoverLeave;
             //Notify Character Actions
-            _handler.EventCommandAttackEnemy += UiTargetHandle_Attacking;
+            //_handler.EventCommandAttackEnemy += UiTargetHandle_Attacking;
             //_handler.OnTryUseWeapon += UiTargetHandle_Attacking;
-            _handler.EventStopTargettingEnemy += UiTargetHandle_Nothing;
-            _handler.EventCommandMove += UiTargetHandle_CommandMove;
-            _handler.EventFinishedMoving += UiTargetHandle_Nothing;
+            //_handler.EventStopTargettingEnemy += UiTargetHandle_Nothing;
+            //_handler.EventCommandMove += UiTargetHandle_CommandMove;
+            //_handler.EventFinishedMoving += UiTargetHandle_Nothing;
         }
 
         protected virtual void UnsubscribeFromUiTargetHandlers(AllyMember _target)
@@ -252,11 +252,11 @@ namespace RTSCoreFramework
             _handler.OnHoverOver -= UiTargetHandle_OnHoverOver;
             _handler.OnHoverLeave -= UiTargetHandle_OnHoverLeave;
             //Notify Character Actions
-            _handler.EventCommandAttackEnemy -= UiTargetHandle_Attacking;
+            //_handler.EventCommandAttackEnemy -= UiTargetHandle_Attacking;
             //_handler.OnTryUseWeapon -= UiTargetHandle_Attacking;
-            _handler.EventStopTargettingEnemy -= UiTargetHandle_Nothing;
-            _handler.EventCommandMove -= UiTargetHandle_CommandMove;
-            _handler.EventFinishedMoving -= UiTargetHandle_Nothing;
+            //_handler.EventStopTargettingEnemy -= UiTargetHandle_Nothing;
+            //_handler.EventCommandMove -= UiTargetHandle_CommandMove;
+            //_handler.EventFinishedMoving -= UiTargetHandle_Nothing;
         }
 
         void SetAllyIsUiTarget(AllyMember _target, bool _isTarget)
@@ -344,28 +344,28 @@ namespace RTSCoreFramework
         }
 
         //Notify Character Actions
-        protected virtual void UiTargetHandle_Attacking(AllyMember ally)
-        {
-            CharacterNameText.text = $"{uiTarget.CharacterName}: Attacking";
-        }
+        //protected virtual void UiTargetHandle_Attacking(AllyMember ally)
+        //{
+        //    CharacterNameText.text = $"{uiTarget.CharacterName}: Attacking";
+        //}
 
-        protected virtual void UiTargetHandle_Attacking()
-        {
-            CharacterNameText.text = $"{uiTarget.CharacterName}: Attacking";
-        }
+        //protected virtual void UiTargetHandle_Attacking()
+        //{
+        //    CharacterNameText.text = $"{uiTarget.CharacterName}: Attacking";
+        //}
 
-        protected virtual void UiTargetHandle_CommandMove(Vector3 _location, bool _isCommandMove)
-        {
-            if (uiTargetHandler.bIsAttacking) return;
-            CharacterNameText.text = $"{uiTarget.CharacterName}: Moving";
-        }
+        //protected virtual void UiTargetHandle_CommandMove(Vector3 _location, bool _isCommandMove)
+        //{
+        //    if (uiTargetHandler.bIsAttacking) return;
+        //    CharacterNameText.text = $"{uiTarget.CharacterName}: Moving";
+        //}
 
-        protected virtual void UiTargetHandle_Nothing()
-        {
-            //Only Set to Nothing if Ally is Not Attacking
-            if (uiTargetHandler.bIsAttacking) return;
-            CharacterNameText.text = $"{uiTarget.CharacterName}";
-        }
+        //protected virtual void UiTargetHandle_Nothing()
+        //{
+        //    //Only Set to Nothing if Ally is Not Attacking
+        //    if (uiTargetHandler.bIsAttacking) return;
+        //    CharacterNameText.text = $"{uiTarget.CharacterName}";
+        //}
         #endregion
 
         #region Services

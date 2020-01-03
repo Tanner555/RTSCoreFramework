@@ -44,11 +44,11 @@ namespace RTSCoreFramework
         #endregion
 
         #region Fields
-        protected bool bIsShooting = false;
-        protected bool bIsMeleeing
-        {
-            get { return myEventHandler.bIsMeleeingEnemy; }
-        }
+        //protected bool bIsShooting = false;
+        //protected bool bIsMeleeing
+        //{
+        //    get { return myEventHandler.bIsMeleeingEnemy; }
+        //}
         protected float defaultFireRepeatRate = 0.25f;
         //Used for finding closest ally
         [Header("AI Finder Properties")]
@@ -76,15 +76,15 @@ namespace RTSCoreFramework
             get { return RTSGameMode.thisInstance; }
         }
 
-        public AllyMember currentTargettedEnemy
-        {
-            get { return __currentTargettedEnemy; }
-            set
-            {
-                __currentTargettedEnemy = value;
-                myEventHandler.CallOnUpdateTargettedEnemy(__currentTargettedEnemy);
-            }
-        }
+        //public AllyMember currentTargettedEnemy
+        //{
+        //    get { return __currentTargettedEnemy; }
+        //    set
+        //    {
+        //        __currentTargettedEnemy = value;
+        //        myEventHandler.CallOnUpdateTargettedEnemy(__currentTargettedEnemy);
+        //    }
+        //}
         private AllyMember __currentTargettedEnemy = null;
         public AllyMember previousTargettedEnemy { get; protected set; }
         public AllyMember allyInCommand { get { return allyMember.partyManager.AllyInCommand; } }
@@ -128,27 +128,27 @@ namespace RTSCoreFramework
             }
         }
 
-        protected bool bIsMoving
-        {
-            get { return myEventHandler.bIsNavMoving; }
-        }
+        //protected bool bIsMoving
+        //{
+        //    get { return myEventHandler.bIsNavMoving; }
+        //}
 
         protected bool bCarryingRangeAndNoAmmoLeft =>
             allyMember.bIsCarryingMeleeWeapon ?
                 false : allyMember.CurrentEquipedAmmo <= 0;
 
-        protected bool bStopUpdatingBattleBehavior
-        {
-            get
-            {
-                return currentTargettedEnemy == null ||
-                currentTargettedEnemy.IsAlive == false ||
-                myEventHandler.bIsFreeMoving ||
-                //Carrying Ranged Weapon and
-                //Doesn't Have Any Ammo Left 
-                bCarryingRangeAndNoAmmoLeft;
-            }
-        }
+        //protected bool bStopUpdatingBattleBehavior
+        //{
+        //    get
+        //    {
+        //        return currentTargettedEnemy == null ||
+        //        currentTargettedEnemy.IsAlive == false ||
+        //        myEventHandler.bIsFreeMoving ||
+        //        //Carrying Ranged Weapon and
+        //        //Doesn't Have Any Ammo Left 
+        //        bCarryingRangeAndNoAmmoLeft;
+        //    }
+        //}
 
         protected virtual bool AllCompsAreValid
         {
@@ -226,17 +226,17 @@ namespace RTSCoreFramework
             followDistance = _allFields.followDistance;
         }
 
-        protected virtual void OnWeaponChanged(EEquipType _eType, EWeaponType _weaponType, EWeaponUsage _wUsage, bool _equipped)
-        {
-            if (IsInvoking("UpdateBattleBehavior"))
-            {
-                bool _commandAttackRestart = myEventHandler.bIsCommandAttacking ? true : false;
-                AllyMember _currentTargetRestart = currentTargettedEnemy;
-                myEventHandler.CallEventFinishedMoving();
-                myEventHandler.CallEventStopTargettingEnemy();
-                StartCoroutine(OnWeaponChangedDelay(_commandAttackRestart, _currentTargetRestart));
-            }
-        }
+        //protected virtual void OnWeaponChanged(EEquipType _eType, EWeaponType _weaponType, EWeaponUsage _wUsage, bool _equipped)
+        //{
+        //    if (IsInvoking("UpdateBattleBehavior"))
+        //    {
+        //        bool _commandAttackRestart = myEventHandler.bIsCommandAttacking ? true : false;
+        //        AllyMember _currentTargetRestart = currentTargettedEnemy;
+        //        myEventHandler.CallEventFinishedMoving();
+        //        myEventHandler.CallEventStopTargettingEnemy();
+        //        StartCoroutine(OnWeaponChangedDelay(_commandAttackRestart, _currentTargetRestart));
+        //    }
+        //}
 
         /// <summary>
         /// Used To Delay The Restarting of Attacking Enemy Target
@@ -259,12 +259,12 @@ namespace RTSCoreFramework
             //CommandAttackEnemy(enemy);
         }
 
-        protected virtual void HandleStopTargetting()
-        {
-            //currentTargettedEnemy = null;
-            //StopBattleBehavior();
-            //CancelInvoke();
-        }
+        //protected virtual void HandleStopTargetting()
+        //{
+        //    //currentTargettedEnemy = null;
+        //    //StopBattleBehavior();
+        //    //CancelInvoke();
+        //}
 
         protected virtual void HandleOnMoveAlly(Vector3 _point, bool _isCommandMove)
         {
@@ -275,20 +275,20 @@ namespace RTSCoreFramework
             //}
         }
 
-        protected virtual void HandleOnAIStopMoving()
-        {
+        //protected virtual void HandleOnAIStopMoving()
+        //{
 
-        }
+        //}
 
         protected virtual void OnEnableCameraMovement(bool _enable)
         {
 
         }
 
-        protected virtual void TogglebIsShooting(bool _enable)
-        {
-            bIsShooting = _enable;
-        }
+        //protected virtual void TogglebIsShooting(bool _enable)
+        //{
+        //    bIsShooting = _enable;
+        //}
 
         protected virtual void HandleAllySwitch(PartyManager _party, AllyMember _toSet, AllyMember _current)
         {
@@ -318,65 +318,65 @@ namespace RTSCoreFramework
                 _allyInCommand.transform.position) <= followDistance;
         }
 
-        public virtual bool Tactics_IsEnemyWithinSightRange()
-        {
-            AllyMember _closestEnemy = FindClosestEnemy();
-            bool _valid = _closestEnemy != null && _closestEnemy.IsAlive;
-            if (_valid)
-            {
-                currentTargettedEnemy = _closestEnemy;
-            }
-            else
-            {
-                if (currentTargettedEnemy == null ||
-                    !currentTargettedEnemy.IsAlive)
-                {
-                    currentTargettedEnemy = null;
-                }
-            }
-            return (_valid);
-        }
+        //public virtual bool Tactics_IsEnemyWithinSightRange()
+        //{
+        //    AllyMember _closestEnemy = FindClosestEnemy();
+        //    bool _valid = _closestEnemy != null && _closestEnemy.IsAlive;
+        //    if (_valid)
+        //    {
+        //        currentTargettedEnemy = _closestEnemy;
+        //    }
+        //    else
+        //    {
+        //        if (currentTargettedEnemy == null ||
+        //            !currentTargettedEnemy.IsAlive)
+        //        {
+        //            currentTargettedEnemy = null;
+        //        }
+        //    }
+        //    return (_valid);
+        //}
 
-        public virtual void Tactics_MoveToLeader()
-        {
-            if (allyMember.bIsGeneralInCommand) return;
+        //public virtual void Tactics_MoveToLeader()
+        //{
+        //    if (allyMember.bIsGeneralInCommand) return;
 
-            //Temporarily Fixes Bug with Ally Attacking 
-            //An Enemy After They Are Set To Command 
-            //After Tactics Have Been Followed when Switching
-            //From Command
-            //if (IsInvoking("UpdateBattleBehavior"))
-            //{
-            //    StopBattleBehavior();
-            //    myEventHandler.CallEventStopTargettingEnemy();
-            //}
+        //    //Temporarily Fixes Bug with Ally Attacking 
+        //    //An Enemy After They Are Set To Command 
+        //    //After Tactics Have Been Followed when Switching
+        //    //From Command
+        //    //if (IsInvoking("UpdateBattleBehavior"))
+        //    //{
+        //    //    StopBattleBehavior();
+        //    //    myEventHandler.CallEventStopTargettingEnemy();
+        //    //}
 
-            if (IsWithinFollowingDistance() == false)
-            {
-                myEventHandler.CallEventAIMove(allyInCommand.transform.position);
-            }
-            else
-            {
-                if (myEventHandler.bIsAIMoving == true)
-                {
-                    myEventHandler.CallEventFinishedMoving();
-                }
-            }
-        }
+        //    if (IsWithinFollowingDistance() == false)
+        //    {
+        //        myEventHandler.CallEventAIMove(allyInCommand.transform.position);
+        //    }
+        //    else
+        //    {
+        //        if (myEventHandler.bIsAIMoving == true)
+        //        {
+        //            myEventHandler.CallEventFinishedMoving();
+        //        }
+        //    }
+        //}
 
-        public virtual void AttackTargettedEnemy()
-        {
-            if (currentTargettedEnemy != null &&
-                currentTargettedEnemy.IsAlive)
-            {
-                if (myEventHandler.bIsAiAttacking == false)
-                    myEventHandler.CallEventAICommandAttackEnemy(currentTargettedEnemy);
-            }
-            else if (myEventHandler.bIsAiAttacking)
-            {
-                myEventHandler.CallEventStopTargettingEnemy();
-            }
-        }
+        //public virtual void AttackTargettedEnemy()
+        //{
+        //    if (currentTargettedEnemy != null &&
+        //        currentTargettedEnemy.IsAlive)
+        //    {
+        //        if (myEventHandler.bIsAiAttacking == false)
+        //            myEventHandler.CallEventAICommandAttackEnemy(currentTargettedEnemy);
+        //    }
+        //    else if (myEventHandler.bIsAiAttacking)
+        //    {
+        //        myEventHandler.CallEventStopTargettingEnemy();
+        //    }
+        //}
 
         //public void Tactics_AttackClosestEnemy()
         //{
@@ -613,11 +613,11 @@ namespace RTSCoreFramework
         protected virtual void SubToEvents()
         {
             myEventHandler.EventCommandAttackEnemy += HandleCommandAttackEnemy;
-            myEventHandler.EventStopTargettingEnemy += HandleStopTargetting;
-            myEventHandler.EventToggleIsShooting += TogglebIsShooting;
+            //myEventHandler.EventStopTargettingEnemy += HandleStopTargetting;
+            //myEventHandler.EventToggleIsShooting += TogglebIsShooting;
             myEventHandler.EventCommandMove += HandleOnMoveAlly;
-            myEventHandler.EventFinishedMoving += HandleOnAIStopMoving;
-            myEventHandler.OnWeaponChanged += OnWeaponChanged;
+            //myEventHandler.EventFinishedMoving += HandleOnAIStopMoving;
+            //myEventHandler.OnWeaponChanged += OnWeaponChanged;
             myEventHandler.InitializeAllyComponents += OnAllyInitComps;
             myEventHandler.EventAllyDied += OnAllyDeath;            
             gamemaster.EventHoldingRightMouseDown += OnEnableCameraMovement;
@@ -627,11 +627,11 @@ namespace RTSCoreFramework
         protected virtual void UnSubFromEvents()
         {
             myEventHandler.EventCommandAttackEnemy -= HandleCommandAttackEnemy;
-            myEventHandler.EventStopTargettingEnemy -= HandleStopTargetting;
-            myEventHandler.EventToggleIsShooting -= TogglebIsShooting;
+            //myEventHandler.EventStopTargettingEnemy -= HandleStopTargetting;
+            //myEventHandler.EventToggleIsShooting -= TogglebIsShooting;
             myEventHandler.EventCommandMove -= HandleOnMoveAlly;
-            myEventHandler.EventFinishedMoving -= HandleOnAIStopMoving;
-            myEventHandler.OnWeaponChanged -= OnWeaponChanged;
+            //myEventHandler.EventFinishedMoving -= HandleOnAIStopMoving;
+            //myEventHandler.OnWeaponChanged -= OnWeaponChanged;
             myEventHandler.InitializeAllyComponents -= OnAllyInitComps;
             myEventHandler.EventAllyDied -= OnAllyDeath;
             gamemaster.EventHoldingRightMouseDown -= OnEnableCameraMovement;

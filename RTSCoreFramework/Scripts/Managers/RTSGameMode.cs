@@ -601,7 +601,7 @@ namespace RTSCoreFramework
                     //Friendly Kill, give punishment
                     _instigator.PartyPoints += GetPendingPunishment(_instigator, RTSGameMode.ERTSPunishmentTypes.Punishment_KilledAnAlly);
                 }
-                _instigator.allyEventHandler.CallEventKilledEnemy();
+                //_instigator.allyEventHandler.CallEventKilledEnemy();
             }
 
             //Update GameModeStats in the end

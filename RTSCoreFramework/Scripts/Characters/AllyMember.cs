@@ -95,10 +95,10 @@ namespace RTSCoreFramework
             }
         }
 
-        public virtual AllyMember enemyTarget
-        {
-            get { return aiController.currentTargettedEnemy; }
-        }
+        //public virtual AllyMember enemyTarget
+        //{
+        //    get { return aiController.currentTargettedEnemy; }
+        //}
 
         public int PartyKills
         {
@@ -308,15 +308,15 @@ namespace RTSCoreFramework
         //Ui Target Info
         public bool bAllyIsUiTarget { get { return allyEventHandler.bAllyIsUiTarget; } }
         //Other Easy Getter Properties
-        public bool bIsAttacking { get { return allyEventHandler.bIsAttacking; } }
-        public bool bIsAIAttacking { get { return allyEventHandler.bIsAiAttacking; } }
-        public bool bIsCommandAttacking { get { return allyEventHandler.bIsCommandAttacking; } }
-        public bool bIsNavMoving { get { return allyEventHandler.bIsNavMoving; } }
-        public bool bIsFreeMoving { get { return allyEventHandler.bIsFreeMoving; } }
-        public bool bIsCommandMoving { get { return allyEventHandler.bIsCommandMoving; } }
-        public bool bIsAIMoving { get { return allyEventHandler.bIsAIMoving; } }
+        //public bool bIsAttacking { get { return allyEventHandler.bIsAttacking; } }
+        //public bool bIsAIAttacking { get { return allyEventHandler.bIsAiAttacking; } }
+        //public bool bIsCommandAttacking { get { return allyEventHandler.bIsCommandAttacking; } }
+        //public bool bIsNavMoving { get { return allyEventHandler.bIsNavMoving; } }
+        //public bool bIsFreeMoving { get { return allyEventHandler.bIsFreeMoving; } }
+        //public bool bIsCommandMoving { get { return allyEventHandler.bIsCommandMoving; } }
+        //public bool bIsAIMoving { get { return allyEventHandler.bIsAIMoving; } }
         public bool bIsUsingAbility { get { return allyEventHandler.bIsUsingAbility; } }
-        public bool bActiveTimeBarIsRegenerating => allyEventHandler.bActiveTimeBarIsRegenerating;
+        //public bool bActiveTimeBarIsRegenerating => allyEventHandler.bActiveTimeBarIsRegenerating;
         #endregion
 
         #region UnityMessages
@@ -382,59 +382,59 @@ namespace RTSCoreFramework
             bIsCurrentPlayer = _toSet == this && _toSet.bIsInGeneralCommanderParty;
         }
 
-        protected virtual void OnTryHitscanFire(Vector3 _force)
-        {
-            RaycastHit _hit;
-            var _target = enemyTarget;
-            bool _validShot = ChestTransform != null &&
-                _target != null;
-            if (_validShot && Physics.Linecast(MyLOSTransform.position, _target.ChestTransform.position, out _hit))
-            {
-                var _root = _hit.transform.root;
-                //If Hit Self
-                if (_root == transform)
-                {
-                    Debug.Log(CharacterName.ToString()
-                        + " is shooting himself.");
-                }
-                bool _isEnemy = _root.tag == gamemode.AllyTag;
-                if (_isEnemy)
-                {
-                    _target.allyEventHandler.CallOnAllyTakeDamage(
-                        GetDamageRate(), _hit.point, _force, this, _hit.transform.gameObject, _hit.collider);
-                }
-            }
-        }
+        //protected virtual void OnTryHitscanFire(Vector3 _force)
+        //{
+        //    RaycastHit _hit;
+        //    var _target = enemyTarget;
+        //    bool _validShot = ChestTransform != null &&
+        //        _target != null;
+        //    if (_validShot && Physics.Linecast(MyLOSTransform.position, _target.ChestTransform.position, out _hit))
+        //    {
+        //        var _root = _hit.transform.root;
+        //        //If Hit Self
+        //        if (_root == transform)
+        //        {
+        //            Debug.Log(CharacterName.ToString()
+        //                + " is shooting himself.");
+        //        }
+        //        bool _isEnemy = _root.tag == gamemode.AllyTag;
+        //        if (_isEnemy)
+        //        {
+        //            _target.allyEventHandler.CallOnAllyTakeDamage(
+        //                GetDamageRate(), _hit.point, _force, this, _hit.transform.gameObject, _hit.collider);
+        //        }
+        //    }
+        //}
 
-        protected virtual void OnTryMeleeAttack()
-        {
-            float _delay = Mathf.Max(0.1f, WeaponAttackRate - 0.5f);
-            Invoke("OnTryMeleeAttackDelay", _delay);
-        }
+        //protected virtual void OnTryMeleeAttack()
+        //{
+        //    float _delay = Mathf.Max(0.1f, WeaponAttackRate - 0.5f);
+        //    Invoke("OnTryMeleeAttackDelay", _delay);
+        //}
 
-        protected virtual void OnTryMeleeAttackDelay()
-        {
-            RaycastHit _hit;
-            var _target = enemyTarget;
-            bool _validShot = ChestTransform != null &&
-                _target != null;
-            if (_validShot && Physics.Linecast(MyLOSTransform.position, _target.ChestTransform.position, out _hit))
-            {
-                var _root = _hit.transform.root;
-                //If Hit Self
-                if (_root == transform)
-                {
-                    Debug.Log(CharacterName.ToString()
-                        + " is shooting himself.");
-                }
-                bool _isEnemy = _root.tag == gamemode.AllyTag;
-                if (_isEnemy)
-                {
-                    _target.allyEventHandler.CallOnAllyTakeDamage(
-                        GetDamageRate(), _hit.point, Vector3.zero, this, _hit.transform.gameObject, _hit.collider);
-                }
-            }
-        }
+        //protected virtual void OnTryMeleeAttackDelay()
+        //{
+        //    RaycastHit _hit;
+        //    var _target = enemyTarget;
+        //    bool _validShot = ChestTransform != null &&
+        //        _target != null;
+        //    if (_validShot && Physics.Linecast(MyLOSTransform.position, _target.ChestTransform.position, out _hit))
+        //    {
+        //        var _root = _hit.transform.root;
+        //        //If Hit Self
+        //        if (_root == transform)
+        //        {
+        //            Debug.Log(CharacterName.ToString()
+        //                + " is shooting himself.");
+        //        }
+        //        bool _isEnemy = _root.tag == gamemode.AllyTag;
+        //        if (_isEnemy)
+        //        {
+        //            _target.allyEventHandler.CallOnAllyTakeDamage(
+        //                GetDamageRate(), _hit.point, Vector3.zero, this, _hit.transform.gameObject, _hit.collider);
+        //        }
+        //    }
+        //}
 
         public virtual void AllyTakeDamage(int amount, AllyMember _instigator)
         {
@@ -679,8 +679,8 @@ namespace RTSCoreFramework
             //Called After AllyInCommand has been set
             allyEventHandler.EventPartySwitching += OnPartySwitch;
             allyEventHandler.OnAmmoChanged += OnEquippedWeaponAmmoChanged;
-            allyEventHandler.OnTryHitscanFire += OnTryHitscanFire;
-            allyEventHandler.OnTryMeleeAttack += OnTryMeleeAttack;
+            //allyEventHandler.OnTryHitscanFire += OnTryHitscanFire;
+            //allyEventHandler.OnTryMeleeAttack += OnTryMeleeAttack;
             allyEventHandler.OnAllyTakeDamage += AllyTakeDamage;
             allyEventHandler.InitializeAllyComponents += InitializeAlly;
             //Called Before AllyInCommand has been set
@@ -693,8 +693,8 @@ namespace RTSCoreFramework
             //Called After AllyInCommand has been set
             allyEventHandler.EventPartySwitching -= OnPartySwitch;
             allyEventHandler.OnAmmoChanged -= OnEquippedWeaponAmmoChanged;
-            allyEventHandler.OnTryHitscanFire -= OnTryHitscanFire;
-            allyEventHandler.OnTryMeleeAttack -= OnTryMeleeAttack;
+            //allyEventHandler.OnTryHitscanFire -= OnTryHitscanFire;
+            //allyEventHandler.OnTryMeleeAttack -= OnTryMeleeAttack;
             allyEventHandler.OnAllyTakeDamage -= AllyTakeDamage;
             allyEventHandler.InitializeAllyComponents -= InitializeAlly;
             //Called Before AllyInCommand has been set

@@ -310,38 +310,38 @@ namespace RTSCoreFramework
         #endregion
 
         #region Helpers
-        protected virtual void UpdateWaypointRenderer()
-        {
-            if (/*bHasSwitched || */myNavMesh == null ||
-                myNavMesh.path == null ||
-                myEventHandler.bIsAIMoving)
-                return;
+        //protected virtual void UpdateWaypointRenderer()
+        //{
+        //    if (/*bHasSwitched || */myNavMesh == null ||
+        //        myNavMesh.path == null ||
+        //        myEventHandler.bIsAIMoving)
+        //        return;
 
-            if (waypointRenderer != null && waypointRenderer.enabled == false)
-            {
-                waypointRenderer.enabled = true;
-            }
-            else if (waypointRenderer == null)
-            {
-                waypointRenderer = this.gameObject.AddComponent<LineRenderer>();
-                if (waypointRendererMaterial != null)
-                    waypointRenderer.material = waypointRendererMaterial;
+        //    if (waypointRenderer != null && waypointRenderer.enabled == false)
+        //    {
+        //        waypointRenderer.enabled = true;
+        //    }
+        //    else if (waypointRenderer == null)
+        //    {
+        //        waypointRenderer = this.gameObject.AddComponent<LineRenderer>();
+        //        if (waypointRendererMaterial != null)
+        //            waypointRenderer.material = waypointRendererMaterial;
 
-                waypointRenderer.startWidth = waypointStartWidth;
-                waypointRenderer.endWidth = waypointEndWidth;
-                waypointRenderer.startColor = waypointStartColor;
-                waypointRenderer.endColor = waypointEndColor;
-            }
+        //        waypointRenderer.startWidth = waypointStartWidth;
+        //        waypointRenderer.endWidth = waypointEndWidth;
+        //        waypointRenderer.startColor = waypointStartColor;
+        //        waypointRenderer.endColor = waypointEndColor;
+        //    }
 
-            var path = myNavMesh.path;
+        //    var path = myNavMesh.path;
 
-            waypointRenderer.positionCount = path.corners.Length;
+        //    waypointRenderer.positionCount = path.corners.Length;
 
-            for (int i = 0; i < path.corners.Length; i++)
-            {
-                waypointRenderer.SetPosition(i, path.corners[i]);
-            }
-        }
+        //    for (int i = 0; i < path.corners.Length; i++)
+        //    {
+        //        waypointRenderer.SetPosition(i, path.corners[i]);
+        //    }
+        //}
         #endregion
 
     }
