@@ -95,7 +95,7 @@ namespace RTSCoreFramework
             eventhandler.EventAllyDied += OnAllyDeath;
             eventhandler.OnTrySpecialAbility += HandleOnTrySpecialAbility;
             eventhandler.InitializeAllyComponents += InitializeSpecialAbilties;
-            gamemaster.OnNumberKeyPress += OnKeyPress;
+            //gamemaster.OnNumberKeyPress += OnKeyPress;
         }
 
         protected virtual void OnDisable()
@@ -103,7 +103,7 @@ namespace RTSCoreFramework
             eventhandler.EventAllyDied -= OnAllyDeath;
             eventhandler.OnTrySpecialAbility -= HandleOnTrySpecialAbility;
             eventhandler.InitializeAllyComponents -= InitializeSpecialAbilties;
-            gamemaster.OnNumberKeyPress -= OnKeyPress;
+            //gamemaster.OnNumberKeyPress -= OnKeyPress;
         }
         #endregion
 
@@ -184,18 +184,18 @@ namespace RTSCoreFramework
             }
         }
 
-        protected virtual void OnKeyPress(int _key)
-        {
-            if (bIsDead) return;
+        //protected virtual void OnKeyPress(int _key)
+        //{
+        //    if (bIsDead) return;
 
-            //This fixes a bug with retrieving the wrong ability index
-            int _index = _key - 1;
-            if (_index < 0 ||
-                _index > GetNumberOfAbilities() - 1 ||
-                allymember.bIsCurrentPlayer == false) return;
+        //    //This fixes a bug with retrieving the wrong ability index
+        //    int _index = _key - 1;
+        //    if (_index < 0 ||
+        //        _index > GetNumberOfAbilities() - 1 ||
+        //        allymember.bIsCurrentPlayer == false) return;
 
-            AttemptSpecialAbility(_index);
-        }
+        //    AttemptSpecialAbility(_index);
+        //}
 
         protected virtual void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {

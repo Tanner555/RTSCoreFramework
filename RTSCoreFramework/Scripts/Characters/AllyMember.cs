@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RTSCoreFramework
@@ -587,6 +588,11 @@ namespace RTSCoreFramework
                 AbilityDictionary[_config].CanUseAbility();
         }
 
+        public virtual int GetNumberOfAbilities()
+        {
+            return AbilityDictionary.Count;
+        }
+
         public AbilityConfig GetAbilityConfig(System.Type _type)
         {
             foreach (var _config in AbilityDictionary.Keys)
@@ -597,6 +603,20 @@ namespace RTSCoreFramework
                 }
             }
             return null;
+        }
+
+        public AbilityConfig GetAbilityConfig(int _index)
+        {
+            AbilityConfig _config = AbilityDictionary.Keys.ElementAt(_index);
+            if(_config != null)
+            {
+                return _config;
+            }
+            else
+            {
+                Debug.LogWarning($"Couldn't Find Ability Config at Index: {_index}");
+                return null;
+            }
         }
 
         public PartyManager FindPartyManager()
