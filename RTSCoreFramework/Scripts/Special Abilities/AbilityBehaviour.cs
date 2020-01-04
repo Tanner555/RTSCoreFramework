@@ -104,11 +104,13 @@ namespace RTSCoreFramework
 
         protected virtual IEnumerator DestroyParticleWhenFinished(GameObject particlePrefab)
         {
-            while (particlePrefab.GetComponent<ParticleSystem>().isPlaying)
+            ParticleSystem particlePrefabComp = particlePrefab.GetComponent<ParticleSystem>();
+            while (particlePrefabComp.isPlaying)
             {
                 yield return new WaitForSeconds(PARTICLE_CLEAN_UP_DELAY);
             }
             Destroy(particlePrefab);
+            particlePrefabComp = null;
             yield return new WaitForEndOfFrame();
         }
 
