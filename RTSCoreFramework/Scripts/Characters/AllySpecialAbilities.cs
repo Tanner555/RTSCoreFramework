@@ -158,10 +158,10 @@ namespace RTSCoreFramework
         #endregion
 
         #region Services
-        protected virtual void SE_AddEnergyPoints()
-        {
-            allymember.AllyRegainStamina(regenPointsPerSecond);
-        }
+        //protected virtual void SE_AddEnergyPoints()
+        //{
+        //    allymember.AllyRegainStamina(regenPointsPerSecond);
+        //}
         #endregion
 
         #region Handlers
@@ -170,7 +170,7 @@ namespace RTSCoreFramework
             abilities = _allFields.specialAbilitiesArray;
             outOfEnergy = _allFields.outOfEnergySoundClip;
             InitializeAbilityDictionary();
-            InvokeRepeating("SE_AddEnergyPoints", 1f, addStaminaRepeatRate);
+            //InvokeRepeating("SE_AddEnergyPoints", 1f, addStaminaRepeatRate);
         }
 
         protected virtual void HandleOnTrySpecialAbility(System.Type _type)
