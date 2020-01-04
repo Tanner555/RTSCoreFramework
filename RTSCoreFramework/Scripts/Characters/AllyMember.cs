@@ -316,7 +316,7 @@ namespace RTSCoreFramework
         //public bool bIsFreeMoving { get { return allyEventHandler.bIsFreeMoving; } }
         //public bool bIsCommandMoving { get { return allyEventHandler.bIsCommandMoving; } }
         //public bool bIsAIMoving { get { return allyEventHandler.bIsAIMoving; } }
-        public bool bIsUsingAbility { get { return allyEventHandler.bIsUsingAbility; } }
+        //public bool bIsUsingAbility { get { return allyEventHandler.bIsUsingAbility; } }
         //public bool bActiveTimeBarIsRegenerating => allyEventHandler.bActiveTimeBarIsRegenerating;
         #endregion
 
@@ -591,6 +591,21 @@ namespace RTSCoreFramework
         public virtual int GetNumberOfAbilities()
         {
             return AbilityDictionary.Count;
+        }
+
+        public AbilityBehaviour GetAbilityBehavior(System.Type _type)
+        {
+            var _config = GetAbilityConfig(_type);
+            if(_config != null)
+            {
+                return GetAbilityBehavior(_config);
+            }
+            return null;
+        }
+
+        public AbilityBehaviour GetAbilityBehavior(AbilityConfig _config)
+        {
+            return AbilityDictionary[_config];
         }
 
         public AbilityConfig GetAbilityConfig(System.Type _type)

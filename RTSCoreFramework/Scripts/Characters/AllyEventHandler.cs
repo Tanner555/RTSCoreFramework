@@ -100,7 +100,7 @@ namespace RTSCoreFramework
         #endregion
 
         #region FieldsAndProps
-        public bool bIsUsingAbility { get; protected set; }
+        //public bool bIsUsingAbility { get; protected set; }
         //public bool bCanEnableAITactics
         //{
         //    get
@@ -167,7 +167,7 @@ namespace RTSCoreFramework
         /// Currently Called After Ally Is Set
         /// </summary>
         public event GeneralEventHandler EventSetAsCommander;
-        public event GeneralOneBoolHandler EventToggleIsUsingAbility;
+        //public event GeneralOneBoolHandler EventToggleIsUsingAbility;
         //Opsive TPC Events
         public event GeneralEventHandler OnSwitchToPrevItem;
         public event GeneralEventHandler OnSwitchToNextItem;
@@ -228,7 +228,7 @@ namespace RTSCoreFramework
             //bIsCommandAttacking = false;
             //bIsAiAttacking = false;
             //bIsMeleeingEnemy = false;
-            bIsUsingAbility = false;
+            //bIsUsingAbility = false;
             //bActiveTimeBarIsRegenerating = false;
         }
 
@@ -303,11 +303,11 @@ namespace RTSCoreFramework
         //    }
         //}
 
-        public virtual void CallEventToggleIsUsingAbility(bool _enable)
-        {
-            bIsUsingAbility = _enable;
-            if (EventToggleIsUsingAbility != null) EventToggleIsUsingAbility(_enable);
-        }
+        //public virtual void CallEventToggleIsUsingAbility(bool _enable)
+        //{
+        //    bIsUsingAbility = _enable;
+        //    if (EventToggleIsUsingAbility != null) EventToggleIsUsingAbility(_enable);
+        //}
 
         //public virtual void CallEventToggleIsSprinting()
         //{

@@ -117,7 +117,7 @@ namespace RTSCoreFramework
             //Override To Add Ability Animations Functionality
         }
 
-        protected virtual void StopAbilityAnimation()
+        public virtual void StopAbilityAnimation()
         {
             //Override To Add Ability Animations Functionality
         }
