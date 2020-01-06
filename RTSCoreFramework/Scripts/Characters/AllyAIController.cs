@@ -5,6 +5,25 @@ using UnityEngine.AI;
 
 namespace RTSCoreFramework
 {
+    #region Structs
+    [System.Serializable]
+    public class AllyTacticsItem
+    {
+        public int order;
+        public IGBPI_DataHandler.IGBPI_Condition condition;
+        public RTSActionItem action;
+
+        public AllyTacticsItem(int order,
+            IGBPI_DataHandler.IGBPI_Condition condition,
+            RTSActionItem action)
+        {
+            this.order = order;
+            this.condition = condition;
+            this.action = action;
+        }
+    }
+    #endregion
+
     public class AllyAIController : MonoBehaviour
     {
         #region Components
@@ -63,6 +82,9 @@ namespace RTSCoreFramework
         protected Collider[] colliders;
         protected List<Transform> uniqueTransforms = new List<Transform>();
         protected List<AllyMember> scanEnemyList = new List<AllyMember>();
+
+        //IGBPI
+        public List<AllyTacticsItem> AllyTacticsList = new List<AllyTacticsItem>();
         #endregion
 
         #region Properties
@@ -76,17 +98,20 @@ namespace RTSCoreFramework
             get { return RTSGameMode.thisInstance; }
         }
 
-        //public AllyMember currentTargettedEnemy
-        //{
-        //    get { return __currentTargettedEnemy; }
-        //    set
-        //    {
-        //        __currentTargettedEnemy = value;
-        //        myEventHandler.CallOnUpdateTargettedEnemy(__currentTargettedEnemy);
-        //    }
-        //}
-        private AllyMember __currentTargettedEnemy = null;
-        public AllyMember previousTargettedEnemy { get; protected set; }
+        protected RTSStatHandler statHandler
+        {
+            get
+            {
+                return RTSStatHandler.thisInstance;
+            }
+        }
+
+        protected RTSUiMaster uiMaster { get { return RTSUiMaster.thisInstance; } }
+        protected RTSUiManager uiManager { get { return RTSUiManager.thisInstance; } }
+
+        protected RTSSaveManager saveManager { get { return RTSSaveManager.thisInstance; } }
+        protected IGBPI_DataHandler dataHandler { get { return IGBPI_DataHandler.thisInstance; } }
+
         public AllyMember allyInCommand { get { return allyMember.partyManager.AllyInCommand; } }
 
         //AllyMember Transforms
@@ -380,7 +405,7 @@ namespace RTSCoreFramework
 
         //public void Tactics_AttackClosestEnemy()
         //{
-        //    if(currentTargettedEnemy == null || currentTargettedEnemy.IsAlive == false)
+        //    if (currentTargettedEnemy == null || currentTargettedEnemy.IsAlive == false)
         //    {
         //        AllyMember _closestEnemy = FindClosestEnemy();
         //        if (_closestEnemy != null)
@@ -471,6 +496,55 @@ namespace RTSCoreFramework
         }
         #endregion
 
+        #region Helpers
+        protected virtual void FinishMoving()
+        {
+
+        }
+        #endregion
+
+        #region TacticsMainMethods
+        protected virtual void ToggleTactics(bool _enable)
+        {
+            if (_enable)
+            {
+                LoadAndExecuteAllyTactics();
+            }
+            else
+            {
+                UnLoadAndCancelTactics();
+            }
+        }
+
+        protected virtual void LoadAndExecuteAllyTactics()
+        {
+            UnLoadAndCancelTactics();
+            var _tactics = statHandler.RetrieveCharacterTactics(
+                    allyMember, allyMember.CharacterType);
+            foreach (var _data in _tactics.Tactics)
+            {
+                bool _hasCondition = dataHandler.IGBPI_Conditions.ContainsKey(_data.condition);
+                bool _hasAction = dataHandler.IGBPI_Actions.ContainsKey(_data.action);
+                int _order = -1;
+                bool _hasOrder = int.TryParse(_data.order, out _order) && _order != -1;
+                if (_hasCondition && _hasAction && _hasOrder)
+                {
+                    AllyTacticsList.Add(new AllyTacticsItem(_order,
+                        dataHandler.IGBPI_Conditions[_data.condition],
+                        dataHandler.IGBPI_Actions[_data.action]));
+                }
+            }
+
+            //if (AllyTacticsList.Count > 0)
+            //    InvokeRepeating("ExecuteAllyTacticsList", 0.05f, 1f / executionsPerSec);
+        }
+
+        protected virtual void UnLoadAndCancelTactics()
+        {
+            AllyTacticsList.Clear();
+        }
+        #endregion
+
         #region ShootingAndBattleBehavior
         //protected virtual void CommandAttackEnemy(AllyMember enemy)
         //{
@@ -518,7 +592,7 @@ namespace RTSCoreFramework
         //            {
         //                StopMeleeAttackBehavior();
         //            }
-                    
+
         //            myEventHandler.CallEventAIMove(currentTargettedEnemy.transform.position);
         //        }
         //    }
@@ -647,7 +721,6 @@ namespace RTSCoreFramework
         {
             CancelInvoke();
         }
-        #endregion
-
+        #endregion        
     }
 }
