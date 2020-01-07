@@ -83,29 +83,29 @@ namespace RTSCoreFramework
 
         protected Dictionary<string, IGBPI_Condition> _IGBPI_Conditions = new Dictionary<string, IGBPI_Condition>()
         {
-            {"Self: Any", new IGBPI_Condition((_ally) => true, ConditionFilters.Standard) },
-            {"Leader: Not Within Follow Distance", new IGBPI_Condition((_ally) =>
-            { return !_ally.aiController.IsWithinFollowingDistance(); }, ConditionFilters.Standard) },
-            {"Leader: Within Follow Distance", new IGBPI_Condition((_ally) =>
-            { return _ally.aiController.IsWithinFollowingDistance(); }, ConditionFilters.Standard) },
-            {"Self: Health < 100", new IGBPI_Condition((_ally) =>
-            { return _ally.HealthAsPercentage < 1; }, ConditionFilters.AllyHealth) },
-            {"Self: Health < 90", new IGBPI_Condition((_ally) =>
-            { return _ally.HealthAsPercentage < 0.90; }, ConditionFilters.AllyHealth) },
-            {"Self: Health < 75", new IGBPI_Condition((_ally) =>
-            { return _ally.HealthAsPercentage < 0.75; }, ConditionFilters.AllyHealth) },
-            {"Self: Health < 50", new IGBPI_Condition((_ally) =>
-            { return _ally.HealthAsPercentage < 0.50; }, ConditionFilters.AllyHealth) },
-            {"Self: Health < 25", new IGBPI_Condition((_ally) =>
-            { return _ally.HealthAsPercentage < 0.25; }, ConditionFilters.AllyHealth) },
-            {"Self: Health < 10", new IGBPI_Condition((_ally) =>
-            { return _ally.HealthAsPercentage < 0.10; }, ConditionFilters.AllyHealth) },
-            {"Self: CurAmmo < 10", new IGBPI_Condition((_ally) =>
-            { return _ally.CurrentEquipedAmmo < 10; }, ConditionFilters.AllyGun) },
-            {"Self: CurAmmo = 0", new IGBPI_Condition((_ally) =>
-            { return _ally.CurrentEquipedAmmo == 0; }, ConditionFilters.AllyGun) },
-            {"Self: CurAmmo > 0", new IGBPI_Condition((_ally) =>
-            { return _ally.CurrentEquipedAmmo > 0; }, ConditionFilters.AllyGun) },
+            {"Self: Any", new IGBPI_Condition((_self, _ai) => (true, _self), ConditionFilters.Standard) },
+            {"Leader: Not Within Follow Distance", new IGBPI_Condition((_self, _ai) =>
+            { return (!_ai.IsWithinFollowingDistance(), _self.allyInCommand); }, ConditionFilters.Standard) },
+            {"Leader: Within Follow Distance", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.aiController.IsWithinFollowingDistance(), _self.allyInCommand); }, ConditionFilters.Standard) },
+            {"Self: Health < 100", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.HealthAsPercentage < 1, _self); }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 90", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.HealthAsPercentage < 0.90, _self); }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 75", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.HealthAsPercentage < 0.75, _self); }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 50", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.HealthAsPercentage < 0.50, _self); }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 25", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.HealthAsPercentage < 0.25, _self); }, ConditionFilters.AllyHealth) },
+            {"Self: Health < 10", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.HealthAsPercentage < 0.10, _self); }, ConditionFilters.AllyHealth) },
+            {"Self: CurAmmo < 10", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.CurrentEquipedAmmo < 10, _self); }, ConditionFilters.AllyGun) },
+            {"Self: CurAmmo = 0", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.CurrentEquipedAmmo == 0, _self); }, ConditionFilters.AllyGun) },
+            {"Self: CurAmmo > 0", new IGBPI_Condition((_self, _ai) =>
+            { return (_self.CurrentEquipedAmmo > 0, _self); }, ConditionFilters.AllyGun) },
             //{"Enemy: WithinSightRange", new IGBPI_Condition((_ally) =>
             //{ return _ally.aiController.Tactics_IsEnemyWithinSightRange(); }, ConditionFilters.TargetedEnemy)  },
         };
@@ -173,10 +173,10 @@ namespace RTSCoreFramework
         #region Structs
         public struct IGBPI_Condition
         {
-            public Func<AllyMember, bool> action;
+            public Func<AllyMember, AllyAIController, (bool _success, AllyMember _target)> action;
             public ConditionFilters filter;
 
-            public IGBPI_Condition(Func<AllyMember, bool> action, ConditionFilters filter)
+            public IGBPI_Condition(Func<AllyMember, AllyAIController, (bool, AllyMember)> action, ConditionFilters filter)
             {
                 this.action = action;
                 this.filter = filter;

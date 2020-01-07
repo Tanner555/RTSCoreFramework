@@ -52,6 +52,13 @@ namespace RTSCoreFramework
             }
         }
         private PartyManager _partyManager = null;
+        public AllyMember allyInCommand
+        {
+            get
+            {
+                return _partyManager != null ? _partyManager.AllyInCommand : null;
+            }
+        }
         public int FactionPlayerCount { get { return gamemode.GetAllyFactionPlayerCount((AllyMember)this); } }
         public int GeneralPlayerCount { get { return gamemode.GetAllyGeneralPlayerCount((AllyMember)this); } }
         //Camera Follow Transforms
