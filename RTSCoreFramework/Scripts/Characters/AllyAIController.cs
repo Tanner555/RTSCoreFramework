@@ -551,7 +551,22 @@ namespace RTSCoreFramework
         #endregion
 
         #region Helpers
-        protected virtual void FinishMoving()
+        public virtual bool IsPerformingSpecialAbility()
+        {
+            return false;
+        }
+
+        public virtual void FinishMoving()
+        {
+
+        }
+
+        public virtual void ResetTargetting()
+        {
+
+        }
+
+        public virtual void ResetSpecialAbilities()
         {
 
         }
