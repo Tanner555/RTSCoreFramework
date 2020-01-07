@@ -588,8 +588,18 @@ namespace RTSCoreFramework
 
         public bool CanUseAbility(System.Type _type)
         {
-            if (AllyStamina <= AllyMinStamina) return false;
-            AbilityConfig _config = GetAbilityConfig(_type);
+            AbilityConfig _config;
+            return CanUseAbility(_type, out _config);
+        }
+
+        public bool CanUseAbility(System.Type _type, out AbilityConfig _config)
+        {
+            if (AllyStamina <= AllyMinStamina)
+            {
+                _config = null;
+                return false;
+            }
+            _config = GetAbilityConfig(_type);
             return _config != null &&
                 AllyStamina >= _config.GetEnergyCost() &&
                 AbilityDictionary[_config].CanUseAbility();

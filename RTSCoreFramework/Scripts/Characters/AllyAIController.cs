@@ -525,6 +525,11 @@ namespace RTSCoreFramework
             return false;
         }
 
+        public virtual void TryStartSpecialAbility(System.Type _abilityType)
+        {
+
+        }
+
         public virtual void SetEnemyTarget(AllyMember _target)
         {
 
