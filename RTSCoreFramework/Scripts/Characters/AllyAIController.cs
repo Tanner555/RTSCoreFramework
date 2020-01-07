@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace RTSCoreFramework
 {
-    #region Structs
+    #region AllyTacticsItemClass
     [System.Serializable]
     public class AllyTacticsItem
     {
@@ -20,6 +20,60 @@ namespace RTSCoreFramework
             this.order = order;
             this.condition = condition;
             this.action = action;
+        }
+    }
+    #endregion
+
+    #region RTSActionItemClass
+    /// <summary>
+    /// Used For Queueing Actions Inside AllyActionQueueController
+    /// </summary>
+    public class RTSActionItem
+    {
+        /// <summary>
+        /// From IGBPI_Action Struct.
+        /// </summary>
+        public System.Action<AllyMember, AllyAIController, AllyMember> actionToPerform;
+        /// <summary>
+        /// From IGBPI_Action Struct.
+        /// Only Needed For Testing Action Condition Inside 
+        /// AllyTacticsController Script.
+        /// Use (_self, _ai, _target) => true If No Additional Condition is Needed
+        /// </summary>
+        public System.Func<AllyMember, AllyAIController, AllyMember, bool> canPerformAction;
+        /// <summary>
+        /// From IGBPI_Action Struct.
+        /// </summary>
+        public ActionFilters actionFilter;
+        /// <summary>
+        /// Optional Action That Will Stop The Execution Of A Task.
+        /// Use (_self, _ai, _target) => {} if Stopping Isn't Needed
+        /// </summary>
+        public System.Action<AllyMember, AllyAIController, AllyMember> stopPerformingTask;
+
+        /// <summary>
+        /// Used For Queueing Actions Inside AllyActionQueueController
+        /// </summary>
+        /// <param name="actionToPerform">From IGBPI_Action Struct.</param>
+        /// <param name="canPerformAction">From IGBPI_Action Struct. Only Needed For Testing Action Condition Inside AllyTacticsController Script. Use (_ally) => true If No Additional Condition is Needed</param>
+        /// <param name="actionFilter">From IGBPI_Action Struct.</param>
+        /// <param name="stopPerformingTask">Optional Action That Will Stop The Execution Of A Task. Use (_ally) => {} if Stopping Isn't Needed</param>
+        public RTSActionItem(
+            System.Action<AllyMember, AllyAIController, AllyMember> actionToPerform,
+            System.Func<AllyMember, AllyAIController, AllyMember, bool> canPerformAction,
+            ActionFilters actionFilter,
+            System.Action<AllyMember, AllyAIController, AllyMember> stopPerformingTask
+            )
+        {
+            this.actionToPerform = actionToPerform;
+            this.canPerformAction = canPerformAction;
+            this.actionFilter = actionFilter;
+            this.stopPerformingTask = stopPerformingTask;
+        }
+
+        private RTSActionItem()
+        {
+
         }
     }
     #endregion
@@ -112,7 +166,7 @@ namespace RTSCoreFramework
         protected RTSSaveManager saveManager { get { return RTSSaveManager.thisInstance; } }
         protected IGBPI_DataHandler dataHandler { get { return IGBPI_DataHandler.thisInstance; } }
 
-        public AllyMember allyInCommand { get { return allyMember.partyManager.AllyInCommand; } }
+        public AllyMember allyInCommand { get { return allyMember.allyInCommand; } }
 
         //AllyMember Transforms
         Transform headTransform { get { return allyMember.HeadTransform; } }
