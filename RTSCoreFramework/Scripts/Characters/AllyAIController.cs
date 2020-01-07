@@ -397,81 +397,44 @@ namespace RTSCoreFramework
                 _allyInCommand.transform.position) <= followDistance;
         }
 
-        //public virtual bool Tactics_IsEnemyWithinSightRange()
-        //{
-        //    AllyMember _closestEnemy = FindClosestEnemy();
-        //    bool _valid = _closestEnemy != null && _closestEnemy.IsAlive;
-        //    if (_valid)
-        //    {
-        //        currentTargettedEnemy = _closestEnemy;
-        //    }
-        //    else
-        //    {
-        //        if (currentTargettedEnemy == null ||
-        //            !currentTargettedEnemy.IsAlive)
-        //        {
-        //            currentTargettedEnemy = null;
-        //        }
-        //    }
-        //    return (_valid);
-        //}
+        public virtual (bool _success, AllyMember _target) Tactics_IsEnemyWithinSightRange()
+        {
+            return (false, null);
+        }
 
-        //public virtual void Tactics_MoveToLeader()
-        //{
-        //    if (allyMember.bIsGeneralInCommand) return;
+        public virtual void Tactics_MoveToLeader()
+        {
+            if (allyMember.bIsGeneralInCommand) return;
 
-        //    //Temporarily Fixes Bug with Ally Attacking 
-        //    //An Enemy After They Are Set To Command 
-        //    //After Tactics Have Been Followed when Switching
-        //    //From Command
-        //    //if (IsInvoking("UpdateBattleBehavior"))
-        //    //{
-        //    //    StopBattleBehavior();
-        //    //    myEventHandler.CallEventStopTargettingEnemy();
-        //    //}
+            //Temporarily Fixes Bug with Ally Attacking 
+            //An Enemy After They Are Set To Command 
+            //After Tactics Have Been Followed when Switching
+            //From Command
+            //if (IsInvoking("UpdateBattleBehavior"))
+            //{
+            //    StopBattleBehavior();
+            //    myEventHandler.CallEventStopTargettingEnemy();
+            //}
 
-        //    if (IsWithinFollowingDistance() == false)
-        //    {
-        //        myEventHandler.CallEventAIMove(allyInCommand.transform.position);
-        //    }
-        //    else
-        //    {
-        //        if (myEventHandler.bIsAIMoving == true)
-        //        {
-        //            myEventHandler.CallEventFinishedMoving();
-        //        }
-        //    }
-        //}
+            if (IsWithinFollowingDistance() == false)
+            {
+                myEventHandler.CallEventAIMove(allyInCommand.transform.position);
+            }
+            else
+            {
+                FinishMoving();
+            }
+        }
 
-        //public virtual void AttackTargettedEnemy()
-        //{
-        //    if (currentTargettedEnemy != null &&
-        //        currentTargettedEnemy.IsAlive)
-        //    {
-        //        if (myEventHandler.bIsAiAttacking == false)
-        //            myEventHandler.CallEventAICommandAttackEnemy(currentTargettedEnemy);
-        //    }
-        //    else if (myEventHandler.bIsAiAttacking)
-        //    {
-        //        myEventHandler.CallEventStopTargettingEnemy();
-        //    }
-        //}
+        public virtual void AttackTargettedEnemy(AllyMember _self, AllyAIController _ai, AllyMember _target)
+        {
 
-        //public void Tactics_AttackClosestEnemy()
-        //{
-        //    if (currentTargettedEnemy == null || currentTargettedEnemy.IsAlive == false)
-        //    {
-        //        AllyMember _closestEnemy = FindClosestEnemy();
-        //        if (_closestEnemy != null)
-        //        {
-        //            currentTargettedEnemy = _closestEnemy;
-        //            if (myEventHandler.bIsAiAttacking == false && currentTargettedEnemy != null)
-        //            {
-        //                myEventHandler.CallEventAICommandAttackEnemy(currentTargettedEnemy);
-        //            }
-        //        }
-        //    }
-        //}
+        }
+
+        public virtual void Tactics_AttackClosestEnemy()
+        {
+
+        }
         #endregion
 
         #region AITacticsHelpers
@@ -554,6 +517,17 @@ namespace RTSCoreFramework
         public virtual bool IsPerformingSpecialAbility()
         {
             return false;
+        }
+
+        public virtual bool IsTargettingEnemy(out Transform _currentTarget)
+        {
+            _currentTarget = null;
+            return false;
+        }
+
+        public virtual void SetEnemyTarget(AllyMember _target)
+        {
+
         }
 
         public virtual void FinishMoving()
