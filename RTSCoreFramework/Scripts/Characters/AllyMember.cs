@@ -311,7 +311,7 @@ namespace RTSCoreFramework
         }
 
         public bool bIsCurrentPlayer { get; protected set; } = false;
-        public bool bIsGeneralInCommand { get { return partyManager ? partyManager.AllyIsGeneralInCommand(this) : false; } }
+        public bool bIsAllyInCommand { get { return partyManager ? partyManager.AllyIsGeneralInCommand(this) : false; } }
         public bool bIsInGeneralCommanderParty { get { return partyManager.bIsCurrentPlayerCommander; } }
         //Ui Target Info
         public bool bAllyIsUiTarget { get { return allyEventHandler.bAllyIsUiTarget; } }

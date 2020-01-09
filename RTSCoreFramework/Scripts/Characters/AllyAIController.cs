@@ -404,7 +404,7 @@ namespace RTSCoreFramework
 
         public virtual void Tactics_MoveToLeader()
         {
-            if (allyMember.bIsGeneralInCommand) return;
+            if (allyMember.bIsAllyInCommand) return;
 
             //Temporarily Fixes Bug with Ally Attacking 
             //An Enemy After They Are Set To Command 
