@@ -289,7 +289,7 @@ namespace RTSCoreFramework
             return allyMember.WeaponAttackRate;
         }
 
-        protected virtual bool IsTargetInMeleeRange(GameObject _target)
+        public virtual bool IsTargetInMeleeRange(GameObject _target)
         {
             bool _isCarryingMelee = allyMember.bIsCarryingMeleeWeapon;
             if (_isCarryingMelee == false) return false;
@@ -471,7 +471,7 @@ namespace RTSCoreFramework
             return _closestEnemy;
         }
 
-        protected virtual bool hasLOSWithinRange(AllyMember _enemy, out RaycastHit _hit)
+        public virtual bool hasLOSWithinRange(AllyMember _enemy, out RaycastHit _hit)
         {
             RaycastHit _myHit;
             bool _bHit = Physics.Linecast(losTransform.position,

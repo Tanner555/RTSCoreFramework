@@ -106,7 +106,7 @@ namespace RTSCoreFramework
             myEventHandler.EventPartySwitching += OnPartySwitch;
             //myEventHandler.EventCommandAttackEnemy += OnCmdAttackEnemy;
             //myEventHandler.EventCommandAttackEnemy += DisableWaypointRenderer;
-            myEventHandler.OnAllyTakeDamage += SpawnBloodParticles;
+            //myEventHandler.OnAllyTakeDamage += SpawnBloodParticles;
             myEventHandler.OnHealthChanged += OnHealthUpdate;
             myEventHandler.OnActiveTimeChanged += OnActiveTimeBarUpdate;
             myEventHandler.InitializeAllyComponents += OnAllyInitComponents;
@@ -126,7 +126,7 @@ namespace RTSCoreFramework
             myEventHandler.EventPartySwitching -= OnPartySwitch;
             //myEventHandler.EventCommandAttackEnemy -= OnCmdAttackEnemy;
             //myEventHandler.EventCommandAttackEnemy -= DisableWaypointRenderer;
-            myEventHandler.OnAllyTakeDamage -= SpawnBloodParticles;
+            //myEventHandler.OnAllyTakeDamage -= SpawnBloodParticles;
             myEventHandler.OnHealthChanged -= OnHealthUpdate;
             myEventHandler.OnActiveTimeChanged -= OnActiveTimeBarUpdate;
             myEventHandler.InitializeAllyComponents -= OnAllyInitComponents;

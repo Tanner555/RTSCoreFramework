@@ -733,7 +733,7 @@ namespace RTSCoreFramework
             allyEventHandler.OnAmmoChanged += OnEquippedWeaponAmmoChanged;
             //allyEventHandler.OnTryHitscanFire += OnTryHitscanFire;
             //allyEventHandler.OnTryMeleeAttack += OnTryMeleeAttack;
-            allyEventHandler.OnAllyTakeDamage += AllyTakeDamage;
+            //allyEventHandler.OnAllyTakeDamage += AllyTakeDamage;
             allyEventHandler.InitializeAllyComponents += InitializeAlly;
             //Called Before AllyInCommand has been set
             gamemaster.OnAllySwitch += HandleOnAllySwitch;
@@ -747,7 +747,7 @@ namespace RTSCoreFramework
             allyEventHandler.OnAmmoChanged -= OnEquippedWeaponAmmoChanged;
             //allyEventHandler.OnTryHitscanFire -= OnTryHitscanFire;
             //allyEventHandler.OnTryMeleeAttack -= OnTryMeleeAttack;
-            allyEventHandler.OnAllyTakeDamage -= AllyTakeDamage;
+            //allyEventHandler.OnAllyTakeDamage -= AllyTakeDamage;
             allyEventHandler.InitializeAllyComponents -= InitializeAlly;
             //Called Before AllyInCommand has been set
             gamemaster.OnAllySwitch -= HandleOnAllySwitch;
