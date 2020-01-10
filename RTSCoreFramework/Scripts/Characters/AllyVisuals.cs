@@ -74,19 +74,6 @@ namespace RTSCoreFramework
             get { return thisAlly.bIsInGeneralCommanderParty; }
         }
 
-        //NavMesh used for Waypoint Rendering
-        protected NavMeshAgent myNavMesh
-        {
-            get
-            {
-                if (_myNavMesh == null)
-                    _myNavMesh = GetComponent<NavMeshAgent>();
-
-                return _myNavMesh;
-            }
-        }
-        NavMeshAgent _myNavMesh = null;
-
         protected bool cameraIsMoving = false;
 
         //protected bool bHasSwitched = false;
