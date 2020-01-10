@@ -88,6 +88,12 @@ namespace RTSCoreFramework
                 if (_myNavAgent == null)
                     _myNavAgent = GetComponent<NavMeshAgent>();
 
+                if (_myNavAgent == null)
+                {
+                    //NavMesh hasn't been added yet.
+                    _myNavAgent = gameObject.AddComponent<NavMeshAgent>();
+                }
+
                 return _myNavAgent;
             }
         }
@@ -132,6 +138,8 @@ namespace RTSCoreFramework
         private LayerMask __allyLayers = -1;
         private LayerMask __sightLayers = -1;
         private LayerMask __allyAndCharacterLayers = -1;
+        protected NavMeshQueryFilter agentQueryFilter;
+        private NavMeshPath surfaceWalkablePath;
 
         protected Collider[] colliders;
         protected List<Transform> uniqueTransforms = new List<Transform>();
@@ -274,14 +282,14 @@ namespace RTSCoreFramework
 
         public virtual bool isSurfaceWalkable(RaycastHit hit)
         {
-            return myNavAgent.enabled && myNavAgent.CalculatePath(hit.point, myNavAgent.path) &&
-            myNavAgent.path.status == NavMeshPathStatus.PathComplete;
+            return NavMesh.CalculatePath(transform.position, hit.point, agentQueryFilter, surfaceWalkablePath) &&
+                surfaceWalkablePath.status == NavMeshPathStatus.PathComplete;
         }
 
         public virtual bool isSurfaceWalkable(Vector3 _point)
         {
-            return myNavAgent.enabled && myNavAgent.CalculatePath(_point, myNavAgent.path) &&
-            myNavAgent.path.status == NavMeshPathStatus.PathComplete;
+            return NavMesh.CalculatePath(transform.position, _point, agentQueryFilter, surfaceWalkablePath) &&
+                surfaceWalkablePath.status == NavMeshPathStatus.PathComplete;
         }
 
         public virtual float GetAttackRate()
@@ -303,6 +311,15 @@ namespace RTSCoreFramework
         {
             sightRange = _allFields.sightRange;
             followDistance = _allFields.followDistance;
+            if(myNavAgent.enabled == false)
+                myNavAgent.enabled = true;
+
+            agentQueryFilter = new NavMeshQueryFilter
+            {
+                areaMask = myNavAgent.areaMask,
+                agentTypeID = myNavAgent.agentTypeID
+            };
+            surfaceWalkablePath = new NavMeshPath();
         }
 
         //protected virtual void OnWeaponChanged(EEquipType _eType, EWeaponType _weaponType, EWeaponUsage _wUsage, bool _equipped)
