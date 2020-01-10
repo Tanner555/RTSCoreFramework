@@ -237,14 +237,14 @@ namespace RTSCoreFramework
         //    }
         //}
 
-        protected virtual bool AllCompsAreValid
-        {
-            get
-            {
-                return myNavAgent && myEventHandler
-                    && allyMember;
-            }
-        }
+        //protected virtual bool AllCompsAreValid
+        //{
+        //    get
+        //    {
+        //        return myNavAgent && myEventHandler
+        //            && allyMember;
+        //    }
+        //}
         #endregion
 
         #region UnityMessages
@@ -256,17 +256,14 @@ namespace RTSCoreFramework
         // Use this for initialization
         protected virtual void Start()
         {
-            if (!AllCompsAreValid)
-            {
-                Debug.LogError("Not all comps are valid!");
-            }
-            StartServices();
+            
         }
 
         protected virtual void OnDisable()
         {
             UnSubFromEvents();
-            CancelServices();
+            StopAllCoroutines();
+            CancelInvoke();
         }
         #endregion
 
@@ -775,16 +772,6 @@ namespace RTSCoreFramework
             myEventHandler.EventAllyDied -= OnAllyDeath;
             gamemaster.EventHoldingRightMouseDown -= OnEnableCameraMovement;
             gamemaster.OnAllySwitch -= HandleAllySwitch;
-        }
-
-        protected virtual void StartServices()
-        {
-
-        }
-
-        protected virtual void CancelServices()
-        {
-            CancelInvoke();
         }
         #endregion        
     }
