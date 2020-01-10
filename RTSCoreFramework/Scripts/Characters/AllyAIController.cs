@@ -308,8 +308,10 @@ namespace RTSCoreFramework
         {
             sightRange = _allFields.sightRange;
             followDistance = _allFields.followDistance;
-            if(myNavAgent.enabled == false)
-                myNavAgent.enabled = true;
+            if (IsNavMeshAgentEnabled() == false)
+            {
+                ToggleNavMeshAgent(true);
+            }
 
             agentQueryFilter = new NavMeshQueryFilter
             {
@@ -528,6 +530,20 @@ namespace RTSCoreFramework
         #endregion
 
         #region Helpers
+        public virtual bool IsNavMeshAgentEnabled()
+        {
+            return myNavAgent.enabled;
+        }
+
+        /// <summary>
+        /// Used To Toggle Nav Mesh Agent On Or Off. Considering Using in Conjunction With Nav Mesh Obstacle for Better Navigation.
+        /// </summary>
+        /// <param name="_enable"></param>
+        public virtual void ToggleNavMeshAgent(bool _enable)
+        {
+            myNavAgent.enabled = _enable;
+        }
+
         public virtual bool IsPerformingSpecialAbility()
         {
             return false;
