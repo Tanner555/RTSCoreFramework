@@ -390,6 +390,11 @@ namespace RTSCoreFramework
 
         }
 
+        protected virtual void HandleOnTogglePause(bool _paused)
+        {
+
+        }
+
         protected virtual void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             StopAllCoroutines();
@@ -771,7 +776,9 @@ namespace RTSCoreFramework
             //myEventHandler.EventFinishedMoving += HandleOnAIStopMoving;
             //myEventHandler.OnWeaponChanged += OnWeaponChanged;
             myEventHandler.InitializeAllyComponents += OnAllyInitComps;
-            myEventHandler.EventAllyDied += OnAllyDeath;            
+            myEventHandler.EventAllyDied += OnAllyDeath;
+            gamemaster.OnTogglebIsInPauseControlMode += HandleOnTogglePause;
+            gamemaster.OnToggleIsGamePaused += HandleOnTogglePause;
             gamemaster.EventHoldingRightMouseDown += OnEnableCameraMovement;
             gamemaster.OnAllySwitch += HandleAllySwitch;
         }
@@ -786,6 +793,8 @@ namespace RTSCoreFramework
             //myEventHandler.OnWeaponChanged -= OnWeaponChanged;
             myEventHandler.InitializeAllyComponents -= OnAllyInitComps;
             myEventHandler.EventAllyDied -= OnAllyDeath;
+            gamemaster.OnTogglebIsInPauseControlMode -= HandleOnTogglePause;
+            gamemaster.OnToggleIsGamePaused -= HandleOnTogglePause;
             gamemaster.EventHoldingRightMouseDown -= OnEnableCameraMovement;
             gamemaster.OnAllySwitch -= HandleAllySwitch;
         }
