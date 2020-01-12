@@ -213,6 +213,14 @@ namespace RTSCoreFramework
             get { return 0f; }
         }
 
+        /// <summary>
+        /// Target Cannot Be Closer Than This Minimum Range Before Attacking.
+        /// </summary>
+        public virtual float MinimumTargetRange
+        {
+            get { return 2.5f; }
+        }
+
         public virtual float MaxMeleeAttackDistance
         {
             get { return 0f; }

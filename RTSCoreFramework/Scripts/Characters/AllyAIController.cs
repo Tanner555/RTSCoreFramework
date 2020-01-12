@@ -140,6 +140,11 @@ namespace RTSCoreFramework
         private LayerMask __allyAndCharacterLayers = -1;
         protected NavMeshQueryFilter agentQueryFilter;
         private NavMeshPath surfaceWalkablePath;
+        public virtual float myNavAgentHeight
+        {
+            get { return _myNavAgentHeight; }
+        }
+        protected float _myNavAgentHeight = 3f;
 
         protected Collider[] colliders;
         protected List<Transform> uniqueTransforms = new List<Transform>();
@@ -318,7 +323,12 @@ namespace RTSCoreFramework
                 areaMask = myNavAgent.areaMask,
                 agentTypeID = myNavAgent.agentTypeID
             };
-            surfaceWalkablePath = new NavMeshPath();
+            surfaceWalkablePath = new NavMeshPath();            
+            if (myNavAgent.height >= 2f)
+            {
+                //Only Set Property If Nav Height Is Accurate, Otherwise Use an Estimate
+                _myNavAgentHeight = myNavAgent.height;
+            }
         }
 
         //protected virtual void OnWeaponChanged(EEquipType _eType, EWeaponType _weaponType, EWeaponUsage _wUsage, bool _equipped)
