@@ -93,7 +93,7 @@ namespace RTSCoreFramework
         protected virtual void OnEnable()
         {
             eventhandler.EventAllyDied += OnAllyDeath;
-            eventhandler.OnTrySpecialAbility += HandleOnTrySpecialAbility;
+            eventhandler.OnTryPerformSpecialAbility += HandleOnTrySpecialAbility;
             eventhandler.InitializeAllyComponents += InitializeSpecialAbilties;
             //gamemaster.OnNumberKeyPress += OnKeyPress;
         }
@@ -101,7 +101,7 @@ namespace RTSCoreFramework
         protected virtual void OnDisable()
         {
             eventhandler.EventAllyDied -= OnAllyDeath;
-            eventhandler.OnTrySpecialAbility -= HandleOnTrySpecialAbility;
+            eventhandler.OnTryPerformSpecialAbility -= HandleOnTrySpecialAbility;
             eventhandler.InitializeAllyComponents -= InitializeSpecialAbilties;
             //gamemaster.OnNumberKeyPress -= OnKeyPress;
         }

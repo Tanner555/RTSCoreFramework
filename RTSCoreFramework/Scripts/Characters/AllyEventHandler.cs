@@ -185,7 +185,8 @@ namespace RTSCoreFramework
 
         //For Special Abilities
         public delegate void OneSystemTypeArgHandler(System.Type _type);
-        public event OneSystemTypeArgHandler OnTrySpecialAbility;
+        public event OneSystemTypeArgHandler OnTryScheduleSpecialAbility;
+        public event OneSystemTypeArgHandler OnTryPerformSpecialAbility;
 
         //May use delegate in the future
         //public delegate void RtsHitTypeAndRayCastHitHandler(rtsHitType hitType, RaycastHit hit);
@@ -371,9 +372,14 @@ namespace RTSCoreFramework
             if (OnTryAim != null) OnTryAim(_enable);
         }
 
-        public virtual void CallOnTrySpecialAbility(System.Type _type)
+        public virtual void CallOnTryScheduleSpecialAbility(System.Type _type)
         {
-            if (OnTrySpecialAbility != null) OnTrySpecialAbility(_type);
+            if (OnTryScheduleSpecialAbility != null) OnTryScheduleSpecialAbility(_type);
+        }
+
+        public virtual void CallOnTryPerformSpecialAbility(System.Type _type)
+        {
+            if (OnTryPerformSpecialAbility != null) OnTryPerformSpecialAbility(_type);
         }
 
         //public virtual void CallOnRemoveCommandActionFromQueue()

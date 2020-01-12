@@ -405,6 +405,11 @@ namespace RTSCoreFramework
 
         }
 
+        protected virtual void HandleOnTryScheduleSpecialAbility(System.Type _ability)
+        {
+
+        }
+
         protected virtual void OnAllyDeath(Vector3 position, Vector3 force, GameObject attacker)
         {
             StopAllCoroutines();
@@ -786,6 +791,7 @@ namespace RTSCoreFramework
             //myEventHandler.EventFinishedMoving += HandleOnAIStopMoving;
             //myEventHandler.OnWeaponChanged += OnWeaponChanged;
             myEventHandler.InitializeAllyComponents += OnAllyInitComps;
+            myEventHandler.OnTryScheduleSpecialAbility += HandleOnTryScheduleSpecialAbility;
             myEventHandler.EventAllyDied += OnAllyDeath;
             gamemaster.OnTogglebIsInPauseControlMode += HandleOnTogglePause;
             gamemaster.OnToggleIsGamePaused += HandleOnTogglePause;
@@ -802,6 +808,7 @@ namespace RTSCoreFramework
             //myEventHandler.EventFinishedMoving -= HandleOnAIStopMoving;
             //myEventHandler.OnWeaponChanged -= OnWeaponChanged;
             myEventHandler.InitializeAllyComponents -= OnAllyInitComps;
+            myEventHandler.OnTryScheduleSpecialAbility -= HandleOnTryScheduleSpecialAbility;
             myEventHandler.EventAllyDied -= OnAllyDeath;
             gamemaster.OnTogglebIsInPauseControlMode -= HandleOnTogglePause;
             gamemaster.OnToggleIsGamePaused -= HandleOnTogglePause;
