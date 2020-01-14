@@ -10,6 +10,7 @@ namespace RTSCoreFramework
     public class RTSGameInstance : GameInstance
     {
         #region FieldsAndProps
+        bool bIsLoadingLevel = false;
         float transitionTime = 1f;
         string startTrigger = "Start";
         string endTrigger = "End";
@@ -69,11 +70,15 @@ namespace RTSCoreFramework
         #region Overrides
         public override void LoadLevel(LevelIndex _level, ScenarioIndex _scenario)
         {
-            StartCoroutine(FadeAndLoadLevelAfterDelay(_level, _scenario));
+            if (bIsLoadingLevel == false)
+            {
+                StartCoroutine(FadeAndLoadLevelAfterDelay(_level, _scenario));
+            }
         }
 
         IEnumerator FadeAndLoadLevelAfterDelay(LevelIndex _level, ScenarioIndex _scenario)
         {
+            bIsLoadingLevel = true;
             ToggleCrossFadeGameObject(true);
             crossFadeAnimator.SetTrigger(startTrigger);
             yield return new WaitForSeconds(transitionTime);
@@ -82,6 +87,7 @@ namespace RTSCoreFramework
             crossFadeAnimator.SetTrigger(endTrigger);
             yield return new WaitForSeconds(transitionTime);
             ToggleCrossFadeGameObject(false);
+            bIsLoadingLevel = false;
         }
 
         private void LoadLevelDelay(LevelIndex _level, ScenarioIndex _scenario)
