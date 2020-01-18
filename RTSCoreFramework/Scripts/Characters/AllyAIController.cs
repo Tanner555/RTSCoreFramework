@@ -511,7 +511,7 @@ namespace RTSCoreFramework
         {
             RaycastHit _myHit;
             bool _bHit = Physics.Linecast(losTransform.position,
-                        _enemy.ChestTransform.position, out _myHit);
+                        _enemy.ChestTransform.position, out _myHit, sightLayers);
             _hit = _myHit;
             bool _valid = _bHit && _myHit.transform != null &&
                 _myHit.transform.root.tag == gamemode.AllyTag;
