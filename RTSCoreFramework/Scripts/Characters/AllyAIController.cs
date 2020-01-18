@@ -138,6 +138,7 @@ namespace RTSCoreFramework
         private LayerMask __allyLayers = -1;
         private LayerMask __sightLayers = -1;
         private LayerMask __allyAndCharacterLayers = -1;
+        protected LayerMask SingleDeadAllyLayer = -1;
         protected NavMeshQueryFilter agentQueryFilter;
         private NavMeshPath surfaceWalkablePath;
         public virtual float myNavAgentHeight
@@ -313,6 +314,7 @@ namespace RTSCoreFramework
         {
             sightRange = _allFields.sightRange;
             followDistance = _allFields.followDistance;
+            SingleDeadAllyLayer = gamemode.SingleDeadAllyLayer;
             if (IsNavMeshAgentEnabled() == false)
             {
                 ToggleNavMeshAgent(true);

@@ -158,6 +158,8 @@ namespace RTSCoreFramework
         private string singleAllyLayerName = "Ally";
         [SerializeField]
         private string singleCurrentPlayerLayerName = "CurrentPlayerAlly";
+        [SerializeField]
+        private string singleDeadAllyLayerName = "DeadAlly";
 
         //Layer Getters
         public LayerMask AllyLayers { get { return allyLayers; } }
@@ -174,6 +176,7 @@ namespace RTSCoreFramework
         {
             get { return LayerMask.NameToLayer(singleCurrentPlayerLayerName); }
         }
+        public LayerMask SingleDeadAllyLayer => LayerMask.NameToLayer(singleDeadAllyLayerName);
 
         //Tag Getters
         public string AllyTag { get { return "Ally"; } }
