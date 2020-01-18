@@ -93,7 +93,7 @@ namespace RTSCoreFramework
             myEventHandler.EventPartySwitching += OnPartySwitch;
             //myEventHandler.EventCommandAttackEnemy += OnCmdAttackEnemy;
             //myEventHandler.EventCommandAttackEnemy += DisableWaypointRenderer;
-            //myEventHandler.OnAllyTakeDamage += SpawnBloodParticles;
+            myEventHandler.OnAllyAfterTakeDamage += OnHealthAfterTakeDamage;
             myEventHandler.OnHealthChanged += OnHealthUpdate;
             myEventHandler.OnActiveTimeChanged += OnActiveTimeBarUpdate;
             myEventHandler.InitializeAllyComponents += OnAllyInitComponents;
@@ -113,7 +113,7 @@ namespace RTSCoreFramework
             myEventHandler.EventPartySwitching -= OnPartySwitch;
             //myEventHandler.EventCommandAttackEnemy -= OnCmdAttackEnemy;
             //myEventHandler.EventCommandAttackEnemy -= DisableWaypointRenderer;
-            //myEventHandler.OnAllyTakeDamage -= SpawnBloodParticles;
+            myEventHandler.OnAllyAfterTakeDamage -= OnHealthAfterTakeDamage;
             myEventHandler.OnHealthChanged -= OnHealthUpdate;
             myEventHandler.OnActiveTimeChanged -= OnActiveTimeBarUpdate;
             myEventHandler.InitializeAllyComponents -= OnAllyInitComponents;
@@ -183,10 +183,10 @@ namespace RTSCoreFramework
             }
         }
 
-        protected virtual void SpawnBloodParticles(int amount, Vector3 position, Vector3 force, AllyMember _instigator, GameObject hitGameObject, Collider hitCollider)
+        protected virtual void OnHealthAfterTakeDamage(int amount, Vector3 position, Vector3 force, AllyMember _instigator, Collider hitCollider)
         {
-            if (BloodParticles == null) return;
-            GameObject.Instantiate(BloodParticles, position, Quaternion.identity);
+            //if (BloodParticles == null) return;
+            //GameObject.Instantiate(BloodParticles, position, Quaternion.identity);
         }
 
         protected virtual void SetupWaypointRenderer(Vector3 _point, bool _isCommandMove)

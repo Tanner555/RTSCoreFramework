@@ -212,8 +212,8 @@ namespace RTSCoreFramework
         public event TwoIntArgsHandler OnStaminaChanged;
         public event TwoIntArgsHandler OnActiveTimeChanged;
 
-        //public delegate void RTSTakeDamageHandler(int amount, Vector3 position, Vector3 force, AllyMember _instigator, GameObject hitGameObject, Collider hitCollider);
-        //public event RTSTakeDamageHandler OnAllyTakeDamage;
+        public delegate void RTSTakeDamageHandler(int amount, Vector3 position, Vector3 force, AllyMember _instigator, Collider hitCollider);
+        public event RTSTakeDamageHandler OnAllyAfterTakeDamage;
 
         public delegate void RTSAllyComponentInitializationHandler(RTSAllyComponentSpecificFields _specificComps, RTSAllyComponentsAllCharacterFields _allAllyComps);
         public event RTSAllyComponentInitializationHandler InitializeAllyComponents;
@@ -596,11 +596,11 @@ namespace RTSCoreFramework
             if (OnActiveTimeChanged != null) OnActiveTimeChanged(_current, _max);
         }
 
-        //public virtual void CallOnAllyTakeDamage(int amount, Vector3 position, Vector3 force, AllyMember _instigator, GameObject hitGameObject, Collider hitCollider)
-        //{
-        //    if (OnAllyTakeDamage != null)
-        //        OnAllyTakeDamage(amount, position, force, _instigator, hitGameObject, hitCollider);
-        //}
+        public virtual void CallOnAllyAfterTakeDamage(int amount, Vector3 position, Vector3 force, AllyMember _instigator, Collider hitCollider)
+        {
+            if (OnAllyAfterTakeDamage != null)
+                OnAllyAfterTakeDamage(amount, position, force, _instigator, hitCollider);
+        }
 
         public virtual void CallInitializeAllyComponents(RTSAllyComponentSpecificFields _specificComps, RTSAllyComponentsAllCharacterFields _allAllyComps)
         {
