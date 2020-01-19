@@ -511,15 +511,13 @@ namespace RTSCoreFramework
 
         public virtual bool hasLOSWithinRange(AllyMember _enemy, out RaycastHit _hit)
         {
-            RaycastHit _myHit;
             bool _bHit = Physics.Linecast(losTransform.position,
-                        _enemy.ChestTransform.position, out _myHit, sightLayers);
-            _hit = _myHit;
-            bool _valid = _bHit && _myHit.transform != null &&
-                _myHit.transform.root.tag == gamemode.AllyTag;
+                        _enemy.ChestTransform.position, out _hit, sightLayers);
+            bool _valid = _bHit && _hit.transform != null &&
+                _hit.transform.root.tag == gamemode.AllyTag;
             if (_valid)
             {
-                AllyMember _hitAlly = _myHit.transform.root.GetComponent<AllyMember>();
+                AllyMember _hitAlly = _hit.transform.root.GetComponent<AllyMember>();
                 if (_hitAlly == allyMember)
                 {
                     Debug.Log(allyMember.CharacterName +
