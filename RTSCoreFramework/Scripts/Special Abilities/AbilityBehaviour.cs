@@ -51,7 +51,7 @@ namespace RTSCoreFramework
         #region Fields
         protected AbilityConfig config;
 
-        protected const float PARTICLE_CLEAN_UP_DELAY = 20f;
+        protected const float PARTICLE_CLEAN_UP_DELAY = 3.0f;
         #endregion
 
         #region Getters
