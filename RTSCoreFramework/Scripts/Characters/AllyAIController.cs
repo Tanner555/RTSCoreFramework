@@ -210,6 +210,23 @@ namespace RTSCoreFramework
             }
         }
 
+        public LayerMask enemyHasLOSLayers
+        {
+            get
+            {
+                if(_enemyHasLOSLayers == -1)
+                {
+                    //Set To Opposite Of Ally's Current EasyHit Collider
+                    //That Way Only Enemies Will Be Hit and Not Friends
+                    _enemyHasLOSLayers = allyMember.bIsInGeneralCommanderParty ?
+                        gamemode.SightAndEnemyLayers :
+                        gamemode.SightAndFriendLayers;
+                }
+                return _enemyHasLOSLayers;
+            }
+        }
+        private LayerMask _enemyHasLOSLayers = -1;
+
         public LayerMask allyAndCharacterLayers
         {
             get
@@ -512,7 +529,7 @@ namespace RTSCoreFramework
         public virtual bool hasLOSWithinRange(AllyMember _enemy, out RaycastHit _hit)
         {
             bool _bHit = Physics.Linecast(losTransform.position,
-                        _enemy.ChestTransform.position, out _hit, sightLayers);
+                        _enemy.ChestTransform.position, out _hit, enemyHasLOSLayers);
             bool _valid = _bHit && _hit.transform != null &&
                 _hit.transform.root.tag == gamemode.AllyTag;
             if (_valid)
