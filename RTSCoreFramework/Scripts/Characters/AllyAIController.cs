@@ -540,7 +540,7 @@ namespace RTSCoreFramework
                     Debug.Log(allyMember.CharacterName +
                         " Has LOS With Himself.");
                 }
-                //TODO: RTSPrototype Fix hasLosWithinRange() hitting self instead of enemy
+
                 return _hitAlly != null &&
                     (_hitAlly == allyMember ||
                     _hitAlly.IsEnemyFor(allyMember));
