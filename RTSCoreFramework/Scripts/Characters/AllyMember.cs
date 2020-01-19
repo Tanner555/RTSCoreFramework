@@ -218,7 +218,7 @@ namespace RTSCoreFramework
         /// </summary>
         public virtual float MinimumTargetRange
         {
-            get { return 2.5f; }
+            get { return 2.0f; }
         }
 
         public virtual float MaxMeleeAttackDistance
