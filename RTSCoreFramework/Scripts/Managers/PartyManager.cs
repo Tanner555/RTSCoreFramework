@@ -189,8 +189,7 @@ namespace RTSCoreFramework
                 //Set PartySwitching Event Afterwards for more accurate party data retreival
                 foreach (var _ally in PartyMembers)
                 {
-                    //TODO: RTSPrototype Fix null exception from foreach loop, this should not happen
-                    if (_ally != null)
+                    if (_ally != null && _ally.IsAlive)
                         _ally.allyEventHandler.CallEventPartySwitching();
                 }
             }
