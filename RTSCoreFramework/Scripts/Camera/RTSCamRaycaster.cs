@@ -101,7 +101,7 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
         private rtsHitType rayHitType = rtsHitType.Unknown;
         private rtsHitType rayHitTypeLastFrame = rtsHitType.Unknown;
         private GameObject gObject, gObjectRoot = null;
-        private GameObject gObjectLastFrame = null;
+        private GameObject gObjectLastFrame, gObjectRootLastFrame = null;
         private string hitTag = "";
         private AllyMember hitAlly = null;
 
@@ -217,17 +217,21 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
                 gObject = rayHit.collider.gameObject;
                 gObjectRoot = rayHit.collider.gameObject.transform.root.gameObject;
                 rayHitType = GetHitType();
-                //if (rayHitType != rayHitTypeLastFrame || 
-                //    MyCursorChangeTimer.IsTimerFinished())
-                if (rayHitType != rayHitTypeLastFrame)
+                if(((/*isAllyMemberType*/rayHitType == rtsHitType.Ally || rayHitType == rtsHitType.Enemy) 
+                    && /*type==TypeLastFrame*/rayHitType == rayHitTypeLastFrame
+                    && /*rootObject!=rootObjectLastFrame*/gObjectRoot != gObjectRootLastFrame) ||
+                    rayHitType != rayHitTypeLastFrame)
                 {
-                    //Timer created issues, retracted for now
-                    //Update Cursor Change Every So Often To Resolve Cursor Bugs
-                    //MyCursorChangeTimer.StartTimer();
+                    //If [1]([2](
+                    //[3](Type Is Either Friend or Enemy AllyMember)[/3]
+                    //And Type is Equal To Type Last Frame
+                    //And Root Object is NOT Equal To Last Frame Root Object)[/2]
+                    //OR Type is Equal To Type Last Frame)[/1]
                     //Layer has Changed
                     gamemaster.CallEventOnMouseCursorChange(rayHitType, rayHit);
                 }
                 gObjectLastFrame = gObject;
+                gObjectRootLastFrame = gObjectRoot;
                 rayHitTypeLastFrame = rayHitType;
             }
             else
@@ -237,6 +241,7 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
                     gamemaster.CallEventOnMouseCursorChange(rtsHitType.Unknown, rayHit);
                 }
                 gObjectLastFrame = null;
+                gObjectRootLastFrame = null;
                 rayHitTypeLastFrame = rtsHitType.Unknown;
             }
         }

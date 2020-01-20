@@ -38,7 +38,8 @@ namespace RTSCoreFramework
 
         #region Fields
         public bool isInventoryUIOn;
-
+        GameObject hitObjectRoot = null;
+        AllyMember cachedAllyCompThisChange = null;
         #endregion
 
         #region UnityMessages
@@ -153,35 +154,45 @@ namespace RTSCoreFramework
                 OnMouseCursorChange(hitType, hit);
             }
 
-            bool _notAlly = hitType != rtsHitType.Ally && hitType != rtsHitType.Enemy;
+            hitObjectRoot = null;
+            if (hitType != rtsHitType.Unknown)
+                hitObjectRoot = hit.collider.gameObject.transform.root.gameObject;
 
-            if (gamemode.hasPrevHighAlly && _notAlly)
+            cachedAllyCompThisChange =
+                /*isAllyMemberType*/hitType == rtsHitType.Ally || hitType == rtsHitType.Enemy ?
+                hitObjectRoot.GetComponent<AllyMember>() : null;
+
+            //HasPrevAlly and (NotAlly or (isAllyMemberType and allyComp!=prevAllyComp))
+            if (gamemode.hasPrevHighAlly &&
+                ((/*notAlly*/hitType != rtsHitType.Ally && hitType != rtsHitType.Enemy) ||
+                ((/*isAllyMemberType*/hitType == rtsHitType.Ally || hitType == rtsHitType.Enemy) &&
+                /*allyComp!=prevAllyComp*/cachedAllyCompThisChange != gamemode.prevHighAlly)))
             {
                 gamemode.hasPrevHighAlly = false;
-                //TODO: RTSPrototype See if OnMouseCursor Change Should Return if PrevHighAlly is Null
-                if (gamemode.prevHighAlly == null) return;
-                //if (OnHoverLeaveAlly != null) OnHoverLeaveAlly(gamemode.prevHighAlly);
-                gamemode.prevHighAlly.allyEventHandler.CallEventOnHoverLeave(hitType, hit);
-            }
-
-            GameObject hitObjectRoot = null;
-            if (hitType != rtsHitType.Unknown)
-            {
-                hitObjectRoot = hit.collider.gameObject.transform.root.gameObject;
+                if (gamemode.prevHighAlly != null)
+                {
+                    gamemode.prevHighAlly.allyEventHandler.CallEventOnHoverLeave(hitType, hit);
+                    //Clear Reference After Calling Event
+                    gamemode.prevHighAlly = null;
+                }
+                else
+                {
+                    Debug.Log($"OnMouseChange: PrevHighAlly Was NULL. HitType: {hitType.ToString()}. Not Calling On Hover Leave.");
+                }
             }
 
             switch (hitType)
             {
                 case rtsHitType.Ally:
-                    AllyMember _ally = hitObjectRoot.GetComponent<AllyMember>();
+                    AllyMember _ally = cachedAllyCompThisChange;
                     if (_ally == null) return;
-                    gamemode.hasPrevHighAlly = true;
+                    gamemode.hasPrevHighAlly = true;                    
                     //if (OnHoverOverAlly != null) OnHoverOverAlly(_ally);
                     _ally.allyEventHandler.CallEventOnHoverOver(hitType, hit);
                     gamemode.prevHighAlly = _ally;
                     break;
                 case rtsHitType.Enemy:
-                    AllyMember _enemy = hitObjectRoot.GetComponent<AllyMember>();
+                    AllyMember _enemy = cachedAllyCompThisChange;
                     if (_enemy == null) return;
                     gamemode.hasPrevHighAlly = true;
                     //if (OnHoverOverAlly != null) OnHoverOverAlly(_enemy);
