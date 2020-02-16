@@ -2,12 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BaseFramework;
+using UnityEngine.InputSystem;
 
 namespace RTSCoreFramework
 {
     public class RTSInputManager : InputManager
     {
-        #region Properties       
+        #region Properties    
+        //Input Action Properties
+        protected InputAction PauseGameAction
+        {
+            get => GameplayActionMap.FindAction(PauseGameActionName);
+        }
+
+        protected InputActionMap GameplayActionMap
+        {
+            get
+            {
+                if (_gameplayActionMap == null)
+                {
+                    if (MyInputActions == null)
+                    {
+                        Debug.LogError("Couldn't Find Input Action Asset On Input Manager.");
+                        _gameplayActionMap = null;
+                    }
+                    else
+                    {
+                        _gameplayActionMap = MyInputActions.FindActionMap(GameplayActionMapName);
+                        if (_gameplayActionMap == null)
+                        {
+                            Debug.LogError("Couldn't Find Gameplay Action Map.");
+                        }
+                    }
+                }
+                return _gameplayActionMap;
+            }
+        }
+        private InputActionMap _gameplayActionMap = null;
+
         RTSCamRaycaster raycaster
         {
             get { return RTSCamRaycaster.thisInstance; }
@@ -40,6 +72,14 @@ namespace RTSCoreFramework
         #endregion
 
         #region Fields
+        [Header("Input Action Asset Fields")]
+        [SerializeField]
+        protected InputActionAsset MyInputActions;
+        [SerializeField]
+        protected string GameplayActionMapName = "Gameplay";
+        [SerializeField]
+        protected string PauseGameActionName = "PauseGame";
+
         //Handles Multi Unit Selection
         [Header("Selection Config")]
         [SerializeField]
@@ -59,20 +99,46 @@ namespace RTSCoreFramework
             
         }
 
+        protected override void OnEnable()
+        {
+            MyInputActions.Enable();
+            base.OnEnable();
+        }
+
         protected override void OnDisable()
         {
-            base.OnDisable();
-            
+            MyInputActions.Disable();
+            base.OnDisable();            
+        }
+        #endregion
+
+        #region InputHandlers
+        void OnPauseGamePressed(InputAction.CallbackContext context)
+        {
+            Debug.Log("Hello");
         }
         #endregion
 
         #region Handlers
-
         protected override void OnUpdateHandler()
         {
             base.OnUpdateHandler();
         }
 
+        #endregion
+
+        #region Initialization
+        protected override void SubToEvents()
+        {
+            base.SubToEvents();
+            PauseGameAction.performed += OnPauseGamePressed;
+        }
+
+        protected override void UnsubFromEvents()
+        {
+            base.UnsubFromEvents();
+            PauseGameAction.performed -= OnPauseGamePressed;
+        }
         #endregion
 
         #region InputSetup
