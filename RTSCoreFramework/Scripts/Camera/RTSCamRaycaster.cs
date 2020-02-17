@@ -226,7 +226,7 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
                     //[3](Type Is Either Friend or Enemy AllyMember)[/3]
                     //And Type is Equal To Type Last Frame
                     //And Root Object is NOT Equal To Last Frame Root Object)[/2]
-                    //OR Type is Equal To Type Last Frame)[/1]
+                    //OR Type is NOT Equal To Type Last Frame)[/1]
                     //Layer has Changed
                     gamemaster.CallEventOnMouseCursorChange(rayHitType, rayHit);
                 }
