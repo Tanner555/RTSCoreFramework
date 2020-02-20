@@ -22,7 +22,7 @@ namespace RTSCoreFramework
     }
     #endregion
 
-    public class RTSCamRaycaster : MonoBehaviour
+    public class RTSCamRaycaster : BaseSingleton<RTSCamRaycaster>
     {
         #region Properties
         RTSUiMaster uimaster
@@ -41,8 +41,6 @@ namespace RTSCoreFramework
         }
 
         UnityMsgManager myUnityMsgManager { get { return UnityMsgManager.thisInstance;} }
-
-        public static RTSCamRaycaster thisInstance { get; protected set; }
 
         bool noMoreChecking
         {
@@ -115,13 +113,6 @@ gamemode.GeneralInCommand.PartyMembers.Count <= 0;
         #region UnityMessages
         private void OnEnable()
         {
-            if (thisInstance == null)
-                thisInstance = this;
-            else if (hasStarted == false)
-            {
-                Debug.LogError("More than one RTS_CamRaycaster in scene!");
-            }
-
             if (hasStarted == true)
             {
                 SubToEvents();
