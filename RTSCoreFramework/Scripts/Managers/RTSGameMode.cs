@@ -168,6 +168,8 @@ namespace RTSCoreFramework
         private string singleFriendLayerName = "Friend";
         [SerializeField]
         private string singleEnemyLayerName = "Enemy";
+        [SerializeField]
+        private string singleIgnoreRaycastLayerName = "Ignore Raycast";
 
         //Layer Getters
         public LayerMask AllyLayers { get { return allyLayers; } }
@@ -189,6 +191,7 @@ namespace RTSCoreFramework
         public LayerMask SingleDeadAllyLayer => LayerMask.NameToLayer(singleDeadAllyLayerName);
         public LayerMask SingleFriendLayer => LayerMask.NameToLayer(singleFriendLayerName);
         public LayerMask SingleEnemyLayer => LayerMask.NameToLayer(singleEnemyLayerName);
+        public LayerMask SingleIgnoreRaycastLayer => LayerMask.NameToLayer(singleIgnoreRaycastLayerName);
 
         //Tag Getters
         public string AllyTag { get { return "Ally"; } }
