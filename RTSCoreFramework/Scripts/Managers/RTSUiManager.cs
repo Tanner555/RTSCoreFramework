@@ -25,11 +25,30 @@ namespace RTSCoreFramework
             get; protected set;
         }
 
+        //Other UI
+        public RectTransform allySelectionBoxRect
+        {
+            get
+            {
+                if(_allySelectionBoxRect == null)
+                {
+                    if (allySelectionBoxGObject.activeSelf == false)
+                        ToggleAllySelectionBox(true);
+
+                    _allySelectionBoxRect = allySelectionBoxGObject.GetComponent<RectTransform>();
+                }
+                return _allySelectionBoxRect;
+            }
+        }
+        RectTransform _allySelectionBoxRect = null;
+
+        //All UI
+
         public override bool AllUiCompsAreValid
         {
             get { return IGBPICompsAreValid && CharacterStatsPanels &&
                     CharacterStatsPrefab && MenuUiPanel && WinnerUiPanel &&
-                    NextLevelButton && GameOverUiPanel && LuaPanel; }
+                    NextLevelButton && GameOverUiPanel && LuaPanel && allySelectionBoxGObject; }
         }
 
         public bool IGBPICompsAreValid
@@ -78,6 +97,9 @@ conditionButton && actionButton && IGBPITitleText;
         //Used as a parameter for adding a dropdown instance
         bool usePanelCreationValues = false;
         IGBPIPanelValue panelCreationValues;
+        //Ally Selection
+        private List<AllyMember> selectedAllies = new List<AllyMember>();
+        Vector2 selectionStartPos;
         #endregion
 
         #region UIGameObjects
@@ -101,6 +123,9 @@ conditionButton && actionButton && IGBPITitleText;
 
         [Header("Prototype Lua Scripting Objects")]
         public GameObject LuaPanel;
+
+        [Header("Other UI")]
+        public GameObject allySelectionBoxGObject; 
         #endregion
 
         #region UnityMessages
@@ -239,6 +264,13 @@ conditionButton && actionButton && IGBPITitleText;
             if (AllUiCompsAreValid == false) return;
 
             if (LuaPanel != null) LuaPanel.SetActive(enable);
+        }
+
+        void ToggleAllySelectionBox(bool enable)
+        {
+            if (AllUiCompsAreValid == false) return;
+
+            if (allySelectionBoxGObject != null) allySelectionBoxGObject.SetActive(enable);
         }
         #endregion
 
